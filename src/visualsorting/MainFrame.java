@@ -12,17 +12,17 @@ import javax.swing.JFrame;
 
 public class MainFrame extends JFrame{
     
-    public MainFrame(SteppableSorter sorter) {
+    public MainFrame(SteppableSorter sorter, String sorterMethod) {
         
-        this.init();
+        this.init(sorterMethod);
         
         this.setSorter(sorter);
         
     }
     
-    private void init() {
+    private void init(String sorterMethod) {
         
-        this.setTitle("Visual Sorting!");
+        this.setTitle("Visual Sorting!" + " - " + sorterMethod);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

@@ -1,12 +1,8 @@
 package visualsorting;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-//import sun.audio.AudioPlayer; //can't use this via jar
-//import sun.audio.AudioStream;
 
 public class VisualSorting {
     
@@ -18,10 +14,10 @@ public class VisualSorting {
         
         array = VisualSorting.shuffleArray(array);
         
-        this.sorter = new SelectionSort(array);
+        this.sorter = new BubbleSort(array);
         //this.sorter = new BubbleSort(array);
         
-        window = new MainFrame(sorter);
+        window = new MainFrame(sorter, this.sorter.getClass().getName());
         window.setSorter(sorter);
         window.setVisible(true);
         
@@ -50,49 +46,29 @@ public class VisualSorting {
         if (doingEndCheck) {
             window.repaint();
             sorter.setSelectedIndex(sorter.getSelectedIndex() + 1);
-            //System.out.println(sorter.getSelectedIndex());
             
             if (sorter.getSelectedIndex() >= sorter.getArray().length) {
                 sorter.setSelectedIndex(-1);
                 timer.cancel();
                 return;
             }
-            
-            //play sound
-            //this.playSound(1, NUM_ELEMENTS + 1, sorter.getArray()[sorter.getSelectedIndex()] );
-            return;
         }
-        
-        sorter.step();
-        
-        //shouldn't have to set the array every tick!
-        //window.setArray(bs.getArray());
-        //only need to repaint it
-        window.repaint();
+        else {  //still doing sorting
+            sorter.step();
+            //only need to repaint it
+            window.repaint();
+        }
         
         //play sound
-        //this.playSound(1, NUM_ELEMENTS + 1, sorter.getArray()[sorter.getSelectedIndex()] );
+        if (sorter.getSelectedIndex() < sorter.getArray().length)
+            this.playSound(1, NUM_ELEMENTS + 1, sorter.getArray()[sorter.getSelectedIndex()] );
     }
     
-    /*
+    
     private void playSound(int low, int high, int num) {
-        //between 0 and 60 (A1 to A7)
-        double n = num * 1.0 / (high - low);
-        double note = n * 60;
-        int noteNumber = (int) Math.round(note);
-        if (noteNumber < 0) noteNumber = 0;
-        if (noteNumber > 60) noteNumber = 60;
-        
-         try {
-            InputStream inputStream = new FileInputStream(System.getProperty("user.home") + "\\Desktop\\noteTest\\note" + noteNumber + ".wav");
-            AudioStream audioStream = new AudioStream(inputStream);
-            AudioPlayer.player.start(audioStream);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-         
+        MakeSound.playSound(getNoteNumber(low, high, num) + ".wav");
     }
-    */
+    
     
     public static int[] shuffleArray(int[] array) {
         Random r = new Random();
@@ -111,6 +87,7 @@ public class VisualSorting {
         new VisualSorting();
     }
     
+    
     private static int getNoteNumber(int low, int high, int num) {
         //between 0 and 60 (A1 to A7)
         double n = num * 1.0 / (high - low);
@@ -122,9 +99,10 @@ public class VisualSorting {
         return noteNumber;
     }
     
+    
     private static final int NUM_ELEMENTS = 40;
     
-    private static final int CLOCK_SPEED = 30;
+    private static final int CLOCK_SPEED = 10;
     private static final int START_DELAY = 1500;
     
     private boolean doingEndCheck;
