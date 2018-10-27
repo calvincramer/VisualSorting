@@ -10,16 +10,24 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import javax.swing.JFrame;
 
+/**
+ * Visual of a steppable sorter
+ * @author Calvin Cramer
+ */
 public class MainFrame extends JFrame{
     
-    public MainFrame(SteppableSorter sorter, String sorterMethod) {
+    public MainFrame(SteppableSorter sorter) {
         
-        this.init(sorterMethod);
+        this.init(sorter.getSorterName());
         
         this.setSorter(sorter);
         
     }
     
+    /**
+     * Initializes the frames components
+     * @param sorterMethod 
+     */
     private void init(String sorterMethod) {
         
         this.setTitle("Visual Sorting!" + " - " + sorterMethod);
@@ -101,8 +109,7 @@ public class MainFrame extends JFrame{
             int height = (int) ( (array[i] * 1.0 / highestNum) * graphHeight ) ;
             //System.out.println(i + " " + height);
             
-            
-            if (sorter.getSelectedIndex() == i) {
+            if (contains(i, sorter.getSelectedIndicies())) {
                 offScreen.setColor(SELECTED_NUMBER_COLOR);
             } else if (sorter.getLastPairSwappedIncedies() != null && (sorter.getLastPairSwappedIncedies()[0] == i || sorter.getLastPairSwappedIncedies()[1] == i) ) {
                 offScreen.setColor(SWAPPED_NUMBER_COLOR);
@@ -129,6 +136,17 @@ public class MainFrame extends JFrame{
                 highestNum = array[i];
         }
         
+    }
+    
+    
+    private boolean contains(int i, int[] arr) {
+        if (arr == null)
+            return false;
+        for (int n : arr) {
+            if (i == n)
+                return true;
+        }
+        return false;
     }
     
     private SteppableSorter sorter;

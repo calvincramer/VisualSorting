@@ -9,6 +9,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 
 /**
+ * Plays a sound from url
  * Credit to: greenLizard and m13r on stack overflow:
  * {@link https://stackoverflow.com/questions/2416935/how-to-play-wav-files-with-java}
  * and also:

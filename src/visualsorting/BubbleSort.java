@@ -1,5 +1,9 @@
 package visualsorting;
 
+/**
+ * A steppable bubble sort algorithm
+ * @author Calvin Cramer
+ */
 public class BubbleSort 
     extends SteppableSorter {
     
@@ -19,7 +23,7 @@ public class BubbleSort
             for (int i = 0; i < array.length - 1; i++) {
                 
                 if (array[i] > array[i+1]) {
-                    swapNumbers(i, i+1);
+                    swap(i, i+1);
                 }
                 
             }
@@ -31,8 +35,8 @@ public class BubbleSort
         if (done) return;
         
         if (i < array.length - 1 && array[i] > array[i + 1]) {
-            swapNumbers(i, i + 1);
-            this.lastSwappedIndecies = new int[] {i, i+1};
+            swap(i, i + 1);
+            this.lastSwappedIndicies = new int[] {i, i+1};
         }
         
         i++;
@@ -43,7 +47,12 @@ public class BubbleSort
                 done = true;
             }
         }
-        this.selectedIndex = i;
+        this.selectedIndicies = new int[]{i};
+    }
+    
+    @Override
+    String getSorterName() {
+        return "Bubble Sort";
     }
     
     public static void main(String[] args) {
@@ -55,7 +64,7 @@ public class BubbleSort
         
         while (!bs.isFinished()) {
             bs.step();
-            bs.printNumbers();
+            SteppableSorter.printArray(bs.array);
             System.out.println();
         }
   
@@ -64,5 +73,4 @@ public class BubbleSort
     //sorting variables
     int m;
     int i;
-
 }
