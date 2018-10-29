@@ -34,15 +34,22 @@ public class BubbleSort
     public void step() {
         if (done) return;
         
-        if (i < array.length - 1 && array[i] > array[i + 1]) {
-            swap(i, i + 1);
-            this.lastSwappedIndicies = new int[] {i, i+1};
+        this.numComparisons++;
+        if (i < array.length - 1) {
+            this.numComparisons++;
+            this.numArrayAccesses += 2;
+            if (array[i] > array[i + 1]) {
+                swap(i, i + 1);
+                this.lastSwappedIndicies = new int[] {i, i+1};
+            }
         }
         
         i++;
+        this.numComparisons++;
         if (i >= m) {
             i = 0;
             m--;
+            this.numComparisons++;
             if (m < 0) {
                 done = true;
             }

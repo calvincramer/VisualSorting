@@ -11,7 +11,7 @@ import java.util.TimerTask;
 public class VisualSorting {
     
     //number of elements in array
-    private static final int NUM_ELEMENTS = 40;
+    private static final int NUM_ELEMENTS = 300;
     
     //clock speed tick in ms
     private static final int CLOCK_SPEED = 10;
@@ -41,7 +41,7 @@ public class VisualSorting {
         
         //sorter to be used
         //TODO: better way to specify this?, read at runtime?
-        this.sorter = new CombSort(array);
+        this.sorter = new BubbleSort(array);
         
         //make window
         window = new MainFrame(sorter);
