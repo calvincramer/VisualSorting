@@ -13,6 +13,7 @@ public abstract class SteppableSorter {
     public boolean done;
     public long numComparisons;
     public long numSwaps;
+    public long numArrayAccesses;
     
     public SteppableSorter(int[] array) {
         this.array = array;
@@ -21,6 +22,7 @@ public abstract class SteppableSorter {
         this.done = false;
         this.numComparisons = 0;
         this.numSwaps = 0;
+        this.numArrayAccesses = 0;
     }
     
     /**
@@ -79,13 +81,18 @@ public abstract class SteppableSorter {
     
     /**
      * Convenience method to swap two elements in the array  
+     * Takes 4 array accesses (getting and setting take 1 each)
+     * Adds number of swaps and array accesses to running total
      * @param i
      * @param j 
      */
-    public void swap(int i, int j) {
+    protected void swap(int i, int j) {
         int temp = array[i];
         array[i] = array[j];
         array[j] = temp;
+        
+        this.numArrayAccesses += 4;
+        this.numSwaps++;
     }
     
     /**

@@ -24,17 +24,26 @@ public class InsertionSort
                 stage = 1;
                 //break;    //fall through to stage one
             case 1: 
-                if (j > 0 && array[j-1] > array[j]) {
-                    SteppableSorter.swap(j, j-1, array);
-                    this.lastSwappedIndicies = new int[] {j, j-1};
-                    j--;
-                    this.selectedIndicies = new int[]{j+1};
+                this.numComparisons++;
+                if (j > 0) {
+                    this.numComparisons++;
+                    this.numArrayAccesses += 2;
+                    if (array[j-1] > array[j]) {
+                        swap(j, j-1);
+                        this.lastSwappedIndicies = new int[] {j, j-1};
+                        j--;
+                        this.selectedIndicies = new int[]{j+1};
+                    }
+                    else {
+                        i++;
+                        this.selectedIndicies = new int[]{i};
+                        stage = 0;
+                    }
                 }
                 else {
                     i++;
                     this.selectedIndicies = new int[]{i};
                     stage = 0;
-                    //stage = 2;
                 }
                 break;
         }

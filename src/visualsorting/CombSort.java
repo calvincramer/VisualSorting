@@ -29,6 +29,7 @@ public class CombSort
                 gap = (int) Math.floor(gap / shrink);
                 if (gap > 1) {
                     sorted = false; //not sorted yet
+                    this.numComparisons++;
                 } 
                 else {
                     gap = 1;
@@ -39,9 +40,13 @@ public class CombSort
                 stage = 1;
                 break;
             case 1:
+                this.numComparisons++;
                 if (i + gap < array.length) {
+                    this.numComparisons++;
+                    this.numArrayAccesses += 2;
                     if (array[i] > array[i + gap]) {
-                        SteppableSorter.swap(i, i + gap, array);
+                        swap(i, i + gap);
+                        
                         this.lastSwappedIndicies = new int[] {i, i + gap};
                         //sorted is false
                         sorted = false;
