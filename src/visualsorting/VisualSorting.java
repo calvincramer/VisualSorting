@@ -49,7 +49,7 @@ public class VisualSorting {
         
         //sorter to be used
         //TODO: better way to specify this?, read at runtime?
-        this.sorter = new MergeSort(array);
+        this.sorter = new SelectionSort(array);
         
         //make window
         window = new MainFrame(sorter);
