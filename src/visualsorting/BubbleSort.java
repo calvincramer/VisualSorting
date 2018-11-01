@@ -49,6 +49,7 @@ public class BubbleSort
         if (i >= m) {
             i = 0;
             m--;
+            this.numComparisons++;
             if (m < 0) {
                 done = true;
             }

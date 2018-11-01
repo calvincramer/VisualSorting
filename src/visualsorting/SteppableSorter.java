@@ -11,6 +11,7 @@ public abstract class SteppableSorter {
     
     public int[] array;
     public int[] sortedFinalArray;
+
     public int[] lastSwappedIndicies;
     public int[] selectedIndicies;
     public boolean done;

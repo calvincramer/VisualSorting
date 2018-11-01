@@ -9,6 +9,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 
 /**
+ * Plays a sound from url
  * Credit to: greenLizard and m13r on stack overflow:
  * {@link https://stackoverflow.com/questions/2416935/how-to-play-wav-files-with-java}
  * and also:
@@ -31,6 +32,9 @@ public class MakeSound {
             //audioClip.addLineListener(this);
             audioClip.open(audioStream);
             audioClip.start();
+        } catch (NullPointerException e) {
+            System.out.println("Playing sounds too fast, could not get the audio input stream!");
+            System.out.println(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);

@@ -86,7 +86,7 @@ public class VisualSorting {
             sorter.setSelectedIndicies(new int[]{0});
             sorter.setLastPairSwappedIncedies(null);
         }
-        
+
         if (doingEndCheck) {    //sweep from left to right
             window.repaint();
             sorter.setSelectedIndicies(new int[]{sorter.getSelectedIndicies()[0] + 1});

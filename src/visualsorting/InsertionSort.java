@@ -27,6 +27,7 @@ public class InsertionSort
                 this.numComparisons++;
                 if (j > 0) {
                     this.numComparisons++;
+                    this.numArrayAccesses += 2;
                     if (array[j-1] > array[j]) {
                         swap(j, j-1);
                         this.lastSwappedIndicies = new int[] {j, j-1};
