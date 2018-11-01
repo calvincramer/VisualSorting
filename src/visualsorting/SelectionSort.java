@@ -40,7 +40,7 @@ public class SelectionSort
             int smallerNumber = array[index];
             array[index] = array[i];
             array[i] = smallerNumber;
-            this.lastSwappedIndecies = new int[] {index, i};
+            this.lastSwappedIndicies = new int[] {index, i};
             //increment
             i++;
             index = i;
@@ -49,8 +49,13 @@ public class SelectionSort
                 done = true;
             }
         }
-        this.selectedIndex = j;
+        this.selectedIndicies = new int[]{j};
         
+    }
+    
+    @Override
+    String getSorterName() {
+        return "SelectionSort";
     }
     
     public static void main(String args[]) {
@@ -61,12 +66,12 @@ public class SelectionSort
         SelectionSort ss = new SelectionSort(array);
         
         System.out.println("Initial:");
-        ss.printNumbers();
+        SteppableSorter.printArray(ss.array);
         System.out.println();
         
         while(!ss.done) {
             ss.step();
-            ss.printNumbers();
+            SteppableSorter.printArray(ss.array);
         }
         
     }

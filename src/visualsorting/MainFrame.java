@@ -2,6 +2,7 @@ package visualsorting;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
@@ -10,16 +11,36 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import javax.swing.JFrame;
 
+/**
+ * Visual of a steppable sorter
+ * @author Calvin Cramer
+ */
 public class MainFrame extends JFrame{
     
-    public MainFrame(SteppableSorter sorter, String sorterMethod) {
-        
-        this.init(sorterMethod);
-        
+    private static final Font MONO = new Font("Courier New", Font.PLAIN, 16);
+    
+    private SteppableSorter sorter;
+
+    private int highestNum;
+    private Graphics offScreen;
+    private Image offScreenImage;
+    
+    private static final Color BACKGROUND_COLOR = new Color(20,20,20);
+    private static final Color NUMBER_COLOR = new Color(0, 120, 255);
+    private static final Color SELECTED_NUMBER_COLOR = new Color(0, 255, 180);
+    private static final Color SWAPPED_NUMBER_COLOR = new Color(255,0,255);
+    private static final int NUMBER_PADDING = 2;
+    private static final Insets GRAPH_INSETS = new Insets(15,15,15,15);
+    
+    public MainFrame(SteppableSorter sorter) {
+        this.init(sorter.getSorterName());
         this.setSorter(sorter);
-        
     }
     
+    /**
+     * Initializes the frames components
+     * @param sorterMethod 
+     */
     private void init(String sorterMethod) {
         
         this.setTitle("Visual Sorting!" + " - " + sorterMethod);
@@ -59,10 +80,14 @@ public class MainFrame extends JFrame{
         if (offScreenImage == null) return;
         
         if (offScreenImage.getWidth(null) < this.getWidth() || offScreenImage.getHeight(null) < this.getHeight()) {
-            //System.out.println("New offscreen");
-            offScreenImage = this.createImage(this.getWidth(), this.getHeight());
-            offScreen = offScreenImage.getGraphics();
+            createOffScreen();
         }
+    }
+    
+    private void createOffScreen() {
+        offScreenImage = this.createImage(this.getWidth(), this.getHeight());
+        offScreen = offScreenImage.getGraphics();
+        offScreen.setFont(MONO);
     }
 
     @Override
@@ -74,8 +99,7 @@ public class MainFrame extends JFrame{
         }
         
         if (this.offScreenImage == null || this.offScreen == null) {
-            offScreenImage = this.createImage(this.getWidth(), this.getHeight());
-            offScreen = offScreenImage.getGraphics();
+            createOffScreen();
         }
 
         //clearing the off screen buffer
@@ -101,8 +125,7 @@ public class MainFrame extends JFrame{
             int height = (int) ( (array[i] * 1.0 / highestNum) * graphHeight ) ;
             //System.out.println(i + " " + height);
             
-            
-            if (sorter.getSelectedIndex() == i) {
+            if (contains(i, sorter.getSelectedIndicies())) {
                 offScreen.setColor(SELECTED_NUMBER_COLOR);
             } else if (sorter.getLastPairSwappedIncedies() != null && (sorter.getLastPairSwappedIncedies()[0] == i || sorter.getLastPairSwappedIncedies()[1] == i) ) {
                 offScreen.setColor(SWAPPED_NUMBER_COLOR);
@@ -114,7 +137,24 @@ public class MainFrame extends JFrame{
             
             x += columnWidth + NUMBER_PADDING;
         }
-
+        
+        //draw text for info
+        y = 50;
+        x = 10;
+        int textHeight = offScreen.getFontMetrics().getHeight();
+        
+        offScreen.setColor(Color.WHITE);
+        
+        offScreen.drawString("Name: " + sorter.getSorterName(), x, y);
+        y += textHeight;
+        offScreen.drawString("Size: " + sorter.array.length, x, y);
+        y += textHeight;
+        offScreen.drawString("Comparisons: " + sorter.numComparisons, x, y);
+        y += textHeight;
+        offScreen.drawString("Swaps: " + sorter.numSwaps, x, y);
+        y += textHeight;
+        offScreen.drawString("Array Accesses: " + sorter.numArrayAccesses, x, y);
+        
         g.drawImage(offScreenImage, 0, 0, null);
     }
     
@@ -131,17 +171,14 @@ public class MainFrame extends JFrame{
         
     }
     
-    private SteppableSorter sorter;
-
-    private int highestNum;
-    private Graphics offScreen;
-    private Image offScreenImage;
     
-    private static final Color BACKGROUND_COLOR = new Color(20,20,20);
-    private static final Color NUMBER_COLOR = new Color(0, 120, 255);
-    private static final Color SELECTED_NUMBER_COLOR = new Color(0, 255, 180);
-    private static final Color SWAPPED_NUMBER_COLOR = new Color(255,0,255);
-    private static final int NUMBER_PADDING = 3;
-    private static final Insets GRAPH_INSETS = new Insets(15,15,15,15);
-    
+    private boolean contains(int i, int[] arr) {
+        if (arr == null)
+            return false;
+        for (int n : arr) {
+            if (i == n)
+                return true;
+        }
+        return false;
+    }
 }
