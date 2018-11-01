@@ -15,7 +15,7 @@ public class VisualSorting {
     private static final int NUM_ELEMENTS = 50;
     
     //clock speed tick in ms
-    private static final int CLOCK_SPEED = 7;
+    private static final int CLOCK_SPEED = 100;
     //delay from when window opens and when sorting starts, in ms
     private static final int START_DELAY = 1000;
     
@@ -49,7 +49,7 @@ public class VisualSorting {
         
         //sorter to be used
         //TODO: better way to specify this?, read at runtime?
-        this.sorter = new SelectionSort(array);
+        this.sorter = new MergeSort(array);
         
         //make window
         window = new MainFrame(sorter);
@@ -186,17 +186,19 @@ public class VisualSorting {
      * @param high - the highest value that num can be
      * @param num - the number that represents the note to be played
      * @return the note number, inclusively between low and high
+     * TODO: REPLACE MAGIC NUMBER 60 WITH ACTUAL NUMBER OF NOTE FILES IN THE SELECTED SOUND FOLDER
      */
     private static int getNoteNumber(int low, int high, int num) {
         //between 0 and 60 (A1 to A7)
         double n = num * 1.0 / (high - low);
-        double note = n * 60;
+        double note = n * NUMBER_OF_SOUND_FILES;
         int noteNumber = (int) Math.round(note);
         if (noteNumber < 0) noteNumber = 0;
-        if (noteNumber > 60) noteNumber = 60;
+        if (noteNumber > NUMBER_OF_SOUND_FILES) noteNumber = NUMBER_OF_SOUND_FILES;
         
         return noteNumber;
     }
+    private static final int NUMBER_OF_SOUND_FILES = 73;
     
     private static String toStringArr(int[] a) {
         String s = "";
