@@ -30,21 +30,27 @@ public class SelectionSort
     void step() {
         if (done) return;
         
+        this.numComparisons++;
+        this.numArrayAccesses += 2;
         if (array[j] < array[index])
             index = j;
         
         j++;
         
+        this.numComparisons++;
         if (j >= array.length) {
             //swap
             int smallerNumber = array[index];
             array[index] = array[i];
             array[i] = smallerNumber;
+            this.numSwaps++;
+            this.numArrayAccesses += 4;
             this.lastSwappedIndicies = new int[] {index, i};
             //increment
             i++;
             index = i;
             j = i + 1;
+            this.numComparisons++;
             if (i >= array.length - 1) {
                 done = true;
             }

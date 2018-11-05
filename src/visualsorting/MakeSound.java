@@ -16,6 +16,10 @@ import javax.sound.sampled.DataLine;
  * {@link https://www.codejava.net/coding/how-to-play-back-audio-in-java-with-examples}
  */
 public class MakeSound {
+    
+    private static final String base = "soundpacks";
+    private static final String chosenSoundPack = "pure";
+    
     public static void playSound(String resourceURL){
 
         final int BUFFER_SIZE = 128000;
@@ -24,7 +28,7 @@ public class MakeSound {
         AudioFormat audioFormat = null;
     
         try {
-            in = MakeSound.class.getResourceAsStream("/" + resourceURL); 
+            in = MakeSound.class.getResourceAsStream("/" + base + "/" + chosenSoundPack + "/"+ resourceURL); 
             audioStream = AudioSystem.getAudioInputStream(in);
             audioFormat = audioStream.getFormat();
             DataLine.Info info = new DataLine.Info(Clip.class, audioFormat);

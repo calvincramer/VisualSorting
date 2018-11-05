@@ -12,10 +12,12 @@ import java.util.TimerTask;
 public class VisualSorting {
     
     //number of elements in array
-    private static final int NUM_ELEMENTS = 50;
+    private static final int NUM_ELEMENTS = 300;
+    //number of sound files in the specifies sound pack
+    private static final int NUM_SOUND_FILES_IN_PACK = 68;
     
     //clock speed tick in ms
-    private static final int CLOCK_SPEED = 7;
+    private static final int CLOCK_SPEED = 25;
     //delay from when window opens and when sorting starts, in ms
     private static final int START_DELAY = 1000;
     
@@ -107,7 +109,7 @@ public class VisualSorting {
         if (sorter.getSelectedIndicies() != null
                 && sorter.getSelectedIndicies()[0] >= 0 
                 && sorter.getSelectedIndicies()[0] < sorter.getArray().length)
-            this.playSound(1, NUM_ELEMENTS + 1, sorter.getArray()[sorter.getSelectedIndicies()[0]] );
+            this.playSound(1, NUM_SOUND_FILES_IN_PACK, sorter.getArray()[sorter.getSelectedIndicies()[0]] );
     }
     
     /**
@@ -186,17 +188,19 @@ public class VisualSorting {
      * @param high - the highest value that num can be
      * @param num - the number that represents the note to be played
      * @return the note number, inclusively between low and high
+     * TODO: REPLACE MAGIC NUMBER 60 WITH ACTUAL NUMBER OF NOTE FILES IN THE SELECTED SOUND FOLDER
      */
     private static int getNoteNumber(int low, int high, int num) {
         //between 0 and 60 (A1 to A7)
         double n = num * 1.0 / (high - low);
-        double note = n * 60;
+        double note = n * NUMBER_OF_SOUND_FILES;
         int noteNumber = (int) Math.round(note);
-        if (noteNumber < 0) noteNumber = 0;
-        if (noteNumber > 60) noteNumber = 60;
+        if (noteNumber < 1) noteNumber = 1;
+        if (noteNumber > NUMBER_OF_SOUND_FILES) noteNumber = NUMBER_OF_SOUND_FILES;
         
         return noteNumber;
     }
+    private static final int NUMBER_OF_SOUND_FILES = 73;
     
     private static String toStringArr(int[] a) {
         String s = "";
