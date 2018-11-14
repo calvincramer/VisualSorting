@@ -1,5 +1,6 @@
 package visualsorting;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Timer;
@@ -12,12 +13,13 @@ import java.util.TimerTask;
 public class VisualSorting {
     
     //number of elements in array
-    private static final int NUM_ELEMENTS = 300;
+    private static final int NUM_ELEMENTS = 68;
     //number of sound files in the specifies sound pack
-    private static final int NUM_SOUND_FILES_IN_PACK = 68;
+    private static int NUM_SOUND_FILES = 0;
     
     //clock speed tick in ms
-    private static final int CLOCK_SPEED = 25;
+    protected static final int CLOCK_SPEED = 16;
+    
     //delay from when window opens and when sorting starts, in ms
     private static final int START_DELAY = 1000;
     
@@ -31,10 +33,17 @@ public class VisualSorting {
     
     private int[] copyArr;
     
+    private String soundPack = "piano";
+    
+    protected static long startTime;
+    protected static long currentTime;
+    
     /**
      * Creates the window to show the visual sorting algorithm
      */
     public VisualSorting() {
+        this.init();
+        
         //array of numbers to work on
         int[] array = new int[NUM_ELEMENTS];
         for (int i = 0; i < array.length; i++) {
@@ -51,7 +60,7 @@ public class VisualSorting {
         
         //sorter to be used
         //TODO: better way to specify this?, read at runtime?
-        this.sorter = new MergeSort(array);
+        this.sorter = new InsertionSort(array);
         
         //make window
         window = new MainFrame(sorter);
@@ -75,7 +84,21 @@ public class VisualSorting {
         }
         
         //start timer
+        VisualSorting.startTime = System.currentTimeMillis();
+        VisualSorting.currentTime = System.currentTimeMillis();
         timer.scheduleAtFixedRate(timerTask, 0, CLOCK_SPEED); //17ms about 60fps
+    }
+    
+    /**
+     * Read all options from file
+     */
+    private void init() {
+        //find number of sound files in the selected soundPack
+        //File f = new File("/" + this.soundPack + "/");
+        File f = new File(VisualSorting.class.getResource("/soundpacks/" + this.soundPack).getFile());
+        this.NUM_SOUND_FILES = f.listFiles().length;
+        
+        //other init stuff
     }
     
     /**
@@ -99,6 +122,7 @@ public class VisualSorting {
             }
         }
         else {  //still doing sorting
+            VisualSorting.currentTime = System.currentTimeMillis();
             sorter.step();
             //only need to repaint it
             window.repaint();
@@ -108,8 +132,11 @@ public class VisualSorting {
         //only playing the sound of the first selected index
         if (sorter.getSelectedIndicies() != null
                 && sorter.getSelectedIndicies()[0] >= 0 
-                && sorter.getSelectedIndicies()[0] < sorter.getArray().length)
-            this.playSound(1, NUM_SOUND_FILES_IN_PACK, sorter.getArray()[sorter.getSelectedIndicies()[0]] );
+                && sorter.getSelectedIndicies()[0] < sorter.getArray().length) {
+            
+            int numberMappedToSoundScale = (int) (sorter.getArray()[sorter.getSelectedIndicies()[0]] * 1.0 * VisualSorting.NUM_SOUND_FILES / sorter.getMax());
+            this.playSound(1, NUM_SOUND_FILES, numberMappedToSoundScale);
+        }
     }
     
     /**
@@ -153,7 +180,7 @@ public class VisualSorting {
      * @param num 
      */
     private void playSound(int low, int high, int num) {
-        MakeSound.playSound(getNoteNumber(low, high, num) + ".wav");
+        MakeSound.playSound(this.soundPack, getNoteNumber(low, high, num) + ".wav");
     }
     
     /**
@@ -193,14 +220,13 @@ public class VisualSorting {
     private static int getNoteNumber(int low, int high, int num) {
         //between 0 and 60 (A1 to A7)
         double n = num * 1.0 / (high - low);
-        double note = n * NUMBER_OF_SOUND_FILES;
+        double note = n * NUM_SOUND_FILES;
         int noteNumber = (int) Math.round(note);
         if (noteNumber < 1) noteNumber = 1;
-        if (noteNumber > NUMBER_OF_SOUND_FILES) noteNumber = NUMBER_OF_SOUND_FILES;
+        if (noteNumber > NUM_SOUND_FILES) noteNumber = NUM_SOUND_FILES;
         
         return noteNumber;
     }
-    private static final int NUMBER_OF_SOUND_FILES = 73;
     
     private static String toStringArr(int[] a) {
         String s = "";

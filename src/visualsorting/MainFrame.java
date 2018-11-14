@@ -154,6 +154,10 @@ public class MainFrame extends JFrame{
         offScreen.drawString("Swaps: " + sorter.numSwaps, x, y);
         y += textHeight;
         offScreen.drawString("Array Accesses: " + sorter.numArrayAccesses, x, y);
+        y += textHeight;
+        offScreen.drawString("Clock Speed: " + VisualSorting.CLOCK_SPEED + "ms", x, y);
+        y += textHeight;
+        offScreen.drawString("Time Elapsed: " + (System.currentTimeMillis() - VisualSorting.startTime) + "ms", x, y);
         
         g.drawImage(offScreenImage, 0, 0, null);
     }

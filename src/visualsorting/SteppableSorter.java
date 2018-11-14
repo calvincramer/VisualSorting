@@ -136,4 +136,12 @@ public abstract class SteppableSorter {
         System.out.println("\n");
     }
 
+    
+    /**
+     * Returns the maximum number in the array
+     * @return 
+     */
+    public int getMax() {
+        return this.sortedFinalArray[this.sortedFinalArray.length - 1];
+    }
 }
