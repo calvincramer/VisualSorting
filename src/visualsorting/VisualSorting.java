@@ -13,7 +13,7 @@ import java.util.TimerTask;
 public class VisualSorting {
     
     //number of elements in array
-    private static final int NUM_ELEMENTS = 68;
+    private static final int NUM_ELEMENTS = 200;
     //number of sound files in the specifies sound pack
     private static int NUM_SOUND_FILES = 0;
     

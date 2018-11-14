@@ -4,11 +4,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.geom.Rectangle2D;
 import javax.swing.JFrame;
 
 /**
@@ -22,14 +25,14 @@ public class MainFrame extends JFrame{
     private SteppableSorter sorter;
 
     private int highestNum;
-    private Graphics offScreen;
+    private Graphics2D offScreen;
     private Image offScreenImage;
     
     private static final Color BACKGROUND_COLOR = new Color(20,20,20);
     private static final Color NUMBER_COLOR = new Color(0, 120, 255);
     private static final Color SELECTED_NUMBER_COLOR = new Color(0, 255, 180);
     private static final Color SWAPPED_NUMBER_COLOR = new Color(255,0,255);
-    private static final int NUMBER_PADDING = 2;
+    private static final double NUMBER_PADDING = 0.8;
     private static final Insets GRAPH_INSETS = new Insets(15,15,15,15);
     
     public MainFrame(SteppableSorter sorter) {
@@ -86,7 +89,9 @@ public class MainFrame extends JFrame{
     
     private void createOffScreen() {
         offScreenImage = this.createImage(this.getWidth(), this.getHeight());
-        offScreen = offScreenImage.getGraphics();
+        offScreen = (Graphics2D) offScreenImage.getGraphics();
+        offScreen.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        offScreen.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
         offScreen.setFont(MONO);
     }
 
@@ -112,56 +117,80 @@ public class MainFrame extends JFrame{
         //set up math
         int graphWidth = this.getWidth() - this.getInsets().left - this.getInsets().right - GRAPH_INSETS.left - GRAPH_INSETS.right;
         int graphHeight = this.getHeight() - this.getInsets().top - this.getInsets().bottom - GRAPH_INSETS.top - GRAPH_INSETS.bottom;
-        int columnWidth = (graphWidth / array.length ) - NUMBER_PADDING;
-        int actualGraphWidth = (array.length * columnWidth) + (array.length - 1) * NUMBER_PADDING;
-        int widthDifference = graphWidth - actualGraphWidth;
         
-        int x = GRAPH_INSETS.left + this.getInsets().left + (widthDifference / 2);
-        int y = this.getHeight() - this.getInsets().bottom - GRAPH_INSETS.bottom;
-        
-        
+
+        double columnWidth = (graphWidth * 1.0 / array.length ) - NUMBER_PADDING;        
+        double x = GRAPH_INSETS.left + this.getInsets().left;
+        double y = this.getHeight() - this.getInsets().bottom - GRAPH_INSETS.bottom;
+          
         //drawing the array
+        Rectangle2D.Double tempRect = new Rectangle2D.Double();
         for (int i = 0; i < array.length; i++) {
             int height = (int) ( (array[i] * 1.0 / highestNum) * graphHeight ) ;
-            //System.out.println(i + " " + height);
             
-            if (contains(i, sorter.getSelectedIndicies())) {
+            if (contains(i, sorter.getSelectedIndicies()))
                 offScreen.setColor(SELECTED_NUMBER_COLOR);
-            } else if (sorter.getLastPairSwappedIncedies() != null && (sorter.getLastPairSwappedIncedies()[0] == i || sorter.getLastPairSwappedIncedies()[1] == i) ) {
+            else if (sorter.getLastPairSwappedIncedies() != null && (sorter.getLastPairSwappedIncedies()[0] == i || sorter.getLastPairSwappedIncedies()[1] == i) )
                 offScreen.setColor(SWAPPED_NUMBER_COLOR);
-            } else {
+            else
                 offScreen.setColor(NUMBER_COLOR);
-            }
             
-            offScreen.fillRect(x, y - height, columnWidth, height);
+            //offScreen.fillRect(x, y - height, (int) columnWidth, height);
+            tempRect.setRect(x, y - height, columnWidth, height);
+            offScreen.fill(tempRect);
             
             x += columnWidth + NUMBER_PADDING;
         }
         
+        //testing liens
+        offScreen.setColor(Color.PINK);
+        offScreen.drawLine(0, 0, 100000, 100000);
+        offScreen.drawLine(0, this.getHeight(), this.getHeight(), 0);
+        offScreen.setColor(Color.MAGENTA);
+        offScreen.drawLine(this.getWidth(), 0, this.getWidth() - this.getHeight(), this.getHeight());
+        offScreen.drawLine(this.getWidth(), this.getHeight(), this.getWidth() - this.getHeight(), 0);
+        
         //draw text for info
         y = 50;
-        x = 10;
+        x = 15;
         int textHeight = offScreen.getFontMetrics().getHeight();
         
         offScreen.setColor(Color.WHITE);
-        
-        offScreen.drawString("Name: " + sorter.getSorterName(), x, y);
+        offScreen.drawString("Name: " + sorter.getSorterName(), (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Size: " + sorter.array.length, x, y);
+        offScreen.drawString("Size: " + sorter.array.length, (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Comparisons: " + sorter.numComparisons, x, y);
+        offScreen.drawString("Comparisons: " + sorter.numComparisons, (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Swaps: " + sorter.numSwaps, x, y);
+        offScreen.drawString("Swaps: " + sorter.numSwaps, (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Array Accesses: " + sorter.numArrayAccesses, x, y);
+        offScreen.drawString("Array Accesses: " + sorter.numArrayAccesses, (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Clock Speed: " + VisualSorting.CLOCK_SPEED + "ms", x, y);
+        offScreen.drawString("Clock Speed: " + VisualSorting.CLOCK_SPEED + "ms", (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Time Elapsed: " + (System.currentTimeMillis() - VisualSorting.startTime) + "ms", x, y);
+        offScreen.drawString("Time Elapsed: " + commifyString("" + (System.currentTimeMillis() - VisualSorting.startTime)) + "ms", (int) x, (int) y);
         
         g.drawImage(offScreenImage, 0, 0, null);
     }
     
+    /**
+     * Places commas in a string according to where they would be in an integer number
+     * @param numStr
+     * @return 
+     */
+    public String commifyString(String numStr) {
+        int i = numStr.length() - 3;
+        while (i >= 1) {
+            numStr = numStr.substring(0, i) + "," + numStr.substring(i);
+            i -= 3;
+        }
+        return numStr;
+    }
+    
+    /**
+     * Sets the sorter, which is the algorithm that sorts the array.
+     * @param sorter  the sorter
+     */
     public final void setSorter(SteppableSorter sorter) {
         this.sorter = sorter;
         
@@ -175,7 +204,12 @@ public class MainFrame extends JFrame{
         
     }
     
-    
+    /**
+     * Determines if the array contains the number i
+     * @param i
+     * @param arr
+     * @return 
+     */
     private boolean contains(int i, int[] arr) {
         if (arr == null)
             return false;
