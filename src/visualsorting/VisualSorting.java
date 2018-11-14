@@ -18,7 +18,7 @@ public class VisualSorting {
     private static int NUM_SOUND_FILES = 0;
     
     //clock speed tick in ms
-    protected static final int CLOCK_SPEED = 16;
+    protected static final int CLOCK_SPEED = 0;
     
     //delay from when window opens and when sorting starts, in ms
     private static final int START_DELAY = 1000;
@@ -86,7 +86,11 @@ public class VisualSorting {
         //start timer
         VisualSorting.startTime = System.currentTimeMillis();
         VisualSorting.currentTime = System.currentTimeMillis();
-        timer.scheduleAtFixedRate(timerTask, 0, CLOCK_SPEED); //17ms about 60fps
+        if (CLOCK_SPEED == 0) {
+            while (tick()) {}
+        } else {
+            timer.scheduleAtFixedRate(timerTask, 0, CLOCK_SPEED); //17ms about 60fps
+        }
     }
     
     /**
@@ -99,12 +103,22 @@ public class VisualSorting {
         this.NUM_SOUND_FILES = f.listFiles().length;
         
         //other init stuff
+        
+        
+        
+        
+        //checks
+        if (CLOCK_SPEED < 0) {
+            System.out.println("NEGTIVE CLOCK SPEEDS ARE NOT ALLOWED DUMMY, I CAN'T TIME TRAVEL.\nAlthough it would make sense to undo all of the steps from a sorting algorithm in reverse");
+            System.exit(1);
+        }
     }
     
     /**
      * Clock tick to update window and step the algorithm
+     * @return returns whether the process is complete (false) or is still running (true)
      */
-    public void tick() {
+    public boolean tick() {
         
         if (sorter.isFinished() && !doingEndCheck) {
             this.doingEndCheck = true;
@@ -118,7 +132,7 @@ public class VisualSorting {
             
             if (sorter.getSelectedIndicies()[0] >= sorter.getArray().length) {
                 endProcedure();
-                return;
+                return false;
             }
         }
         else {  //still doing sorting
@@ -137,6 +151,7 @@ public class VisualSorting {
             int numberMappedToSoundScale = (int) (sorter.getArray()[sorter.getSelectedIndicies()[0]] * 1.0 * VisualSorting.NUM_SOUND_FILES / sorter.getMax());
             this.playSound(1, NUM_SOUND_FILES, numberMappedToSoundScale);
         }
+        return true;
     }
     
     /**
