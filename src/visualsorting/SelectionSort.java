@@ -45,7 +45,10 @@ public class SelectionSort
             array[i] = smallerNumber;
             this.numSwaps++;
             this.numArrayAccesses += 4;
-            this.lastSwappedIndicies = new int[] {index, i};
+            //this.lastSwappedIndicies = new int[] {index, i};
+            this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
+            this.addColoredIndex(index, this.SWAP_COLOR_1);
+            this.addColoredIndex(i, SWAP_COLOR_1);
             //increment
             i++;
             index = i;
@@ -55,7 +58,9 @@ public class SelectionSort
                 done = true;
             }
         }
-        this.selectedIndicies = new int[]{j};
+        //this.selectedIndicies = new int[]{j};
+        this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+        this.addColoredIndex(j, this.SELECTED_COLOR);
         
     }
     

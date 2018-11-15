@@ -36,7 +36,9 @@ public class CombSort
                     sorted = true;
                 }
                 i = 0;
-                this.selectedIndicies = new int[]{i};
+                this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                this.addColoredIndex(i, this.SELECTED_COLOR);
+                //this.selectedIndicies = new int[]{i};
                 stage = 1;
                 break;
             case 1:
@@ -47,16 +49,24 @@ public class CombSort
                     if (array[i] > array[i + gap]) {
                         swap(i, i + gap);
                         
-                        this.lastSwappedIndicies = new int[] {i, i + gap};
+                        this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
+                        this.addColoredIndex(i, this.SWAP_COLOR_1);
+                        this.addColoredIndex(i + gap, this.SWAP_COLOR_1);
+                        //this.lastSwappedIndicies = new int[] {i, i + gap};
                         //sorted is false
                         sorted = false;
                     }
                     i++;
-                    this.selectedIndicies = new int[]{i, i + gap};
+                    this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                    this.addColoredIndex(i, this.SELECTED_COLOR);
+                    this.addColoredIndex(i + gap, this.SELECTED_COLOR);
+                    //this.selectedIndicies = new int[]{i, i + gap};
                 }
                 else {
                     i++;
-                    this.selectedIndicies = new int[]{i};
+                    this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                    this.addColoredIndex(i, this.SELECTED_COLOR);
+                    //this.selectedIndicies = new int[]{i};
                     stage = 0;
                 }
                 break;

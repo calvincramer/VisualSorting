@@ -30,19 +30,28 @@ public class InsertionSort
                     this.numArrayAccesses += 2;
                     if (array[j-1] > array[j]) {
                         swap(j, j-1);
-                        this.lastSwappedIndicies = new int[] {j, j-1};
+                        this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
+                        this.addColoredIndex(j, this.SWAP_COLOR_1);
+                        this.addColoredIndex(j-1, this.SWAP_COLOR_1);
+                        //this.lastSwappedIndicies = new int[] {j, j-1};
                         j--;
-                        this.selectedIndicies = new int[]{j+1};
+                        this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                        this.addColoredIndex(j+1, this.SELECTED_COLOR);
+                        //this.selectedIndicies = new int[]{j+1};
                     }
                     else {
                         i++;
-                        this.selectedIndicies = new int[]{i};
+                        this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                        this.addColoredIndex(i, this.SELECTED_COLOR);
+                        //this.selectedIndicies = new int[]{i};
                         stage = 0;
                     }
                 }
                 else {
                     i++;
-                    this.selectedIndicies = new int[]{i};
+                    this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                    this.addColoredIndex(i, this.SELECTED_COLOR);
+                    //this.selectedIndicies = new int[]{i};
                     stage = 0;
                 }
                 break;

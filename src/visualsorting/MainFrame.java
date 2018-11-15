@@ -29,9 +29,7 @@ public class MainFrame extends JFrame{
     private Image offScreenImage;
     
     private static final Color BACKGROUND_COLOR = new Color(20,20,20);
-    private static final Color NUMBER_COLOR = new Color(0, 120, 255);
-    private static final Color SELECTED_NUMBER_COLOR = new Color(0, 255, 180);
-    private static final Color SWAPPED_NUMBER_COLOR = new Color(255,0,255);
+
     private static final double NUMBER_PADDING = 0.8;
     private static final Insets GRAPH_INSETS = new Insets(15,15,15,15);
     
@@ -122,20 +120,14 @@ public class MainFrame extends JFrame{
         double columnWidth = (graphWidth * 1.0 / array.length ) - NUMBER_PADDING;        
         double x = GRAPH_INSETS.left + this.getInsets().left;
         double y = this.getHeight() - this.getInsets().bottom - GRAPH_INSETS.bottom;
-          
+        
         //drawing the array
         Rectangle2D.Double tempRect = new Rectangle2D.Double();
         for (int i = 0; i < array.length; i++) {
+            //set color
+            offScreen.setColor(sorter.getColorAt(i));
+            
             int height = (int) ( (array[i] * 1.0 / highestNum) * graphHeight ) ;
-            
-            if (contains(i, sorter.getSelectedIndicies()))
-                offScreen.setColor(SELECTED_NUMBER_COLOR);
-            else if (sorter.getLastPairSwappedIncedies() != null && (sorter.getLastPairSwappedIncedies()[0] == i || sorter.getLastPairSwappedIncedies()[1] == i) )
-                offScreen.setColor(SWAPPED_NUMBER_COLOR);
-            else
-                offScreen.setColor(NUMBER_COLOR);
-            
-            //offScreen.fillRect(x, y - height, (int) columnWidth, height);
             tempRect.setRect(x, y - height, columnWidth, height);
             offScreen.fill(tempRect);
             
