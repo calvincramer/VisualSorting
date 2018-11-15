@@ -13,7 +13,7 @@ import java.util.TimerTask;
 public class VisualSorting {
     
     //number of elements in array
-    private static final int NUM_ELEMENTS = 64;
+    private static final int NUM_ELEMENTS = 32;
     //number of sound files in the specifies sound pack
     private static int NUM_SOUND_FILES = 0;
     
@@ -61,7 +61,7 @@ public class VisualSorting {
         
         //sorter to be used
         //TODO: better way to specify this?, read at runtime?
-        this.sorter = new CombSort(array);
+        this.sorter = new InsertionSort(array);
         
         //make window
         window = new MainFrame(sorter);
