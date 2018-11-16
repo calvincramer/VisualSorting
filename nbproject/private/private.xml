@@ -2,6 +2,16 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/CombSort.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/HeapSort.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/InsertionSort.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/SelectionSort.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/QuickSort.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/ShellSort.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/SteppableSorter.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/VisualSorting.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/BubbleSort.java</file>
+        </group>
     </open-files>
 </project-private>

@@ -13,15 +13,19 @@ import java.util.TimerTask;
 public class VisualSorting {
     
     //number of elements in array
-    private static final int NUM_ELEMENTS = 200;
+    private static final int NUM_ELEMENTS = 32;
     //number of sound files in the specifies sound pack
     private static int NUM_SOUND_FILES = 0;
     
     //clock speed tick in ms
-    protected static final int CLOCK_SPEED = 0;
+    //0 = as fast as possible
+    protected static final int CLOCK_SPEED = 10;
     
     //delay from when window opens and when sorting starts, in ms
     private static final int START_DELAY = 1000;
+    
+    //sorting algorithm to use
+    protected final Class<?> sorterClass = MergeSort.class;
     
     private boolean doingEndCheck;
     
@@ -29,19 +33,19 @@ public class VisualSorting {
     private TimerTask timerTask;
     
     private MainFrame window;
-    private SteppableSorter sorter;
+    private SteppableSorter sorter = null;
     
     private int[] copyArr;
     
     private String soundPack = "piano";
     
-    protected static long startTime;
-    protected static long currentTime;
+    protected static long startTime = -1;
+    //protected static long currentTime = -1;
     
     /**
      * Creates the window to show the visual sorting algorithm
      */
-    public VisualSorting() {
+    public VisualSorting() {        
         this.init();
         
         //array of numbers to work on
@@ -59,8 +63,18 @@ public class VisualSorting {
             this.copyArr[i] = array[i];
         
         //sorter to be used
-        //TODO: better way to specify this?, read at runtime?
-        this.sorter = new InsertionSort(array);
+        try {
+            this.sorter = (SteppableSorter) sorterClass.newInstance();
+        } catch (InstantiationException ex) {
+            ex.printStackTrace();
+        } catch (IllegalAccessException ex) {
+            ex.printStackTrace();
+        }
+        if (sorter == null) {
+            System.out.println("SORTER WAS NOT CONSTRUCTED");
+            System.exit(1);
+        }
+        sorter.setArray(array);
         
         //make window
         window = new MainFrame(sorter);
@@ -68,7 +82,6 @@ public class VisualSorting {
         window.setVisible(true);
         
         //window update clock
-        //timerTask = new RepeatingTimer(this);
         timerTask = new TimerTask() {
             @Override public void run() {
                 tick();
@@ -85,7 +98,7 @@ public class VisualSorting {
         
         //start timer
         VisualSorting.startTime = System.currentTimeMillis();
-        VisualSorting.currentTime = System.currentTimeMillis();
+        //VisualSorting.currentTime = System.currentTimeMillis();
         if (CLOCK_SPEED == 0) {
             while (tick()) {}
         } else {
@@ -103,9 +116,7 @@ public class VisualSorting {
         this.NUM_SOUND_FILES = f.listFiles().length;
         
         //other init stuff
-        
-        
-        
+
         
         //checks
         if (CLOCK_SPEED < 0) {
@@ -122,33 +133,36 @@ public class VisualSorting {
         
         if (sorter.isFinished() && !doingEndCheck) {
             this.doingEndCheck = true;
-            sorter.setSelectedIndicies(new int[]{0});
-            sorter.setLastPairSwappedIncedies(null);
+            sorter.clearColoredIndices();
+            sorter.addColoredIndex(0, sorter.SELECTED_COLOR);
+            //sorter.setSelectedIndicies(new int[]{0});
+            //sorter.setLastPairSwappedIncedies(null);
+            window.repaint();
+            return true;
         }
 
         if (doingEndCheck) {    //sweep from left to right
-            window.repaint();
-            sorter.setSelectedIndicies(new int[]{sorter.getSelectedIndicies()[0] + 1});
-            
-            if (sorter.getSelectedIndicies()[0] >= sorter.getArray().length) {
+            int nextIndex = sorter.getColoredIndices().get(0).getKey() + 1;
+            sorter.clearColoredIndices();
+            if (nextIndex >= sorter.getArray().length) {
+                window.repaint();   //or else the last selected index on the right will still be selected
                 endProcedure();
                 return false;
             }
+            sorter.addColoredIndex(nextIndex, sorter.SELECTED_COLOR);
+            window.repaint();
         }
         else {  //still doing sorting
-            VisualSorting.currentTime = System.currentTimeMillis();
+            //VisualSorting.currentTime = System.currentTimeMillis();
             sorter.step();
             //only need to repaint it
             window.repaint();
         }
         
         //play sound
-        //only playing the sound of the first selected index
-        if (sorter.getSelectedIndicies() != null
-                && sorter.getSelectedIndicies()[0] >= 0 
-                && sorter.getSelectedIndicies()[0] < sorter.getArray().length) {
-            
-            int numberMappedToSoundScale = (int) (sorter.getArray()[sorter.getSelectedIndicies()[0]] * 1.0 * VisualSorting.NUM_SOUND_FILES / sorter.getMax());
+        if (sorter.indexToPlaySound() >= 0 && sorter.indexToPlaySound() < sorter.getArray().length) {
+            int numberMappedToSoundScale = 
+                    (int) (sorter.getArray()[sorter.indexToPlaySound()] * 1.0 * VisualSorting.NUM_SOUND_FILES / sorter.getMax());
             this.playSound(1, NUM_SOUND_FILES, numberMappedToSoundScale);
         }
         return true;
@@ -158,7 +172,9 @@ public class VisualSorting {
      * When the sorter ends
      */
     public void endProcedure() {
-        sorter.setSelectedIndicies(new int[]{-1});
+        //clear colors
+        
+        //sorter.setSelectedIndicies(new int[]{-1});
         timer.cancel();
         
         //check if the array was sorted properly
