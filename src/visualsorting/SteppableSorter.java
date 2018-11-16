@@ -34,13 +34,13 @@ public abstract class SteppableSorter {
     /**
      * Step once in the algorithm
      */
-    abstract void step();
+    protected abstract void step();
     
     /**
      * Returns the name of the sorter
      * @return 
      */
-    abstract String getSorterName();
+    protected abstract String getSorterName();
     
     /**
      * Gets the array

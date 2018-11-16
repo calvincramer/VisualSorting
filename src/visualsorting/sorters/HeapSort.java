@@ -1,4 +1,6 @@
-package visualsorting;
+package visualsorting.sorters;
+
+import visualsorting.SteppableSorter;
 
 /**
  * Credit to Wikipedia for the algorithm:
@@ -66,12 +68,12 @@ public class HeapSort
     }
 
     @Override
-    void step() {
+    protected void step() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    String getSorterName() {
+    protected String getSorterName() {
         return "HeapSort";
     }
     

@@ -1,10 +1,12 @@
 package visualsorting;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import visualsorting.sorters.*;
 
 /**
  * Main class to show sorting algorithms visualized
@@ -12,35 +14,41 @@ import java.util.TimerTask;
  */
 public class VisualSorting {
     
+    
+    //sorting algorithm to use
+    private Class<?> SORTER_CLASS = DEFAULT_SORTER_CLASS;
+    
     //number of elements in array
-    private static final int NUM_ELEMENTS = 32;
+    private int NUM_ELEMENTS = DEFAULT_NUM_ELEMENTS;
+    
+    //the sound pack to be used (specifies the folder name)
+    private String SOUND_PACK = DEFAULT_SOUND_PACK;
     //number of sound files in the specifies sound pack
-    private static int NUM_SOUND_FILES = 0;
+    private int NUM_SOUND_FILES = 0;
     
     //clock speed tick in ms
     //0 = as fast as possible
-    protected static final int CLOCK_SPEED = 10;
+    protected int CLOCK_SPEED = DEFAULT_CLOCK_SPEED;
     
     //delay from when window opens and when sorting starts, in ms
-    private static final int START_DELAY = 1000;
+    private int START_DELAY = DEFAULT_START_DELAY; 
     
-    //sorting algorithm to use
-    protected final Class<?> sorterClass = MergeSort.class;
     
+    //default options
+    private static final Class<?> DEFAULT_SORTER_CLASS = InsertionSort.class;
+    private static final int      DEFAULT_NUM_ELEMENTS = 64;
+    private static final String   DEFAULT_SOUND_PACK   = "pure";
+    private static final int      DEFAULT_CLOCK_SPEED  = 50;
+    private static final int      DEFAULT_START_DELAY  = 2000;
+    
+    //other members
     private boolean doingEndCheck;
-    
     private Timer timer;
     private TimerTask timerTask;
-    
     private MainFrame window;
     private SteppableSorter sorter = null;
-    
     private int[] copyArr;
-    
-    private String soundPack = "piano";
-    
-    protected static long startTime = -1;
-    //protected static long currentTime = -1;
+    protected long startTime = -1;
     
     /**
      * Creates the window to show the visual sorting algorithm
@@ -64,7 +72,7 @@ public class VisualSorting {
         
         //sorter to be used
         try {
-            this.sorter = (SteppableSorter) sorterClass.newInstance();
+            this.sorter = (SteppableSorter) SORTER_CLASS.newInstance();
         } catch (InstantiationException ex) {
             ex.printStackTrace();
         } catch (IllegalAccessException ex) {
@@ -77,7 +85,7 @@ public class VisualSorting {
         sorter.setArray(array);
         
         //make window
-        window = new MainFrame(sorter);
+        window = new MainFrame(sorter, this);
         window.setSorter(sorter);
         window.setVisible(true);
         
@@ -97,7 +105,7 @@ public class VisualSorting {
         }
         
         //start timer
-        VisualSorting.startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         //VisualSorting.currentTime = System.currentTimeMillis();
         if (CLOCK_SPEED == 0) {
             while (tick()) {}
@@ -112,10 +120,61 @@ public class VisualSorting {
     private void init() {
         //find number of sound files in the selected soundPack
         //File f = new File("/" + this.soundPack + "/");
-        File f = new File(VisualSorting.class.getResource("/soundpacks/" + this.soundPack).getFile());
-        this.NUM_SOUND_FILES = f.listFiles().length;
+        File soundPackFolder = new File(VisualSorting.class.getResource("/soundpacks/" + this.SOUND_PACK).getFile());
+        this.NUM_SOUND_FILES = soundPackFolder.listFiles().length;
         
-        //other init stuff
+        //parse options file
+        URL optionsFileURL = VisualSorting.class.getResource("/options.txt");
+        if (optionsFileURL != null) {
+            File optionsFile = new File(optionsFileURL.getFile());
+            String[] options = Util.readFile(optionsFile);
+            for (String optionLine : options) {
+                //System.out.println(s);
+                String[] optionNameValue = optionLine.split("=");
+                if (optionNameValue.length != 2)
+                    continue;
+                String option = optionNameValue[0];
+                String optionValue = optionNameValue[1];
+                try {
+                    switch (option) {
+                        case "sorter": {
+                            this.SORTER_CLASS = Class.forName("visualsorting.sorters." + optionValue);
+                            break;
+                        }
+                        case "numElements": {
+                            this.NUM_ELEMENTS = Integer.parseInt(optionValue);
+                            break;
+                        }
+                        case "soundPack": {
+                            this.SOUND_PACK = optionValue;
+                            break;
+                        }
+                        case "clockSpeed": {
+                            this.CLOCK_SPEED = Integer.parseInt(optionValue);
+                            break;
+                        }
+                        case "startDelay": {
+                            this.START_DELAY = Integer.parseInt(optionValue);
+                            break;
+                        }
+                    }
+                } catch (ClassNotFoundException e) {
+                    System.out.println("COULD NOT FIND THE SORTER WITH NAME: " + optionValue);
+                    System.out.println("FOR THE OPTION LINE: " + optionLine);
+                    e.printStackTrace();
+                    System.exit(1);
+                } catch (NumberFormatException e) {
+                    System.out.println("THE OPTION VALUE: " + optionValue);
+                    System.out.println("IN: " + optionLine + " SHOULD BE AN INTEGER");
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+            }
+        } else {
+            System.out.println("Options file could not be found, using default options.");
+        }
+        
+        //other init stuff ...
 
         
         //checks
@@ -128,13 +187,17 @@ public class VisualSorting {
     /**
      * Clock tick to update window and step the algorithm
      * @return returns whether the process is complete (false) or is still running (true)
+     */    
+    /**
+     * Clock tick to update window and step the algorithm
+     * @return returns whether the process is complete (false) or is still running (true)
      */
     public boolean tick() {
         
         if (sorter.isFinished() && !doingEndCheck) {
             this.doingEndCheck = true;
             sorter.clearColoredIndices();
-            sorter.addColoredIndex(0, sorter.SELECTED_COLOR);
+            sorter.addColoredIndex(0, sorter.SELECTED_COLOR, true);
             //sorter.setSelectedIndicies(new int[]{0});
             //sorter.setLastPairSwappedIncedies(null);
             window.repaint();
@@ -149,7 +212,7 @@ public class VisualSorting {
                 endProcedure();
                 return false;
             }
-            sorter.addColoredIndex(nextIndex, sorter.SELECTED_COLOR);
+            sorter.addColoredIndex(nextIndex, sorter.SELECTED_COLOR, true);
             window.repaint();
         }
         else {  //still doing sorting
@@ -162,7 +225,7 @@ public class VisualSorting {
         //play sound
         if (sorter.indexToPlaySound() >= 0 && sorter.indexToPlaySound() < sorter.getArray().length) {
             int numberMappedToSoundScale = 
-                    (int) (sorter.getArray()[sorter.indexToPlaySound()] * 1.0 * VisualSorting.NUM_SOUND_FILES / sorter.getMax());
+                    (int) (sorter.getArray()[sorter.indexToPlaySound()] * 1.0 * NUM_SOUND_FILES / sorter.getMax());
             this.playSound(1, NUM_SOUND_FILES, numberMappedToSoundScale);
         }
         return true;
@@ -178,12 +241,12 @@ public class VisualSorting {
         timer.cancel();
         
         //check if the array was sorted properly
-        System.out.println("Original array: " + toStringArr(this.copyArr));
-        System.out.println("Sorted array: " + toStringArr(sorter.array));
+        System.out.println("Original array: " + Util.toStringArr(this.copyArr));
+        System.out.println("Sorted array: " + Util.toStringArr(sorter.array));
         
         Arrays.sort(this.copyArr);
         
-        System.out.println("Array.sort() original: " + toStringArr(this.copyArr));
+        System.out.println("Array.sort() original: " + Util.toStringArr(this.copyArr));
 
         int numErrors = 0;
         if (this.copyArr.length != sorter.array.length) {
@@ -211,7 +274,7 @@ public class VisualSorting {
      * @param num 
      */
     private void playSound(int low, int high, int num) {
-        MakeSound.playSound(this.soundPack, getNoteNumber(low, high, num) + ".wav");
+        Util.playSound(this.SOUND_PACK, getNoteNumber(low, high, num) + ".wav");
     }
     
     /**
@@ -248,7 +311,7 @@ public class VisualSorting {
      * @return the note number, inclusively between low and high
      * TODO: REPLACE MAGIC NUMBER 60 WITH ACTUAL NUMBER OF NOTE FILES IN THE SELECTED SOUND FOLDER
      */
-    private static int getNoteNumber(int low, int high, int num) {
+    private int getNoteNumber(int low, int high, int num) {
         //between 0 and 60 (A1 to A7)
         double n = num * 1.0 / (high - low);
         double note = n * NUM_SOUND_FILES;
@@ -259,11 +322,7 @@ public class VisualSorting {
         return noteNumber;
     }
     
-    private static String toStringArr(int[] a) {
-        String s = "";
-        for (int n : a) {
-            s += n + " ";
-        }
-        return s;
-    }
+
+    
+    
 }

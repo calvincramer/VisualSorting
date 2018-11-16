@@ -70,4 +70,7 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="-pre-jar">
+        <copy file="options.txt" todir="${build.dir}/classes/" />
+    </target>
 </project>

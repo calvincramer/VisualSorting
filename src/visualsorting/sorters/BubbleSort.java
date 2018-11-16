@@ -1,4 +1,6 @@
-package visualsorting;
+package visualsorting.sorters;
+
+import visualsorting.SteppableSorter;
 
 /**
  * A steppable bubble sort algorithm
@@ -33,7 +35,7 @@ public class BubbleSort
     }
 
     @Override
-    public void step() {
+    protected void step() {
         if (done) return;
         
         this.numComparisons++;
@@ -60,12 +62,12 @@ public class BubbleSort
             }
         }
         this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
-        this.addColoredIndex(i, this.SELECTED_COLOR);
+        this.addColoredIndex(i, this.SELECTED_COLOR, true);
         //this.selectedIndicies = new int[]{i};
     }
     
     @Override
-    String getSorterName() {
+    protected String getSorterName() {
         return "Bubble Sort";
     }
     

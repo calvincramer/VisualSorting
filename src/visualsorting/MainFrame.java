@@ -23,6 +23,7 @@ public class MainFrame extends JFrame{
     private static final Font MONO = new Font("Courier New", Font.PLAIN, 16);
     
     private SteppableSorter sorter;
+    private VisualSorting vs;
 
     private int highestNum;
     private Graphics2D offScreen;
@@ -33,9 +34,10 @@ public class MainFrame extends JFrame{
     private static final double NUMBER_PADDING = 0.8;
     private static final Insets GRAPH_INSETS = new Insets(15,15,15,15);
     
-    public MainFrame(SteppableSorter sorter) {
+    public MainFrame(SteppableSorter sorter, VisualSorting vs) {
         this.init(sorter.getSorterName());
         this.setSorter(sorter);
+        this.vs = vs;
     }
     
     /**
@@ -160,29 +162,17 @@ public class MainFrame extends JFrame{
         y += textHeight;
         offScreen.drawString("Array Accesses: " + sorter.numArrayAccesses, (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Clock Speed: " + VisualSorting.CLOCK_SPEED + "ms", (int) x, (int) y);
+        offScreen.drawString("Clock Speed: " + vs.CLOCK_SPEED + "ms", (int) x, (int) y);
         y += textHeight;
-        if (VisualSorting.startTime == -1)
+        if (vs.startTime == -1)
             offScreen.drawString("Time Elapsed: 0", (int) x, (int) y);
         else
-            offScreen.drawString("Time Elapsed: " + commifyString("" + (System.currentTimeMillis() - VisualSorting.startTime)) + "ms", (int) x, (int) y);
+            offScreen.drawString("Time Elapsed: " + Util.commifyString("" + (System.currentTimeMillis() - vs.startTime)) + "ms", (int) x, (int) y);
         
         g.drawImage(offScreenImage, 0, 0, null);
     }
     
-    /**
-     * Places commas in a string according to where they would be in an integer number
-     * @param numStr
-     * @return 
-     */
-    public String commifyString(String numStr) {
-        int i = numStr.length() - 3;
-        while (i >= 1) {
-            numStr = numStr.substring(0, i) + "," + numStr.substring(i);
-            i -= 3;
-        }
-        return numStr;
-    }
+    
     
     /**
      * Sets the sorter, which is the algorithm that sorts the array.
@@ -199,21 +189,5 @@ public class MainFrame extends JFrame{
                 highestNum = array[i];
         }
         
-    }
-    
-    /**
-     * Determines if the array contains the number i
-     * @param i
-     * @param arr
-     * @return 
-     */
-    private boolean contains(int i, int[] arr) {
-        if (arr == null)
-            return false;
-        for (int n : arr) {
-            if (i == n)
-                return true;
-        }
-        return false;
     }
 }

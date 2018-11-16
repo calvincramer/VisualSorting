@@ -1,4 +1,4 @@
-package visualsorting;
+package visualsorting.sorters;
 
 public class QuickSort {
 

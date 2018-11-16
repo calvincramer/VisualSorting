@@ -1,4 +1,7 @@
-package visualsorting;
+package visualsorting.sorters;
+
+import visualsorting.SteppableSorter;
+import visualsorting.VisualSorting;
 
 public class InsertionSort 
     extends SteppableSorter {
@@ -13,7 +16,7 @@ public class InsertionSort
     }
     
     @Override
-    void step() {
+    protected void step() {
         if (done) return;
         
         switch (stage) {
@@ -34,13 +37,13 @@ public class InsertionSort
                         //this.lastSwappedIndicies = new int[] {j, j-1};
                         j--;
                         this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
-                        this.addColoredIndex(j+1, this.SELECTED_COLOR);
+                        this.addColoredIndex(j+1, this.SELECTED_COLOR, true);
                         //this.selectedIndicies = new int[]{j+1};
                     }
                     else {
                         i++;
                         this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
-                        this.addColoredIndex(i, this.SELECTED_COLOR);
+                        this.addColoredIndex(i, this.SELECTED_COLOR, true);
                         //this.selectedIndicies = new int[]{i};
                         stage = 0;
                     }
@@ -48,7 +51,7 @@ public class InsertionSort
                 else {
                     i++;
                     this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
-                    this.addColoredIndex(i, this.SELECTED_COLOR);
+                    this.addColoredIndex(i, this.SELECTED_COLOR, true);
                     //this.selectedIndicies = new int[]{i};
                     stage = 0;
                 }
@@ -57,7 +60,7 @@ public class InsertionSort
     }
 
     @Override
-    String getSorterName() {
+    protected String getSorterName() {
         return "InsertionSort";
     }
     

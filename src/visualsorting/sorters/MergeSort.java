@@ -1,7 +1,8 @@
-package visualsorting;
+package visualsorting.sorters;
 
 import java.util.List;
 import java.util.ArrayList;
+import visualsorting.SteppableSorter;
 
 /**
  * Credit https://en.wikipedia.org/wiki/Merge_sort#Top-down_implementation
@@ -49,7 +50,7 @@ public class MergeSort
     }
     
     @Override
-    void step() {
+    protected void step() {
         switch (state) {
             case 0:
                 if (!this.intervals.isEmpty() || this.intervals == null) {
@@ -91,7 +92,7 @@ public class MergeSort
                         j++;
                     }
                     this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
-                    this.addColoredIndex(k, this.SWAP_COLOR_1);
+                    this.addColoredIndex(k, this.SELECTED_COLOR, true);
                     //this.selectedIndicies = new int[]{k};
                     k++;
                 }
@@ -113,7 +114,7 @@ public class MergeSort
     }
 
     @Override
-    String getSorterName() {
+    protected String getSorterName() {
         return "MergeSort";
     }
     
