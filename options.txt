@@ -4,7 +4,7 @@ SEE scr/visualsorting/sorters/ FOR A LIST OF SORTERS YOU CAN USE FOR THE 'sorter
 ########################################################################################
 sorter=CombSort
 numElements=128
-soundPack=pure
+soundPack=piano
 clockSpeed=10
 startDelay=1000
 ########################################################################################

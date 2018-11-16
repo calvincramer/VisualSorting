@@ -118,11 +118,6 @@ public class VisualSorting {
      * Read all options from file
      */
     private void init() {
-        //find number of sound files in the selected soundPack
-        //File f = new File("/" + this.soundPack + "/");
-        File soundPackFolder = new File(VisualSorting.class.getResource("/soundpacks/" + this.SOUND_PACK).getFile());
-        this.NUM_SOUND_FILES = soundPackFolder.listFiles().length;
-        
         //parse options file
         URL optionsFileURL = VisualSorting.class.getResource("/options.txt");
         if (optionsFileURL != null) {
@@ -172,6 +167,16 @@ public class VisualSorting {
             }
         } else {
             System.out.println("Options file could not be found, using default options.");
+        }
+        
+        //find number of sound files in the selected soundPack
+        URL soundPackURL = VisualSorting.class.getResource("/soundpacks/" + this.SOUND_PACK);
+        if (soundPackURL != null) {
+            File soundPackFolder = new File(soundPackURL.getFile());
+            this.NUM_SOUND_FILES = soundPackFolder.listFiles().length;
+        } else {
+            System.out.println("COULD NOT FIND THE SOUNDPACKS FROM THE JAR");
+            System.out.println("or more specifically, /soundpacks/" + this.SOUND_PACK);
         }
         
         //other init stuff ...
