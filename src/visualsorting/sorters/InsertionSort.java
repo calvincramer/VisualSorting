@@ -7,9 +7,7 @@ public class InsertionSort
     private int i;
     private int j;
     
-    public InsertionSort(int[] array) {
-        super(array);
-        
+    public InsertionSort() {
         i = 1;
         j = i;
     }

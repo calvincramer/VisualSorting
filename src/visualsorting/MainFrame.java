@@ -135,12 +135,14 @@ public class MainFrame extends JFrame{
         }
         
         //testing liens
+        /*
         offScreen.setColor(Color.PINK);
         offScreen.drawLine(0, 0, 100000, 100000);
         offScreen.drawLine(0, this.getHeight(), this.getHeight(), 0);
         offScreen.setColor(Color.MAGENTA);
         offScreen.drawLine(this.getWidth(), 0, this.getWidth() - this.getHeight(), this.getHeight());
         offScreen.drawLine(this.getWidth(), this.getHeight(), this.getWidth() - this.getHeight(), 0);
+        */
         
         //draw text for info
         y = 50;
@@ -160,7 +162,10 @@ public class MainFrame extends JFrame{
         y += textHeight;
         offScreen.drawString("Clock Speed: " + VisualSorting.CLOCK_SPEED + "ms", (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Time Elapsed: " + commifyString("" + (System.currentTimeMillis() - VisualSorting.startTime)) + "ms", (int) x, (int) y);
+        if (VisualSorting.startTime == -1)
+            offScreen.drawString("Time Elapsed: 0", (int) x, (int) y);
+        else
+            offScreen.drawString("Time Elapsed: " + commifyString("" + (System.currentTimeMillis() - VisualSorting.startTime)) + "ms", (int) x, (int) y);
         
         g.drawImage(offScreenImage, 0, 0, null);
     }

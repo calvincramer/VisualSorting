@@ -10,14 +10,18 @@ public class CombSort
     
     private int stage;
     
-    public CombSort(int[] arr) {
-        super(arr);
-        
-        this.gap = arr.length;
+    public CombSort() {
+        //this.gap = arr.length;
         this.shrink = 1.3;
         this.sorted = false;
         this.i = 0;
         this.stage = 0;
+    }
+    
+    @Override 
+    public void setArray(int[] arr) {
+        super.setArray(arr);
+        this.gap = arr.length;
     }
     
     @Override

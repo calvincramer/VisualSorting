@@ -13,13 +13,6 @@ public class HeapSort
 
     private int stage;
     
-    
-    public HeapSort(int[] arr) {
-        super(arr);
-        
-        
-    }
-    
     public int iParent(int i) {
         return (int) ((i-1) / 2);
     }
@@ -87,7 +80,8 @@ public class HeapSort
         int[] arr = {1,5,3,7,5,9,56,3,9,7,4,2,9,6,3,89,6};
         SteppableSorter.printArray(arr);
         
-        HeapSort hs = new HeapSort(arr);
+        HeapSort hs = new HeapSort();
+        hs.setArray(arr);
         hs.heapSort(arr);
 
         SteppableSorter.printArray(arr);

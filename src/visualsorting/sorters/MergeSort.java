@@ -19,8 +19,10 @@ public class MergeSort
     private int j;
     private int k;
     
-    public MergeSort(int[] arr) {
-        super(arr);
+    @Override
+    public void setArray(int[] arr) {
+        super.setArray(arr);
+        
         this.state = 0;
         this.copyArr = new int[arr.length];
         for (int i = 0; i < arr.length; i++)
@@ -33,7 +35,6 @@ public class MergeSort
         //    System.out.println(p);
         
         this.state = 0;
-        
     }
     
     private void addIntervals(List<Pair> collect, int left, int right) {
@@ -140,7 +141,8 @@ public class MergeSort
     
     public static void main(String[] args) {
         int[] arr = new int[]{8,7,6,5,4,3,2,1};
-        MergeSort ms = new MergeSort(arr);
+        MergeSort ms = new MergeSort();
+        ms.setArray(arr);
         
         while (!ms.isFinished()) {
             printArr(ms.array);

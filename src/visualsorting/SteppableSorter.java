@@ -18,7 +18,7 @@ public abstract class SteppableSorter {
 
     //public int[] lastSwappedIndicies;
     //public int[] selectedIndicies;
-    private List<Pair<Integer, Color>> coloredIndicies;
+    private List<Pair<Integer, List<Color>>> coloredIndicies;
     private int indexToPlaySound;
     
     public boolean done;
@@ -30,25 +30,7 @@ public abstract class SteppableSorter {
     public final Color SWAP_COLOR_1     = new Color(255, 0  , 255);
     public final Color SWAP_COLOR_2     = new Color(183, 74 , 247);
     public final Color DEFAULT_COLOR    = new Color(0  , 120, 255);
-    
-    public SteppableSorter(int[] array) {
-        this.array = array;
-        //this.lastSwappedIndicies = null;
-        //this.selectedIndicies = null;
-        this.coloredIndicies = new ArrayList<>();
-        this.indexToPlaySound = -1;
-        this.done = false;
-        this.numComparisons = 0;
-        this.numSwaps = 0;
-        this.numArrayAccesses = 0;
-        
-        //end goal
-        this.sortedFinalArray = new int[array.length];
-        for (int i = 0; i < array.length; i++)
-            this.sortedFinalArray[i] = array[i];
-        Arrays.sort(sortedFinalArray);
-    }
-    
+
     /**
      * Step once in the algorithm
      */
@@ -69,6 +51,28 @@ public abstract class SteppableSorter {
     }
     
     /**
+     * Sets the array
+     * @param arr 
+     */
+    public void setArray(int[] arr) {
+        this.array = arr;
+        //this.lastSwappedIndicies = null;
+        //this.selectedIndicies = null;
+        this.coloredIndicies = new ArrayList<>();
+        this.indexToPlaySound = -1;
+        this.done = false;
+        this.numComparisons = 0;
+        this.numSwaps = 0;
+        this.numArrayAccesses = 0;
+        
+        //end goal
+        this.sortedFinalArray = new int[array.length];
+        for (int i = 0; i < array.length; i++)
+            this.sortedFinalArray[i] = array[i];
+        Arrays.sort(sortedFinalArray);
+    }
+    
+    /**
      * Adds a color to a specific index
      * If a color is already present at that index, it is replaced with the average of the two colors
      * @param i
@@ -77,23 +81,26 @@ public abstract class SteppableSorter {
      */
     public void addColoredIndex(int i, Color c, boolean playSoundHere) {
         if (i < 0 || i >= this.array.length) {
-            System.err.println("CANT COLOR THE INDEX, IT IS OUT OF RANGE");
+            //System.err.println("CANT COLOR THE INDEX, IT IS OUT OF RANGE");
             return;
         }
         //search if already present in list
         for (int k = 0; k < this.coloredIndicies.size(); k++) {
             if (this.coloredIndicies.get(k).getKey().equals(i)) {
-                Color oldColor = this.coloredIndicies.get(k).getValue();
-                Color newColor = new Color(
-                        (oldColor.getRed() + c.getRed()) / 2, 
-                        (oldColor.getGreen() + c.getGreen()) / 2, 
-                        (oldColor.getBlue() + c.getBlue()) / 2);
-                this.coloredIndicies.set(k, new Pair<Integer, Color>(this.coloredIndicies.get(k).getKey(), newColor));
+                //Color oldColor = this.getColorAt(i);
+                //Color newColor = new Color(
+                //        (oldColor.getRed() + c.getRed()) / 2, 
+                //        (oldColor.getGreen() + c.getGreen()) / 2, 
+                //        (oldColor.getBlue() + c.getBlue()) / 2);
+                //this.coloredIndicies.set(k, new Pair<Integer, Color>(this.coloredIndicies.get(k).getKey(), newColor));
+                this.coloredIndicies.get(k).getValue().add(c);
                 return;      //since we only allow adding of coloredIndicies thru this method, there will be at most 1 match
             }
         }
-        
-        this.coloredIndicies.add(new Pair<Integer, Color>(i, c));
+        //start new list for this index
+        List<Color> temp = new ArrayList<Color>();
+        temp.add(c);
+        this.coloredIndicies.add(new Pair<Integer, List<Color>>(i, temp));
         
         if (playSoundHere)
             this.indexToPlaySound = i;
@@ -122,22 +129,66 @@ public abstract class SteppableSorter {
      */
     public void removeAllColoredIndiciesOf(Color c) {
         for (int i = 0; i < this.coloredIndicies.size(); i++) {
-            if (this.coloredIndicies.get(i).getValue().equals(c)) {
-                this.coloredIndicies.remove(i);
+            if (this.coloredIndicies.get(i).getValue().contains(c)) {
+                this.coloredIndicies.get(i).getValue().remove(c);
+                //remove list if it's empty
+                if (this.coloredIndicies.get(i).getValue().size() == 0)
+                    this.coloredIndicies.remove(i);
                 i--;
             }
         }
     }
     
     /**
+     * Returns the list of desired colors at the index i
+     * If no desired color is set for the index then the default color is returned
+     * @param i
+     * @return 
+     */
+    public List<Color> getColorsAt(int i) {
+        for (Pair<Integer, List<Color>> p : this.coloredIndicies)
+            if (p.getKey() == i)
+                return p.getValue();
+        List<Color> temp = new ArrayList<>();
+        temp.add(this.DEFAULT_COLOR);
+        return temp;
+    }
+    
+    /**
      * Returns the desired color at the index i
+     * If the list of colors for this index is larger than 1 then the average color is returned
+     * If no desired color is set for the index then the default color is returned
      * @param i 
      */
     public Color getColorAt(int i) {
-        for (Pair<Integer, Color> p : this.coloredIndicies)
+        for (Pair<Integer, List<Color>> p : this.coloredIndicies)
             if (p.getKey() == i)
-                return p.getValue();
+                return getAverageColor(p.getValue());
         return this.DEFAULT_COLOR;
+    }
+    
+    /**
+     * Returns the average color from the list
+     * If the list is null or empty, null is returned
+     * @param colors
+     * @return 
+     */
+    public Color getAverageColor(List<Color> colors) {
+        if (colors == null || colors.size() == 0)
+            return null;
+        else if (colors.size() == 1)
+            return colors.get(0);
+        
+        int totalR = 0;
+        int totalG = 0;
+        int totalB = 0;
+        
+        for (Color c : colors) {
+            totalR += c.getRed();
+            totalG += c.getGreen();
+            totalB += c.getBlue();
+        }
+        return new Color(totalR / colors.size(), totalG / colors.size(), totalB / colors.size());
     }
 
     /**
@@ -152,7 +203,7 @@ public abstract class SteppableSorter {
      * Returns all colored indices
      * @return 
      */
-    public List<Pair<Integer, Color>> getColoredIndices() {
+    public List<Pair<Integer, List<Color>>> getColoredIndices() {
         return this.coloredIndicies;
     }
     

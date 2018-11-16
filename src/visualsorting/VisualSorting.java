@@ -24,25 +24,28 @@ public class VisualSorting {
     //delay from when window opens and when sorting starts, in ms
     private static final int START_DELAY = 1000;
     
+    //sorting algorithm to use
+    protected final Class<?> sorterClass = MergeSort.class;
+    
     private boolean doingEndCheck;
     
     private Timer timer;
     private TimerTask timerTask;
     
     private MainFrame window;
-    private SteppableSorter sorter;
+    private SteppableSorter sorter = null;
     
     private int[] copyArr;
     
     private String soundPack = "piano";
     
-    protected static long startTime;
-    protected static long currentTime;
+    protected static long startTime = -1;
+    //protected static long currentTime = -1;
     
     /**
      * Creates the window to show the visual sorting algorithm
      */
-    public VisualSorting() {
+    public VisualSorting() {        
         this.init();
         
         //array of numbers to work on
@@ -60,8 +63,18 @@ public class VisualSorting {
             this.copyArr[i] = array[i];
         
         //sorter to be used
-        //TODO: better way to specify this?, read at runtime?
-        this.sorter = new InsertionSort(array);
+        try {
+            this.sorter = (SteppableSorter) sorterClass.newInstance();
+        } catch (InstantiationException ex) {
+            ex.printStackTrace();
+        } catch (IllegalAccessException ex) {
+            ex.printStackTrace();
+        }
+        if (sorter == null) {
+            System.out.println("SORTER WAS NOT CONSTRUCTED");
+            System.exit(1);
+        }
+        sorter.setArray(array);
         
         //make window
         window = new MainFrame(sorter);
@@ -69,7 +82,6 @@ public class VisualSorting {
         window.setVisible(true);
         
         //window update clock
-        //timerTask = new RepeatingTimer(this);
         timerTask = new TimerTask() {
             @Override public void run() {
                 tick();
@@ -86,7 +98,7 @@ public class VisualSorting {
         
         //start timer
         VisualSorting.startTime = System.currentTimeMillis();
-        VisualSorting.currentTime = System.currentTimeMillis();
+        //VisualSorting.currentTime = System.currentTimeMillis();
         if (CLOCK_SPEED == 0) {
             while (tick()) {}
         } else {
@@ -141,7 +153,7 @@ public class VisualSorting {
             window.repaint();
         }
         else {  //still doing sorting
-            VisualSorting.currentTime = System.currentTimeMillis();
+            //VisualSorting.currentTime = System.currentTimeMillis();
             sorter.step();
             //only need to repaint it
             window.repaint();

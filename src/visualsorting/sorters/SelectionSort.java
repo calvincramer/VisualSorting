@@ -2,10 +2,12 @@ package visualsorting;
 
 public class SelectionSort 
     extends SteppableSorter {
+    
+    private int i;
+    private int j;
+    private int index;
 
-    public SelectionSort(int[] array) {
-        super(array);
-        
+    public SelectionSort() {
         this.i = 0;
         this.j = i + 1;
         this.index = i;
@@ -74,7 +76,8 @@ public class SelectionSort
         int[] array = {7,6,5,4,3,2,1};
         array = VisualSorting.shuffleArray(array);
         
-        SelectionSort ss = new SelectionSort(array);
+        SelectionSort ss = new SelectionSort();
+        ss.setArray(array);
         
         System.out.println("Initial:");
         SteppableSorter.printArray(ss.array);
@@ -86,8 +89,4 @@ public class SelectionSort
         }
         
     }
-    
-    private int i;
-    private int j;
-    private int index;
 }

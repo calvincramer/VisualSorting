@@ -7,8 +7,10 @@ package visualsorting;
 public class BubbleSort 
     extends SteppableSorter {
     
-    public BubbleSort(int[] array) {
-        super(array);
+    @Override
+    public void setArray(int[] array) {
+        super.setArray(array);
+        
         this.m = array.length;
         this.i = 0;
     }
@@ -72,7 +74,8 @@ public class BubbleSort
         for (int i = 1; i <= input.length; i++) {
             input[i - 1] = Math.abs(i - input.length) + 1;
         }
-        BubbleSort bs = new BubbleSort(input);
+        BubbleSort bs = new BubbleSort();
+        bs.setArray(input);
         
         while (!bs.isFinished()) {
             bs.step();
