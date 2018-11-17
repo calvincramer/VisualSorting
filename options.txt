@@ -8,4 +8,19 @@ soundPack=piano
 clockSpeed=40
 startDelay=1000
 numSimulSounds=300
+startArrayNumbers=IMEPLEMENT
+startArrayStructure=IMPLEMENT
+
+### Visual options ###
+gapWidth=IMPLEMENT FLOATING POINT
+defaultColor=IMPLEMENT THREE INT
+backgroundColor=IMPLEMENT THREE INT
+textColor=IMPLEMENT THREE INT
+animated=IMPLEMENT BOOLEAN
+showSwapArrows=IMPLEMENT BOOLEAN
+windowWidth=IMPLEMENT
+windowHeight=IMPLEMENT
+fontFamily=IMPLEMENT
+fontSize=IMEPLEMENT
+graphInsets=IMPLEMENT FOUR INTS
 ########################################################################################
