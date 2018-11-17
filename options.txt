@@ -2,10 +2,10 @@
 OPTIONS CAN BE IN ANY ORDER
 SEE scr/visualsorting/sorters/ FOR A LIST OF SORTERS YOU CAN USE FOR THE 'sorter' OPTION
 ########################################################################################
-sorter=CombSort
-numElements=300
+sorter=MergeSort
+numElements=2000
 soundPack=piano
-clockSpeed=25
+clockSpeed=2
 startDelay=1000
 numSimulSounds=300
 ########################################################################################

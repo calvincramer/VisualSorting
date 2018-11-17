@@ -77,7 +77,7 @@ public class MergeSort
                         array[k] = copyArr[i];
                         this.numArrayAccesses++;
                         this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
-                        this.addColoredIndex(k, this.SWAP_COLOR_1);
+                        this.addColoredIndex(k, this.SWAP_COLOR_1, true);
                         this.addColoredIndex(i, this.SWAP_COLOR_1);
                         //this.lastSwappedIndicies = new int[]{k,i};
                         i++;
@@ -86,7 +86,7 @@ public class MergeSort
                         array[k] = copyArr[j];
                         this.numArrayAccesses++;
                         this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
-                        this.addColoredIndex(k, this.SWAP_COLOR_1);
+                        this.addColoredIndex(k, this.SWAP_COLOR_1, true);
                         this.addColoredIndex(j, this.SWAP_COLOR_1);
                         //this.lastSwappedIndicies = new int[]{k,j};
                         j++;

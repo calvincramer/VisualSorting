@@ -48,7 +48,8 @@ public class VisualSorting {
     //other members
     private boolean doingEndCheck;
     private Timer timer;
-    private TimerTask timerTask;
+    private TimerTask updateSortingStepperTask;
+    private TimerTask windowRepaintTask;
     private MainFrame window;
     private Player player;
     private SteppableSorter sorter = null;
@@ -90,14 +91,20 @@ public class VisualSorting {
         sorter.setArray(array);
         
         //make window
-        window = new MainFrame(sorter, this);
-        window.setSorter(sorter);
-        window.setVisible(true);
+        this.window = new MainFrame(sorter, this);
+        this.window.setSorter(sorter);
+        this.window.setVisible(true);
         
-        //window update clock
-        timerTask = new TimerTask() {
+        //timer tasks
+        this.updateSortingStepperTask = new TimerTask() {
             @Override public void run() {
-                tick();
+                sortTick();
+            }
+        };
+        this.windowRepaintTask = new TimerTask() {
+            @Override
+            public void run() {
+                windowRepaintTick();
             }
         };
         timer = new Timer(true);
@@ -113,9 +120,10 @@ public class VisualSorting {
         startTime = System.currentTimeMillis();
         //VisualSorting.currentTime = System.currentTimeMillis();
         if (CLOCK_SPEED == 0) {
-            while (tick()) {}
+            while (sortTick()) {}
         } else {
-            timer.scheduleAtFixedRate(timerTask, 0, CLOCK_SPEED); //17ms about 60fps
+            timer.scheduleAtFixedRate(windowRepaintTask, 0, 17); //17ms about 60fps
+            timer.scheduleAtFixedRate(updateSortingStepperTask, 0, CLOCK_SPEED); 
         }
     }
     
@@ -203,7 +211,7 @@ public class VisualSorting {
      * Clock tick to update window and step the algorithm
      * @return returns whether the process is complete (false) or is still running (true)
      */
-    public boolean tick() {
+    public boolean sortTick() {
         
         if (sorter.isFinished() && !doingEndCheck) {
             this.doingEndCheck = true;
@@ -211,7 +219,7 @@ public class VisualSorting {
             sorter.addColoredIndex(0, sorter.SELECTED_COLOR, true);
             //sorter.setSelectedIndicies(new int[]{0});
             //sorter.setLastPairSwappedIncedies(null);
-            window.repaint();
+            //window.repaint();
             return true;
         }
 
@@ -219,7 +227,7 @@ public class VisualSorting {
             int nextIndex = sorter.getColoredIndices().get(0).getKey() + 1;
             sorter.clearColoredIndices();
             if (nextIndex >= sorter.getArray().length) {
-                window.repaint();   //or else the last selected index on the right will still be selected
+                //window.repaint();   //or else the last selected index on the right will still be selected
                 endProcedure();
                 return false;
             }
@@ -230,7 +238,7 @@ public class VisualSorting {
             //VisualSorting.currentTime = System.currentTimeMillis();
             sorter.step();
             //only need to repaint it
-            window.repaint();
+            //window.repaint();
         }
         
         //play sound
@@ -241,13 +249,18 @@ public class VisualSorting {
     }
     
     /**
+     * Repaints the window
+     */
+    public void windowRepaintTick() {
+        this.window.repaint();
+    }
+    
+    /**
      * When the sorter ends
      */
     public void endProcedure() {
-        //clear colors
-        
-        //sorter.setSelectedIndicies(new int[]{-1});
         timer.cancel();
+        this.window.repaint();  //just in case we haven't repainted at the end of the sorting
         
         //check if the array was sorted properly
         System.out.println("Original array: " + Util.toStringArr(this.copyArr));
