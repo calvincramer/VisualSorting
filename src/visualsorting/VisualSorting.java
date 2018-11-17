@@ -46,6 +46,7 @@ public class VisualSorting {
     private Timer timer;
     private TimerTask timerTask;
     private MainFrame window;
+    private Player player;
     private SteppableSorter sorter = null;
     private int[] copyArr;
     protected long startTime = -1;
@@ -170,14 +171,7 @@ public class VisualSorting {
         }
         
         //find number of sound files in the selected soundPack
-        URL soundPackURL = VisualSorting.class.getResource("/soundpacks/" + this.SOUND_PACK);
-        if (soundPackURL != null) {
-            File soundPackFolder = new File(soundPackURL.getFile());
-            this.NUM_SOUND_FILES = soundPackFolder.listFiles().length;
-        } else {
-            System.out.println("COULD NOT FIND THE SOUNDPACKS FROM THE JAR");
-            System.out.println("or more specifically, /soundpacks/" + this.SOUND_PACK);
-        }
+        this.player = new Player(this.SOUND_PACK);
         
         //other init stuff ...
 
@@ -229,9 +223,7 @@ public class VisualSorting {
         
         //play sound
         if (sorter.indexToPlaySound() >= 0 && sorter.indexToPlaySound() < sorter.getArray().length) {
-            int numberMappedToSoundScale = 
-                    (int) (sorter.getArray()[sorter.indexToPlaySound()] * 1.0 * NUM_SOUND_FILES / sorter.getMax());
-            this.playSound(1, NUM_SOUND_FILES, numberMappedToSoundScale);
+            player.playSound(1, sorter.getMax(), sorter.getArray()[sorter.indexToPlaySound()]);
         }
         return true;
     }
@@ -271,17 +263,7 @@ public class VisualSorting {
             System.out.println("NUM ERRORS: " + numErrors);
         
     }
-    
-    /**
-     * Plays a piano note
-     * @param low
-     * @param high
-     * @param num 
-     */
-    private void playSound(int low, int high, int num) {
-        Util.playSound(this.SOUND_PACK, getNoteNumber(low, high, num) + ".wav");
-    }
-    
+        
     /**
      * Shuffles an array
      * @param array
@@ -307,27 +289,4 @@ public class VisualSorting {
     public static void main(String[] args) {
         new VisualSorting();
     }
-    
-    /**
-     * Calculates the note to be played based upon a value and range
-     * @param low - the lowest value that num can be
-     * @param high - the highest value that num can be
-     * @param num - the number that represents the note to be played
-     * @return the note number, inclusively between low and high
-     * TODO: REPLACE MAGIC NUMBER 60 WITH ACTUAL NUMBER OF NOTE FILES IN THE SELECTED SOUND FOLDER
-     */
-    private int getNoteNumber(int low, int high, int num) {
-        //between 0 and 60 (A1 to A7)
-        double n = num * 1.0 / (high - low);
-        double note = n * NUM_SOUND_FILES;
-        int noteNumber = (int) Math.round(note);
-        if (noteNumber < 1) noteNumber = 1;
-        if (noteNumber > NUM_SOUND_FILES) noteNumber = NUM_SOUND_FILES;
-        
-        return noteNumber;
-    }
-    
-
-    
-    
 }

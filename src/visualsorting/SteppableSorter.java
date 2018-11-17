@@ -162,7 +162,7 @@ public abstract class SteppableSorter {
      */
     public Color getColorAt(int i) {
         for (Pair<Integer, List<Color>> p : this.coloredIndicies)
-            if (p.getKey() == i)
+            if (p != null && p.getKey() == i)
                 return getAverageColor(p.getValue());
         return this.DEFAULT_COLOR;
     }
