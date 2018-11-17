@@ -33,6 +33,9 @@ public class VisualSorting {
     //delay from when window opens and when sorting starts, in ms
     private int START_DELAY = DEFAULT_START_DELAY; 
     
+    //the number of simultaneuous sounds that can be played
+    private int NUM_SIMUL_SOUNDS = DEFAULT_NUM_SIMUL_SOUNDS;
+    
     
     //default options
     private static final Class<?> DEFAULT_SORTER_CLASS = InsertionSort.class;
@@ -40,6 +43,7 @@ public class VisualSorting {
     private static final String   DEFAULT_SOUND_PACK   = "pure";
     private static final int      DEFAULT_CLOCK_SPEED  = 50;
     private static final int      DEFAULT_START_DELAY  = 2000;
+    private static final int      DEFAULT_NUM_SIMUL_SOUNDS = 1;
     
     //other members
     private boolean doingEndCheck;
@@ -129,8 +133,8 @@ public class VisualSorting {
                 String[] optionNameValue = optionLine.split("=");
                 if (optionNameValue.length != 2)
                     continue;
-                String option = optionNameValue[0];
-                String optionValue = optionNameValue[1];
+                String option = optionNameValue[0].trim();
+                String optionValue = optionNameValue[1].trim();
                 try {
                     switch (option) {
                         case "sorter": {
@@ -153,6 +157,14 @@ public class VisualSorting {
                             this.START_DELAY = Integer.parseInt(optionValue);
                             break;
                         }
+                        case "numSimulSounds": {
+                            this.NUM_SIMUL_SOUNDS = Integer.parseInt(optionValue);
+                            break;
+                        }
+                        default: {
+                            System.out.println("DID NOT RECOGNIZE THE OPTION: " + option + "  FOR: " + optionLine);
+                            break;
+                        }
                     }
                 } catch (ClassNotFoundException e) {
                     System.out.println("COULD NOT FIND THE SORTER WITH NAME: " + optionValue);
@@ -171,7 +183,7 @@ public class VisualSorting {
         }
         
         //find number of sound files in the selected soundPack
-        this.player = new Player(this.SOUND_PACK);
+        this.player = new Player(this.SOUND_PACK, NUM_SIMUL_SOUNDS);
         
         //other init stuff ...
 

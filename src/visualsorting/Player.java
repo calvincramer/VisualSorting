@@ -21,9 +21,14 @@ public class Player {
     private final String soundPack;
     private final int NUM_SOUND_FILES;
     private List<Clip> clips;
+    private List<Integer> currentlyPlayingStack = new ArrayList<>();
+    private int allowedSimul;
     
     
-    public Player(String soundPack) {
+    public Player(String soundPack, int numContinuousSoundsPlayingAllowed) {
+        this.allowedSimul = numContinuousSoundsPlayingAllowed;
+        if (this.allowedSimul <= 0)
+            this.allowedSimul = 1;
         this.soundPack = soundPack;
         URL soundPackURL = VisualSorting.class.getResource("/soundpacks/" + soundPack);
         if (soundPackURL != null) {
@@ -72,14 +77,16 @@ public class Player {
      * @param resourceURL -- the name of the file to be played
     */
     private void playSound(int noteNumber){
-        //stop all other clips from playing
-        for (Clip p : this.clips) {
-            p.stop();
-            p.setMicrosecondPosition(0);
+        //stop the last playing clip from playing
+        if (this.currentlyPlayingStack.size() >= this.allowedSimul && this.currentlyPlayingStack.size() > 0) {
+            int stopPlayingIndex = this.currentlyPlayingStack.remove(0);
+            this.clips.get(stopPlayingIndex).stop();
+            this.clips.get(stopPlayingIndex).setMicrosecondPosition(0);
         }
         
+        this.clips.get(noteNumber - 1).setMicrosecondPosition(0);
         this.clips.get(noteNumber - 1).start();
-
+        this.currentlyPlayingStack.add(noteNumber - 1);
     }
     
     /**

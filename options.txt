@@ -3,8 +3,9 @@ OPTIONS CAN BE IN ANY ORDER
 SEE scr/visualsorting/sorters/ FOR A LIST OF SORTERS YOU CAN USE FOR THE 'sorter' OPTION
 ########################################################################################
 sorter=CombSort
-numElements=512
-soundPack=sopranoSax
-clockSpeed=0
+numElements=300
+soundPack=piano
+clockSpeed=25
 startDelay=1000
+numSimulSounds=300
 ########################################################################################

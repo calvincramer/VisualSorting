@@ -31,7 +31,7 @@ public class MainFrame extends JFrame{
     
     private static final Color BACKGROUND_COLOR = new Color(20,20,20);
 
-    private static final double NUMBER_PADDING = 0.1;
+    private static final double NUMBER_PADDING = 0.9;
     private static final Insets GRAPH_INSETS = new Insets(15,15,15,15);
     
     public MainFrame(SteppableSorter sorter, VisualSorting vs) {
