@@ -62,14 +62,10 @@ public class VisualSorting {
     public VisualSorting() {        
         this.init();
         
-        //array of numbers to work on
-        int[] array = new int[NUM_ELEMENTS];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = i + 1;
-        }
-        
-        //sort array
-        array = VisualSorting.shuffleArray(array);
+        //start array
+        int[] array = StartArrayFactory.generate(NUM_ELEMENTS, 
+                StartArrayFactory.ArrayStructure.DESCENDING, 
+                StartArrayFactory.NumberType.CHOOSE_RANDOMLY);
                 
         //copy original array
         this.copyArr = new int[array.length];
@@ -288,7 +284,7 @@ public class VisualSorting {
             System.out.println("NUM ERRORS: " + numErrors);
         
     }
-        
+    
     /**
      * Shuffles an array
      * @param array
@@ -306,7 +302,7 @@ public class VisualSorting {
         }
         return array;
     }
-    
+        
     /**
      * Start
      * @param args 
