@@ -44,9 +44,11 @@ public class BubbleSort
             this.numArrayAccesses += 2;
             if (array[i] > array[i + 1]) {
                 swap(i, i + 1);
-                this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
+                this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                 this.addColoredIndex(i, this.SWAP_COLOR_1, false);
                 this.addColoredIndex(i+1, this.SWAP_COLOR_1, true);
+                this.clearSwapArrowsOf(this.SWAP_COLOR_1);
+                this.addSwapArrow(i, i+1, this.SWAP_COLOR_1);
                 //this.lastSwappedIndicies = new int[] {i, i+1};
             }
         }
@@ -61,7 +63,7 @@ public class BubbleSort
                 done = true;
             }
         }
-        this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+        this.clearColoredIndiciesOf(this.SELECTED_COLOR);
         this.addColoredIndex(i, this.SELECTED_COLOR, false);
         //this.selectedIndicies = new int[]{i};
     }

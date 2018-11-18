@@ -1,7 +1,7 @@
 package visualsorting.sorters;
 
 import visualsorting.SteppableSorter;
-import visualsorting.VisualSorting;
+import visualsorting.Util;
 
 public class SelectionSort 
     extends SteppableSorter {
@@ -51,9 +51,11 @@ public class SelectionSort
             this.numSwaps++;
             this.numArrayAccesses += 4;
             //this.lastSwappedIndicies = new int[] {index, i};
-            this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
+            this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
             this.addColoredIndex(index, this.SWAP_COLOR_1);
             this.addColoredIndex(i, SWAP_COLOR_1);
+            this.clearSwapArrowsOf(this.SWAP_COLOR_1);
+            this.addSwapArrow(i, index, this.SWAP_COLOR_1);
             //increment
             i++;
             index = i;
@@ -64,7 +66,7 @@ public class SelectionSort
             }
         }
         //this.selectedIndicies = new int[]{j};
-        this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+        this.clearColoredIndiciesOf(this.SELECTED_COLOR);
         this.addColoredIndex(j, this.SELECTED_COLOR, true);
         
     }
@@ -77,7 +79,7 @@ public class SelectionSort
     public static void main(String args[]) {
          
         int[] array = {7,6,5,4,3,2,1};
-        array = VisualSorting.shuffleArray(array);
+        array = Util.shuffleArray(array);
         
         SelectionSort ss = new SelectionSort();
         ss.setArray(array);

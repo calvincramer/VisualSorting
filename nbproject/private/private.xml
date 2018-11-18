@@ -3,8 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/CalvinLaptop/Documents/NetBeansProjects/VisualSorting/src/visualsorting/VisualSorting.java</file>
-            <file>file:/C:/Users/CalvinLaptop/Documents/NetBeansProjects/VisualSorting/src/visualsorting/StartArrayFactory.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/sorters/InsertionSort.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/sorters/CombSort.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/Options.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/sorters/HeapSort.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/SteppableSorter.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/VisualSorting.java</file>
+            <file>file:/C:/Users/Calvin/Documents/NetBeansFiles/VisualSorting/src/visualsorting/MainFrame.java</file>
         </group>
     </open-files>
 </project-private>

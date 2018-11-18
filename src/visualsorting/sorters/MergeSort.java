@@ -76,22 +76,26 @@ public class MergeSort
                     if (i < currentMiddle && (j >= currentInterval.right || lteCheck(arrayAccessCheck(copyArr, i), arrayAccessCheck(copyArr, j))) ) {
                         array[k] = copyArr[i];
                         this.numArrayAccesses++;
-                        this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
+                        this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                         this.addColoredIndex(k, this.SWAP_COLOR_1, true);
                         this.addColoredIndex(i, this.SWAP_COLOR_1);
+                        this.clearSwapArrowsOf(this.SWAP_COLOR_1);
+                        this.addSwapArrow(k, i, this.SWAP_COLOR_1);
                         //this.lastSwappedIndicies = new int[]{k,i};
                         i++;
                     }
                     else {
                         array[k] = copyArr[j];
                         this.numArrayAccesses++;
-                        this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
+                        this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                         this.addColoredIndex(k, this.SWAP_COLOR_1, true);
                         this.addColoredIndex(j, this.SWAP_COLOR_1);
+                        this.clearSwapArrowsOf(this.SWAP_COLOR_1);
+                        this.addSwapArrow(k, j, this.SWAP_COLOR_1);
                         //this.lastSwappedIndicies = new int[]{k,j};
                         j++;
                     }
-                    this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                    this.clearColoredIndiciesOf(this.SELECTED_COLOR);
                     this.addColoredIndex(k, this.SELECTED_COLOR, true);
                     //this.selectedIndicies = new int[]{k};
                     k++;

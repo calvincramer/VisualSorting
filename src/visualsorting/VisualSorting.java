@@ -164,29 +164,22 @@ public class VisualSorting {
         if (sorter.isFinished() && !doingEndCheck) {
             this.doingEndCheck = true;
             sorter.clearColoredIndices();
+            sorter.clearSwapArrows();
             sorter.addColoredIndex(0, sorter.SELECTED_COLOR, true);
-            //sorter.setSelectedIndicies(new int[]{0});
-            //sorter.setLastPairSwappedIncedies(null);
-            //window.repaint();
             return true;
         }
 
         if (doingEndCheck) {    //sweep from left to right
-            int nextIndex = sorter.getColoredIndices().get(0).getKey() + 1;
+            int nextIndex = sorter.getColoredIndices().get(0).getKey()+ 1;
             sorter.clearColoredIndices();
             if (nextIndex >= sorter.getArray().length) {
-                //window.repaint();   //or else the last selected index on the right will still be selected
                 endProcedure();
                 return false;
             }
             sorter.addColoredIndex(nextIndex, sorter.SELECTED_COLOR, true);
-            window.repaint();
         }
         else {  //still doing sorting
-            //VisualSorting.currentTime = System.currentTimeMillis();
             sorter.step();
-            //only need to repaint it
-            //window.repaint();
         }
         
         //play sound
@@ -235,24 +228,6 @@ public class VisualSorting {
         else
             System.out.println("NUM ERRORS: " + numErrors);
         
-    }
-    
-    /**
-     * Shuffles an array
-     * @param array
-     * @return 
-     */
-    public static int[] shuffleArray(int[] array) {
-        Random r = new Random(System.currentTimeMillis());
-        for (int i = array.length - 1; i > 0; i--) {
-          int index = r.nextInt(i + 1);
-          
-          // swap
-          int a = array[index];
-          array[index] = array[i];
-          array[i] = a;
-        }
-        return array;
     }
         
     /**

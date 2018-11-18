@@ -19,6 +19,7 @@ public abstract class SteppableSorter {
     //public int[] lastSwappedIndicies;
     //public int[] selectedIndicies;
     private List<Pair<Integer, List<Color>>> coloredIndicies;
+    private List<Triplet<Integer, Integer, Color>> swapArrowIndicies;
     private int indexToPlaySound;
     
     public boolean done;
@@ -59,6 +60,7 @@ public abstract class SteppableSorter {
         //this.lastSwappedIndicies = null;
         //this.selectedIndicies = null;
         this.coloredIndicies = new ArrayList<>();
+        this.swapArrowIndicies = new ArrayList<>();
         this.indexToPlaySound = -1;
         this.done = false;
         this.numComparisons = 0;
@@ -111,7 +113,7 @@ public abstract class SteppableSorter {
         //start new list for this index
         List<Color> temp = new ArrayList<Color>();
         temp.add(c);
-        this.coloredIndicies.add(new Pair<Integer, List<Color>>(i, temp));
+        this.coloredIndicies.add(new Pair<>(i, temp));
         
         if (playSoundHere)
             this.indexToPlaySound = i;
@@ -135,16 +137,49 @@ public abstract class SteppableSorter {
     }
     
     /**
+     * Removes all swap arrows
+     */
+    public void clearSwapArrows() {
+        this.swapArrowIndicies.clear();
+    }
+    
+    /**
+     * Records a pair of indices to draw swap arrows on them
+     * Swap arrows will only be drawn if allowed by the options file
+     * @param first first index
+     * @param second second index
+     */
+    public void addSwapArrow(int first, int second, Color c) {
+        if (first < 0 || second < 0 || first >= array.length || second >= array.length) {
+            return;
+        }
+        this.swapArrowIndicies.add(new Triplet<>(first, second, c));
+    }
+    
+    /**
      * Removes all colored indices with a specific color
      * @param c 
      */
-    public void removeAllColoredIndiciesOf(Color c) {
+    public void clearColoredIndiciesOf(Color c) {
         for (int i = 0; i < this.coloredIndicies.size(); i++) {
             if (this.coloredIndicies.get(i).getValue().contains(c)) {
                 this.coloredIndicies.get(i).getValue().remove(c);
                 //remove list if it's empty
                 if (this.coloredIndicies.get(i).getValue().size() == 0)
                     this.coloredIndicies.remove(i);
+                i--;
+            }
+        }
+    }
+    
+    /**
+     * Removes all swapped arrow of a certain color
+     * @param c the color to remove
+     */
+    public void clearSwapArrowsOf(Color c) {
+        for (int i = 0; i < this.swapArrowIndicies.size(); i++) {
+            if (this.swapArrowIndicies.get(i).getThird().equals(c)) {
+                this.swapArrowIndicies.remove(i);
                 i--;
             }
         }
@@ -158,7 +193,7 @@ public abstract class SteppableSorter {
      */
     public List<Color> getColorsAt(int i) {
         for (Pair<Integer, List<Color>> p : this.coloredIndicies)
-            if (p.getKey() == i)
+            if (p.getKey()== i)
                 return p.getValue();
         List<Color> temp = new ArrayList<>();
         temp.add(this.DEFAULT_COLOR);
@@ -173,7 +208,7 @@ public abstract class SteppableSorter {
      */
     public Color getColorAt(int i) {
         for (Pair<Integer, List<Color>> p : this.coloredIndicies)
-            if (p != null && p.getKey() == i)
+            if (p != null && p.getKey()== i)
                 return getAverageColor(p.getValue());
         return this.DEFAULT_COLOR;
     }
@@ -216,6 +251,14 @@ public abstract class SteppableSorter {
      */
     public List<Pair<Integer, List<Color>>> getColoredIndices() {
         return this.coloredIndicies;
+    }
+    
+    /**
+     * Returns list of pairs of indices to show swap arrows between
+     * @return 
+     */
+    public List<Triplet<Integer, Integer, Color>> getSwapIndicies() {
+        return this.swapArrowIndicies;
     }
     
     /**
