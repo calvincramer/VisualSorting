@@ -1,8 +1,7 @@
 package visualsorting.sorters;
 
-import java.awt.Color;
 import visualsorting.SteppableSorter;
-import visualsorting.VisualSorting;
+import visualsorting.Util;
 
 public class CombSort 
     extends SteppableSorter {
@@ -47,7 +46,7 @@ public class CombSort
                     sorted = true;
                 }
                 i = 0;
-                this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                this.clearColoredIndiciesOf(this.SELECTED_COLOR);
                 this.addColoredIndex(i, this.SELECTED_COLOR, true);
                 //this.selectedIndicies = new int[]{i};
                 stage = 1;
@@ -60,23 +59,24 @@ public class CombSort
                     if (array[i] > array[i + gap]) {
                         swap(i, i + gap);
                         
-                        this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
-                        this.removeAllColoredIndiciesOf(this.SWAP_COLOR_2);
+                        this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                         this.addColoredIndex(i, this.SWAP_COLOR_1);
-                        this.addColoredIndex(i + gap, this.SWAP_COLOR_2);
+                        this.addColoredIndex(i + gap, this.SWAP_COLOR_1);
+                        this.clearSwapArrowsOf(this.SWAP_COLOR_1);
+                        this.addSwapArrow(i, i + gap, this.SWAP_COLOR_1);
                         //this.lastSwappedIndicies = new int[] {i, i + gap};
                         //sorted is false
                         sorted = false;
                     }
                     i++;
-                    this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                    this.clearColoredIndiciesOf(this.SELECTED_COLOR);
                     this.addColoredIndex(i, this.SELECTED_COLOR, true);     //only play the left one
                     this.addColoredIndex(i + gap, this.SELECTED_COLOR, false);
                     //this.selectedIndicies = new int[]{i, i + gap};
                 }
                 else {
                     i++;
-                    this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                    this.clearColoredIndiciesOf(this.SELECTED_COLOR);
                     this.addColoredIndex(i, this.SELECTED_COLOR, true);
                     //this.selectedIndicies = new int[]{i};
                     stage = 0;
@@ -123,7 +123,7 @@ public class CombSort
     
     public static void main(String[] args) {
         int[] array = {7,6,5,4,3,2,1};
-        array = VisualSorting.shuffleArray(array);
+        array = Util.shuffleArray(array);
         array = CombSort.doCombSort(array);
         SteppableSorter.printArray(array);
     }

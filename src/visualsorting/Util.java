@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Util {
@@ -95,5 +96,23 @@ public class Util {
                 return true;
         }
         return false;
+    }
+    
+    /**
+     * Shuffles an array
+     * @param array
+     * @return 
+     */
+    public static int[] shuffleArray(int[] array) {
+        Random r = new Random(System.currentTimeMillis());
+        for (int i = array.length - 1; i > 0; i--) {
+          int index = r.nextInt(i + 1);
+          
+          // swap
+          int a = array[index];
+          array[index] = array[i];
+          array[i] = a;
+        }
+        return array;
     }
 }

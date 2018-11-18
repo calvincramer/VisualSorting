@@ -109,9 +109,11 @@ public class HeapSort
             if (end > 0) {
                 this.swap(0, end);
 
-                this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
+                this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                 this.addColoredIndex(end, this.SWAP_COLOR_1, true);
                 this.addColoredIndex(0, this.SWAP_COLOR_1);
+                this.clearSwapArrowsOf(this.SWAP_COLOR_1);
+                this.addSwapArrow(end, 0, this.SWAP_COLOR_1);
 
                 end--;
                 siftStart = 0;
@@ -146,9 +148,11 @@ public class HeapSort
                 if (array[root] < array[child]) {
                     this.swap(root, child);
                     
-                    this.removeAllColoredIndiciesOf(this.SWAP_COLOR_2);
+                    this.clearColoredIndiciesOf(this.SWAP_COLOR_2);
                     this.addColoredIndex(root, this.SWAP_COLOR_2, true);
                     this.addColoredIndex(child, this.SWAP_COLOR_2);
+                    this.clearSwapArrowsOf(this.SWAP_COLOR_2);
+                    this.addSwapArrow(root, child, this.SWAP_COLOR_2);
 
                     root = child;
                 } else { //done with sift down

@@ -6,11 +6,11 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JFrame;
 
@@ -30,6 +30,9 @@ public class MainFrame extends JFrame{
     private Graphics2D offScreen;
     private Image offScreenImage;
     
+    private double graphWidth;
+    private double graphHeight;
+    private double columnWidth;
     //private static final Color BACKGROUND_COLOR = new Color(20,20,20);
 
     //private static final double NUMBER_PADDING = 0.0;
@@ -87,6 +90,11 @@ public class MainFrame extends JFrame{
         if (offScreenImage.getWidth(null) < this.getWidth() || offScreenImage.getHeight(null) < this.getHeight()) {
             createOffScreen();
         }
+        
+        //redo some math
+        this.graphWidth = this.getWidth() - this.getInsets().left - this.getInsets().right - options.GRAPH_INSETS.left - options.GRAPH_INSETS.right;
+        this.graphHeight = this.getHeight() - this.getInsets().top - this.getInsets().bottom - options.GRAPH_INSETS.top - options.GRAPH_INSETS.bottom;
+        this.columnWidth = (graphWidth * 1.0 / sorter.getArray().length ) - options.GAP_WIDTH;    
     }
     
     private void createOffScreen() {
@@ -125,28 +133,36 @@ public class MainFrame extends JFrame{
         int[] array = sorter.getArray();
         
         //set up math
-        int graphWidth = this.getWidth() - this.getInsets().left - this.getInsets().right - options.GRAPH_INSETS.left - options.GRAPH_INSETS.right;
-        int graphHeight = this.getHeight() - this.getInsets().top - this.getInsets().bottom - options.GRAPH_INSETS.top - options.GRAPH_INSETS.bottom;
-        
-
-        double columnWidth = (graphWidth * 1.0 / array.length ) - options.GAP_WIDTH;        
-        double x = options.GRAPH_INSETS.left + this.getInsets().left;
-        double y = this.getHeight() - this.getInsets().bottom - options.GRAPH_INSETS.bottom;
+        //double y = this.getHeight() - this.getInsets().bottom - options.GRAPH_INSETS.bottom;
         
         //drawing the array
         Rectangle2D.Double tempRect = new Rectangle2D.Double();
         for (int i = 0; i < array.length; i++) {
             //set color
             offScreen.setColor(sorter.getColorAt(i));
-            
-            int height = (int) ( (array[i] * 1.0 / highestNum) * graphHeight ) ;
-            tempRect.setRect(x, y - height, columnWidth, height);
+            tempRect.setRect(getX(i), getTop(i), columnWidth, getHeight(i));
             offScreen.fill(tempRect);
             
-            x += columnWidth + options.GAP_WIDTH;
+        }
+        double x;
+        //draw swap lines
+        if (options.SHOW_SWAP_ARROWS) {
+            for (Triplet<Integer, Integer, Color> p : this.sorter.getSwapIndicies()) {
+                offScreen.setColor(p.getThird());
+                
+                double x1 = getX(p.getFirst()) + columnWidth / 2;
+                double y1 = getTop(p.getFirst());
+                double x2 = getX(p.getSecond()) + columnWidth / 2;
+                double y2 = getTop(p.getSecond());
+                
+                this.drawSwapLine(x1, y1, 
+                        x2, y2, 
+                        (x1 + x2) / 2,
+                        Math.min(y1, y2 ) - this.getHeight() * 0.1);
+            }
         }
         
-        //testing liens
+        //testing lines
         /*
         offScreen.setColor(Color.PINK);
         offScreen.drawLine(0, 0, 100000, 100000);
@@ -158,7 +174,7 @@ public class MainFrame extends JFrame{
         
         //draw text for info
         int textHeight = offScreen.getFontMetrics().getHeight();
-        y = textHeight + 30;
+        double y = textHeight + 30;
         x = 15;
         
         offScreen.setColor(options.TEXT_COLOR);
@@ -182,6 +198,38 @@ public class MainFrame extends JFrame{
         g.drawImage(offScreenImage, 0, 0, null);
     }
     
+    /**
+     * Calculates the leftmost coordinate of the index'th number
+     * @param index
+     * @return 
+     */
+    private double getX(int index) {
+        return options.GRAPH_INSETS.left + this.getInsets().left + index * (columnWidth + options.GAP_WIDTH);
+    }
+    
+    private double getTop(int index) {
+        return this.getHeight() - this.getInsets().bottom - options.GRAPH_INSETS.bottom - (sorter.array[index] * 1.0 / highestNum) * graphHeight;
+    }
+    
+    private double getHeight(int index) {
+        return (sorter.array[index] * 1.0 / highestNum) * graphHeight;
+    }
+    
+    /**
+     * Draws a swap arrow between the two points
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2 
+     */
+    public void drawSwapLine(double x1, double y1, double x2, double y2, double cntrX, double cntrY) {
+        CubicCurve2D.Double path = new CubicCurve2D.Double(
+                x1, y1,     //first point
+                cntrX, cntrY,     //control point 1
+                cntrX, cntrY,     //control point 2
+                x2, y2);    //second point
+        offScreen.draw(path);
+    }
     
     
     /**
