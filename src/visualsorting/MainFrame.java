@@ -20,24 +20,26 @@ import javax.swing.JFrame;
  */
 public class MainFrame extends JFrame{
     
-    private static final Font MONO = new Font("Courier New", Font.PLAIN, 16);
+    //private static final Font MONO = new Font("Courier New", Font.PLAIN, 16);
     
     private SteppableSorter sorter;
     private VisualSorting vs;
+    private Options options;
 
     private int highestNum;
     private Graphics2D offScreen;
     private Image offScreenImage;
     
-    private static final Color BACKGROUND_COLOR = new Color(20,20,20);
+    //private static final Color BACKGROUND_COLOR = new Color(20,20,20);
 
-    private static final double NUMBER_PADDING = 0.0;
-    private static final Insets GRAPH_INSETS = new Insets(15,15,15,15);
+    //private static final double NUMBER_PADDING = 0.0;
+    //private static final Insets GRAPH_INSETS = new Insets(15,15,15,15);
     
-    public MainFrame(SteppableSorter sorter, VisualSorting vs) {
+    public MainFrame(SteppableSorter sorter, VisualSorting vs, Options options) {
         this.init(sorter.getSorterName());
         this.setSorter(sorter);
         this.vs = vs;
+        this.options = options;
     }
     
     /**
@@ -90,9 +92,17 @@ public class MainFrame extends JFrame{
     private void createOffScreen() {
         offScreenImage = this.createImage(this.getWidth(), this.getHeight());
         offScreen = (Graphics2D) offScreenImage.getGraphics();
-        offScreen.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        offScreen.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-        offScreen.setFont(MONO);
+        if (options.ANTI_ALIAS)
+            offScreen.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        else 
+            offScreen.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+        
+        if (options.ANTI_ALIAS_FONT)
+            offScreen.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        else 
+            offScreen.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+        
+        offScreen.setFont(new Font(options.FONT_FAMILY, Font.PLAIN, options.FONT_SIZE));
     }
 
     @Override
@@ -108,20 +118,20 @@ public class MainFrame extends JFrame{
         }
 
         //clearing the off screen buffer
-        offScreen.setColor(Color.BLACK);
+        offScreen.setColor(options.BACKGROUND_COLOR);
         offScreen.fillRect(0, 0, offScreenImage.getWidth(null), offScreenImage.getHeight(null));
         
         //getting the array from the sorter to draw
         int[] array = sorter.getArray();
         
         //set up math
-        int graphWidth = this.getWidth() - this.getInsets().left - this.getInsets().right - GRAPH_INSETS.left - GRAPH_INSETS.right;
-        int graphHeight = this.getHeight() - this.getInsets().top - this.getInsets().bottom - GRAPH_INSETS.top - GRAPH_INSETS.bottom;
+        int graphWidth = this.getWidth() - this.getInsets().left - this.getInsets().right - options.GRAPH_INSETS.left - options.GRAPH_INSETS.right;
+        int graphHeight = this.getHeight() - this.getInsets().top - this.getInsets().bottom - options.GRAPH_INSETS.top - options.GRAPH_INSETS.bottom;
         
 
-        double columnWidth = (graphWidth * 1.0 / array.length ) - NUMBER_PADDING;        
-        double x = GRAPH_INSETS.left + this.getInsets().left;
-        double y = this.getHeight() - this.getInsets().bottom - GRAPH_INSETS.bottom;
+        double columnWidth = (graphWidth * 1.0 / array.length ) - options.GAP_WIDTH;        
+        double x = options.GRAPH_INSETS.left + this.getInsets().left;
+        double y = this.getHeight() - this.getInsets().bottom - options.GRAPH_INSETS.bottom;
         
         //drawing the array
         Rectangle2D.Double tempRect = new Rectangle2D.Double();
@@ -133,7 +143,7 @@ public class MainFrame extends JFrame{
             tempRect.setRect(x, y - height, columnWidth, height);
             offScreen.fill(tempRect);
             
-            x += columnWidth + NUMBER_PADDING;
+            x += columnWidth + options.GAP_WIDTH;
         }
         
         //testing liens
@@ -147,11 +157,11 @@ public class MainFrame extends JFrame{
         */
         
         //draw text for info
-        y = 50;
-        x = 15;
         int textHeight = offScreen.getFontMetrics().getHeight();
+        y = textHeight + 30;
+        x = 15;
         
-        offScreen.setColor(Color.WHITE);
+        offScreen.setColor(options.TEXT_COLOR);
         offScreen.drawString("Name: " + sorter.getSorterName(), (int) x, (int) y);
         y += textHeight;
         offScreen.drawString("Size: " + sorter.array.length, (int) x, (int) y);
@@ -162,7 +172,7 @@ public class MainFrame extends JFrame{
         y += textHeight;
         offScreen.drawString("Array Accesses: " + sorter.numArrayAccesses, (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Clock Speed: " + vs.CLOCK_SPEED + "ms", (int) x, (int) y);
+        offScreen.drawString("Clock Speed: " + options.CLOCK_SPEED + "ms", (int) x, (int) y);
         y += textHeight;
         if (vs.startTime == -1)
             offScreen.drawString("Time Elapsed: 0", (int) x, (int) y);

@@ -14,6 +14,18 @@ public class HeapSort
     extends SteppableSorter {
 
     private int stage;
+    private int start;
+    private int end;
+    private int siftStart;
+    private int siftEnd;
+    private int returnToStage;
+    private int root;
+    
+    public HeapSort() {
+        this.stage = 0;
+    }
+    
+    
     
     public int iParent(int i) {
         return (int) ((i-1) / 2);
@@ -69,7 +81,84 @@ public class HeapSort
 
     @Override
     protected void step() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (stage == 0) {   //heapify init
+            start = iParent(array.length - 1);
+            stage = 1;
+        }
+        if (stage == 1) {   //heapify loop
+            this.numComparisons++;
+            if (start >= 0) {
+                siftStart = start;
+                siftEnd = array.length - 1;
+                returnToStage = 1;
+                stage = 4;
+                start--;
+            }
+            else {
+                stage = 2;
+                start = -1;
+            }
+            
+        }
+        if (stage == 2) {   //heapsort while loop init
+            end = array.length - 1;
+            stage = 3;
+        }
+        if (stage == 3) {   //heapsort while loop
+            this.numComparisons++;
+            if (end > 0) {
+                this.swap(0, end);
+
+                this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
+                this.addColoredIndex(end, this.SWAP_COLOR_1, true);
+                this.addColoredIndex(0, this.SWAP_COLOR_1);
+
+                end--;
+                siftStart = 0;
+                siftEnd = end;
+                returnToStage = 3;
+                stage = 4;
+                return; //let another tick go by
+            }
+            else {
+                //done
+            }
+        }
+        if (stage == 4) {   //sift down init
+            root = siftStart;
+            stage = 5;
+        }
+        if (stage == 5) {
+            this.numComparisons++;
+            if (iLeftChild(root) <= siftEnd) {
+                int child = iLeftChild(root);
+                
+                this.numComparisons++;
+                if (child + 1 <= siftEnd) {
+                    this.numComparisons++;
+                    this.numArrayAccesses += 2;
+                    if (array[child] < array[child + 1]) 
+                       child = child + 1;
+                }
+                
+                this.numComparisons++;
+                this.numArrayAccesses += 2;
+                if (array[root] < array[child]) {
+                    this.swap(root, child);
+                    
+                    this.removeAllColoredIndiciesOf(this.SWAP_COLOR_2);
+                    this.addColoredIndex(root, this.SWAP_COLOR_2, true);
+                    this.addColoredIndex(child, this.SWAP_COLOR_2);
+
+                    root = child;
+                } else { //done with sift down
+                    stage = returnToStage;
+                }
+            } else {
+                stage = returnToStage;
+            }
+            
+        }
     }
 
     @Override

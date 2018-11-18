@@ -1,26 +1,39 @@
 ### OPTIONS ###
 OPTIONS CAN BE IN ANY ORDER
 SEE scr/visualsorting/sorters/ FOR A LIST OF SORTERS YOU CAN USE FOR THE 'sorter' OPTION
+START_ARRAY_NUMBERS_TYPE can be:
+		UNIQUE, 
+        SOME_PAIRS, 
+        ALL_PAIRED, 
+        CHOOSE_RANDOMLY
+START_ARRAY_STRUCTURE can be:
+		ASCENDING, 
+        DESCENDING, 
+        SHUFFLED, 
+        PARTIALLY_SHUFFLED
 ########################################################################################
-sorter=MergeSort
-numElements=100
-soundPack=piano
-clockSpeed=40
-startDelay=1000
-numSimulSounds=300
-startArrayNumbers=IMEPLEMENT
-startArrayStructure=IMPLEMENT
+SORTER_CLASS=HeapSort
+NUM_ELEMENTS=4096
+SOUND_PACK=sopranoSax
+CLOCK_SPEED=1
+START_DELAY=1000
+NUM_SIMUL_SOUNDS=1
+START_ARRAY_NUMBERS_TYPE=UNIQUE
+START_ARRAY_STRUCTURE=SHUFFLED
 
 ### Visual options ###
-gapWidth=IMPLEMENT FLOATING POINT
-defaultColor=IMPLEMENT THREE INT
-backgroundColor=IMPLEMENT THREE INT
-textColor=IMPLEMENT THREE INT
-animated=IMPLEMENT BOOLEAN
-showSwapArrows=IMPLEMENT BOOLEAN
-windowWidth=IMPLEMENT
-windowHeight=IMPLEMENT
-fontFamily=IMPLEMENT
-fontSize=IMEPLEMENT
-graphInsets=IMPLEMENT FOUR INTS
+GAP_WIDTH=0.0
+DEFAULT_COLOR=100 100 100
+SELECTED_COLOR=0 255 180
+SWAP_COLOR_1=255 0 255
+SWAP_COLOR_2=183 74 247
+BACKGROUND_COLOR=20 20 20
+TEXT_COLOR=255 255 255
+IS_ANIMATED=false
+SHOW_SWAP_ARROWS=false
+FONT_FAMILY=Courier New
+FONT_SIZE=20
+ANTI_ALIAS=true
+ANTI_ALIAS_FONT=true
+GRAPH_INSETS=50 50 50 50
 ########################################################################################

@@ -16,34 +16,34 @@ public class VisualSorting {
     
     
     //sorting algorithm to use
-    private Class<?> SORTER_CLASS = DEFAULT_SORTER_CLASS;
+    //private Class<?> SORTER_CLASS = DEFAULT_SORTER_CLASS;
     
     //number of elements in array
-    private int NUM_ELEMENTS = DEFAULT_NUM_ELEMENTS;
+    //private int NUM_ELEMENTS = DEFAULT_NUM_ELEMENTS;
     
     //the sound pack to be used (specifies the folder name)
-    private String SOUND_PACK = DEFAULT_SOUND_PACK;
+    //private String SOUND_PACK = DEFAULT_SOUND_PACK;
     //number of sound files in the specifies sound pack
-    private int NUM_SOUND_FILES = 0;
+    //private int NUM_SOUND_FILES = 0;
     
     //clock speed tick in ms
     //0 = as fast as possible
-    protected int CLOCK_SPEED = DEFAULT_CLOCK_SPEED;
+    //protected int CLOCK_SPEED = DEFAULT_CLOCK_SPEED;
     
     //delay from when window opens and when sorting starts, in ms
-    private int START_DELAY = DEFAULT_START_DELAY; 
+    //private int START_DELAY = DEFAULT_START_DELAY; 
     
     //the number of simultaneuous sounds that can be played
-    private int NUM_SIMUL_SOUNDS = DEFAULT_NUM_SIMUL_SOUNDS;
+    //private int NUM_SIMUL_SOUNDS = DEFAULT_NUM_SIMUL_SOUNDS;
     
     
     //default options
-    private static final Class<?> DEFAULT_SORTER_CLASS = InsertionSort.class;
-    private static final int      DEFAULT_NUM_ELEMENTS = 64;
-    private static final String   DEFAULT_SOUND_PACK   = "pure";
-    private static final int      DEFAULT_CLOCK_SPEED  = 50;
-    private static final int      DEFAULT_START_DELAY  = 2000;
-    private static final int      DEFAULT_NUM_SIMUL_SOUNDS = 1;
+    //private static final Class<?> DEFAULT_SORTER_CLASS = InsertionSort.class;
+    //private static final int      DEFAULT_NUM_ELEMENTS = 64;
+    //private static final String   DEFAULT_SOUND_PACK   = "pure";
+    //private static final int      DEFAULT_CLOCK_SPEED  = 50;
+    //private static final int      DEFAULT_START_DELAY  = 2000;
+    //private static final int      DEFAULT_NUM_SIMUL_SOUNDS = 1;
     
     //other members
     private boolean doingEndCheck;
@@ -51,6 +51,7 @@ public class VisualSorting {
     private TimerTask updateSortingStepperTask;
     private TimerTask windowRepaintTask;
     private MainFrame window;
+    private Options options;
     private Player player;
     private SteppableSorter sorter = null;
     private int[] copyArr;
@@ -63,9 +64,7 @@ public class VisualSorting {
         this.init();
         
         //start array
-        int[] array = StartArrayFactory.generate(NUM_ELEMENTS, 
-                StartArrayFactory.ArrayStructure.DESCENDING, 
-                StartArrayFactory.NumberType.CHOOSE_RANDOMLY);
+        int[] array = StartArrayFactory.generate(options.NUM_ELEMENTS, options.START_ARRAY_STRUCTURE, options.START_ARRAY_NUMBERS_TYPE);
                 
         //copy original array
         this.copyArr = new int[array.length];
@@ -74,7 +73,7 @@ public class VisualSorting {
         
         //sorter to be used
         try {
-            this.sorter = (SteppableSorter) SORTER_CLASS.newInstance();
+            this.sorter = (SteppableSorter) options.SORTER_CLASS.newInstance();
         } catch (InstantiationException ex) {
             ex.printStackTrace();
         } catch (IllegalAccessException ex) {
@@ -85,9 +84,10 @@ public class VisualSorting {
             System.exit(1);
         }
         sorter.setArray(array);
+        sorter.setColors(options);
         
         //make window
-        this.window = new MainFrame(sorter, this);
+        this.window = new MainFrame(sorter, this, options);
         this.window.setSorter(sorter);
         this.window.setVisible(true);
         
@@ -107,7 +107,7 @@ public class VisualSorting {
         
         //wait a little right after the window pops up
         try {
-            Thread.sleep( START_DELAY );
+            Thread.sleep( options.START_DELAY );
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
@@ -115,11 +115,11 @@ public class VisualSorting {
         //start timer
         startTime = System.currentTimeMillis();
         //VisualSorting.currentTime = System.currentTimeMillis();
-        if (CLOCK_SPEED == 0) {
+        if (options.CLOCK_SPEED == 0) {
             while (sortTick()) {}
         } else {
             timer.scheduleAtFixedRate(windowRepaintTask, 0, 17); //17ms about 60fps
-            timer.scheduleAtFixedRate(updateSortingStepperTask, 0, CLOCK_SPEED); 
+            timer.scheduleAtFixedRate(updateSortingStepperTask, 0, options.CLOCK_SPEED); 
         }
     }
     
@@ -131,69 +131,21 @@ public class VisualSorting {
         URL optionsFileURL = VisualSorting.class.getResource("/options.txt");
         if (optionsFileURL != null) {
             File optionsFile = new File(optionsFileURL.getFile());
-            String[] options = Util.readFile(optionsFile);
-            for (String optionLine : options) {
-                //System.out.println(s);
-                String[] optionNameValue = optionLine.split("=");
-                if (optionNameValue.length != 2)
-                    continue;
-                String option = optionNameValue[0].trim();
-                String optionValue = optionNameValue[1].trim();
-                try {
-                    switch (option) {
-                        case "sorter": {
-                            this.SORTER_CLASS = Class.forName("visualsorting.sorters." + optionValue);
-                            break;
-                        }
-                        case "numElements": {
-                            this.NUM_ELEMENTS = Integer.parseInt(optionValue);
-                            break;
-                        }
-                        case "soundPack": {
-                            this.SOUND_PACK = optionValue;
-                            break;
-                        }
-                        case "clockSpeed": {
-                            this.CLOCK_SPEED = Integer.parseInt(optionValue);
-                            break;
-                        }
-                        case "startDelay": {
-                            this.START_DELAY = Integer.parseInt(optionValue);
-                            break;
-                        }
-                        case "numSimulSounds": {
-                            this.NUM_SIMUL_SOUNDS = Integer.parseInt(optionValue);
-                            break;
-                        }
-                        default: {
-                            System.out.println("DID NOT RECOGNIZE THE OPTION: " + option + "  FOR: " + optionLine);
-                            break;
-                        }
-                    }
-                } catch (ClassNotFoundException e) {
-                    System.out.println("COULD NOT FIND THE SORTER WITH NAME: " + optionValue);
-                    System.out.println("FOR THE OPTION LINE: " + optionLine);
-                    e.printStackTrace();
-                    System.exit(1);
-                } catch (NumberFormatException e) {
-                    System.out.println("THE OPTION VALUE: " + optionValue);
-                    System.out.println("IN: " + optionLine + " SHOULD BE AN INTEGER");
-                    e.printStackTrace();
-                    System.exit(1);
-                }
-            }
+            String[] optionLines = Util.readFile(optionsFile);
+            this.options = new Options(optionLines);
         } else {
             System.out.println("Options file could not be found, using default options.");
+            this.options = new Options();
         }
         
         //find number of sound files in the selected soundPack
-        this.player = new Player(this.SOUND_PACK, NUM_SIMUL_SOUNDS);
+        this.player = new Player(options.SOUND_PACK, options.NUM_SIMUL_SOUNDS);
         
         //other init stuff ...
 
         
         //checks
-        if (CLOCK_SPEED < 0) {
+        if (options.CLOCK_SPEED < 0) {
             System.out.println("NEGTIVE CLOCK SPEEDS ARE NOT ALLOWED DUMMY, I CAN'T TIME TRAVEL.\nAlthough it would make sense to undo all of the steps from a sorting algorithm in reverse");
             System.exit(1);
         }

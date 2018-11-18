@@ -12,8 +12,8 @@ public class CombSort
     private boolean sorted;
     private int i;
     
-    private static final Color HEAP_SORT_SWAP_COLOR = new Color(226, 93, 11);
-    private static final Color HEAP_SORT_SELECT_COLOR = new Color(255, 255, 0);
+    //private static final Color HEAP_SORT_SWAP_COLOR = new Color(226, 93, 11);
+    //private static final Color HEAP_SORT_SELECT_COLOR = new Color(255, 255, 0);
     
     private int stage;
     
@@ -47,8 +47,8 @@ public class CombSort
                     sorted = true;
                 }
                 i = 0;
-                this.removeAllColoredIndiciesOf(HEAP_SORT_SELECT_COLOR);
-                this.addColoredIndex(i, HEAP_SORT_SELECT_COLOR, true);
+                this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                this.addColoredIndex(i, this.SELECTED_COLOR, true);
                 //this.selectedIndicies = new int[]{i};
                 stage = 1;
                 break;
@@ -60,23 +60,24 @@ public class CombSort
                     if (array[i] > array[i + gap]) {
                         swap(i, i + gap);
                         
-                        this.removeAllColoredIndiciesOf(HEAP_SORT_SWAP_COLOR);
-                        this.addColoredIndex(i, HEAP_SORT_SWAP_COLOR);
-                        this.addColoredIndex(i + gap, HEAP_SORT_SWAP_COLOR);
+                        this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
+                        this.removeAllColoredIndiciesOf(this.SWAP_COLOR_2);
+                        this.addColoredIndex(i, this.SWAP_COLOR_1);
+                        this.addColoredIndex(i + gap, this.SWAP_COLOR_2);
                         //this.lastSwappedIndicies = new int[] {i, i + gap};
                         //sorted is false
                         sorted = false;
                     }
                     i++;
-                    this.removeAllColoredIndiciesOf(HEAP_SORT_SELECT_COLOR);
-                    this.addColoredIndex(i, HEAP_SORT_SELECT_COLOR, true);     //only play the left one
-                    this.addColoredIndex(i + gap, HEAP_SORT_SELECT_COLOR, false);
+                    this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                    this.addColoredIndex(i, this.SELECTED_COLOR, true);     //only play the left one
+                    this.addColoredIndex(i + gap, this.SELECTED_COLOR, false);
                     //this.selectedIndicies = new int[]{i, i + gap};
                 }
                 else {
                     i++;
-                    this.removeAllColoredIndiciesOf(HEAP_SORT_SELECT_COLOR);
-                    this.addColoredIndex(i, HEAP_SORT_SELECT_COLOR, true);
+                    this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);
+                    this.addColoredIndex(i, this.SELECTED_COLOR, true);
                     //this.selectedIndicies = new int[]{i};
                     stage = 0;
                 }

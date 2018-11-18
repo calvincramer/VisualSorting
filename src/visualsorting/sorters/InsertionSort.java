@@ -32,8 +32,8 @@ public class InsertionSort
                     if (array[j-1] > array[j]) {
                         swap(j, j-1);
                         this.removeAllColoredIndiciesOf(this.SWAP_COLOR_1);
-                        this.addColoredIndex(j, this.SWAP_COLOR_1);
-                        this.addColoredIndex(j-1, this.SWAP_COLOR_1);
+                        this.addColoredIndex(j, this.SWAP_COLOR_1, true);
+                        this.addColoredIndex(j-1, this.SWAP_COLOR_1, false);
                         //this.lastSwappedIndicies = new int[] {j, j-1};
                         j--;
                         this.removeAllColoredIndiciesOf(this.SELECTED_COLOR);

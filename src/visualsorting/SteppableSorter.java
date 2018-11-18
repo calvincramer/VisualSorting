@@ -26,10 +26,10 @@ public abstract class SteppableSorter {
     public long numSwaps;
     public long numArrayAccesses;
     
-    public final Color SELECTED_COLOR   = new Color(0  , 255, 180);
-    public final Color SWAP_COLOR_1     = new Color(255, 0  , 255);
-    public final Color SWAP_COLOR_2     = new Color(183, 74 , 247);
-    public final Color DEFAULT_COLOR    = new Color(0  , 120, 255);
+    public Color DEFAULT_COLOR;
+    public Color SELECTED_COLOR;
+    public Color SWAP_COLOR_1;
+    public Color SWAP_COLOR_2;
 
     /**
      * Step once in the algorithm
@@ -70,6 +70,17 @@ public abstract class SteppableSorter {
         for (int i = 0; i < array.length; i++)
             this.sortedFinalArray[i] = array[i];
         Arrays.sort(sortedFinalArray);
+    }
+    
+    /**
+     * Sets the default colors according to the options
+     * @param options 
+     */
+    public void setColors(Options options) {
+        this.DEFAULT_COLOR = options.DEFAULT_COLOR;
+        this.SWAP_COLOR_1 = options.SWAP_COLOR_1;
+        this.SWAP_COLOR_2 = options.SWAP_COLOR_2;
+        this.SELECTED_COLOR = options.SELECTED_COLOR;
     }
     
     /**
