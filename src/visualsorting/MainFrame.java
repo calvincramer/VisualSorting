@@ -229,6 +229,11 @@ public class MainFrame extends JFrame{
                 cntrX, cntrY,     //control point 2
                 x2, y2);    //second point
         offScreen.draw(path);
+        
+        //TODO
+        //draw arrows
+        //get slope of each point
+        //arrow length = min(barWidth, 5)
     }
     
     

@@ -3,48 +3,15 @@ package visualsorting;
 import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import visualsorting.sorters.*;
 
 /**
  * Main class to show sorting algorithms visualized
  * @author Calvin Cramer
  */
 public class VisualSorting {
-    
-    
-    //sorting algorithm to use
-    //private Class<?> SORTER_CLASS = DEFAULT_SORTER_CLASS;
-    
-    //number of elements in array
-    //private int NUM_ELEMENTS = DEFAULT_NUM_ELEMENTS;
-    
-    //the sound pack to be used (specifies the folder name)
-    //private String SOUND_PACK = DEFAULT_SOUND_PACK;
-    //number of sound files in the specifies sound pack
-    //private int NUM_SOUND_FILES = 0;
-    
-    //clock speed tick in ms
-    //0 = as fast as possible
-    //protected int CLOCK_SPEED = DEFAULT_CLOCK_SPEED;
-    
-    //delay from when window opens and when sorting starts, in ms
-    //private int START_DELAY = DEFAULT_START_DELAY; 
-    
-    //the number of simultaneuous sounds that can be played
-    //private int NUM_SIMUL_SOUNDS = DEFAULT_NUM_SIMUL_SOUNDS;
-    
-    
-    //default options
-    //private static final Class<?> DEFAULT_SORTER_CLASS = InsertionSort.class;
-    //private static final int      DEFAULT_NUM_ELEMENTS = 64;
-    //private static final String   DEFAULT_SOUND_PACK   = "pure";
-    //private static final int      DEFAULT_CLOCK_SPEED  = 50;
-    //private static final int      DEFAULT_START_DELAY  = 2000;
-    //private static final int      DEFAULT_NUM_SIMUL_SOUNDS = 1;
-    
+
     //other members
     private boolean doingEndCheck;
     private Timer timer;
@@ -90,6 +57,9 @@ public class VisualSorting {
         this.window = new MainFrame(sorter, this, options);
         this.window.setSorter(sorter);
         this.window.setVisible(true);
+        //why is the graph not showing on the laptop?
+        windowRepaintTick();
+        this.window.setSize(this.window.getSize());
         
         //timer tasks
         this.updateSortingStepperTask = new TimerTask() {
