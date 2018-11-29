@@ -11,6 +11,9 @@ import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.CubicCurve2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JFrame;
 
@@ -150,15 +153,24 @@ public class MainFrame extends JFrame{
             for (Triplet<Integer, Integer, Color> p : this.sorter.getSwapIndicies()) {
                 offScreen.setColor(p.getThird());
                 
+                if (p.getFirst() > p.getSecond())   //first is the lowest x value
+                    p = new Triplet(p.getSecond(), p.getFirst(), p.getThird());
+                else if (p.getFirst() == p.getSecond()) //dont draw arrows pointing to the same place
+                    continue;
+                
                 double x1 = getX(p.getFirst()) + columnWidth / 2;
                 double y1 = getTop(p.getFirst());
                 double x2 = getX(p.getSecond()) + columnWidth / 2;
                 double y2 = getTop(p.getSecond());
+                double width = Math.abs(x2 - x1);
+                double height = Math.abs(x2 - x1);
+                double top = Math.min(y1, y2) - height;
+                
                 
                 this.drawSwapLine(x1, y1, 
                         x2, y2, 
-                        (x1 + x2) / 2,
-                        Math.min(y1, y2 ) - this.getHeight() * 0.1);
+                        x1 + width / 4, top,
+                        x2 - width / 4, top);
             }
         }
         
@@ -217,23 +229,74 @@ public class MainFrame extends JFrame{
     
     /**
      * Draws a swap arrow between the two points
+     * Credit to: https://stackoverflow.com/questions/15620590/polygons-with-double-coordinates
+     * for double polygons
      * @param x1
      * @param y1
      * @param x2
      * @param y2 
      */
-    public void drawSwapLine(double x1, double y1, double x2, double y2, double cntrX, double cntrY) {
+    public void drawSwapLine(double x1, double y1, double x2, double y2, double cntrX1, double cntrY1, double cntrX2, double cntrY2) {
         CubicCurve2D.Double path = new CubicCurve2D.Double(
                 x1, y1,     //first point
-                cntrX, cntrY,     //control point 1
-                cntrX, cntrY,     //control point 2
+                cntrX1, cntrY1,     //control point 1
+                cntrX2, cntrY2,     //control point 2
                 x2, y2);    //second point
         offScreen.draw(path);
         
         //TODO
+        double lineLength = Math.min(15, columnWidth);
+        double arrowAngleHalf = Math.PI / 11;
         //draw arrows
-        //get slope of each point
-        //arrow length = min(barWidth, 5)
+        double slopeStart = this.getSlopeOfCubicBezierCurve(0.0, path);
+        double slopeStartLeft  = slopeStart - arrowAngleHalf;
+        double slopeStartRight = slopeStart + arrowAngleHalf;
+        Point2D.Double startLeft  = new Point2D.Double(x1 + lineLength * Math.cos(slopeStartLeft), y1 + lineLength * Math.sin(slopeStartLeft));
+        Point2D.Double startRight = new Point2D.Double(x1 + lineLength * Math.cos(slopeStartRight), y1 + lineLength * Math.sin(slopeStartRight));
+        
+        Path2D.Double arrowStart = new Path2D.Double();
+        arrowStart.moveTo(x1, y1);
+        arrowStart.lineTo(startLeft.x, startLeft.y);
+        arrowStart.lineTo(startRight.x, startRight.y);
+        arrowStart.closePath();
+        offScreen.fill(arrowStart);
+        
+        double slopeEnd = this.getSlopeOfCubicBezierCurve(1.0, path);
+        slopeEnd += Math.PI;
+        double slopeEndLeft  = slopeEnd - arrowAngleHalf;
+        double slopeEndRight = slopeEnd + arrowAngleHalf;
+        Point2D.Double endLeft  = new Point2D.Double(x2 + lineLength * Math.cos(slopeEndLeft), y2 + lineLength * Math.sin(slopeEndLeft));
+        Point2D.Double endRight = new Point2D.Double(x2 + lineLength * Math.cos(slopeEndRight), y2 + lineLength * Math.sin(slopeEndRight));
+        
+        Path2D.Double arrowEnd = new Path2D.Double();
+        arrowEnd.moveTo(x2, y2);
+        arrowEnd.lineTo(endLeft.x, endLeft.y);
+        arrowEnd.lineTo(endRight.x, endRight.y);
+        arrowEnd.closePath();
+        offScreen.fill(arrowEnd);
+    }
+    
+    /**
+     * Calculates the slope of a cubic Bezier curve at a point in time along its curve
+     * time = 0 corresponds to the start point, time = 1 corresponds to the end point
+     * @param time
+     * @param curve
+     * @return 
+     */
+    public double getSlopeOfCubicBezierCurve(double time, CubicCurve2D curve) {
+        if (time < 0.0)
+            return Double.NaN;
+        if (time > 1.0)
+            return Double.NaN;
+        
+        double dx = 3 * Math.pow((1-time), 2) * (curve.getCtrlX1() - curve.getX1())
+                + 6 * (1-time) * time * (curve.getCtrlX2() - curve.getCtrlX1())
+                + 3 * time * time * (curve.getX2() - curve.getCtrlX2());
+        double dy = 3 * Math.pow((1-time), 2) * (curve.getCtrlY1() - curve.getY1())
+                + 6 * (1-time) * time * (curve.getCtrlY2() - curve.getCtrlY1())
+                + 3 * time * time * (curve.getY2() - curve.getCtrlY2());
+        
+        return Math.atan2(dy, dx);
     }
     
     
