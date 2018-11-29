@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Insets;
 import visualsorting.sorters.InsertionSort;
 import visualsorting.StartArrayFactory.*;
+import visualsorting.Transition.TransitionType;
 
 /**
  * Encapsulates all of the options
@@ -28,6 +29,7 @@ public class Options {
     public Color BACKGROUND_COLOR   = DEAULT_BACKGROUND_COLOR;
     public Color TEXT_COLOR         = DEAULT_TEXT_COLOR;
     public boolean IS_ANIMATED      = DEAULT_IS_ANIMATED;
+    public TransitionType TRANSITION_TYPE = DEFAULT_TRANSITION_TYPE;
     public boolean SHOW_SWAP_ARROWS = DEAULT_SHOW_SWAP_ARROWS;
     public String FONT_FAMILY       = DEAULT_FONT_FAMILY;
     public int FONT_SIZE            = DEAULT_FONT_SIZE;
@@ -53,6 +55,7 @@ public class Options {
     private static final Color DEAULT_BACKGROUND_COLOR   = new Color(20 , 20 , 20 );
     private static final Color DEAULT_TEXT_COLOR         = Color.WHITE;
     private static final boolean DEAULT_IS_ANIMATED      = false;
+    private static final TransitionType DEFAULT_TRANSITION_TYPE     = TransitionType.LINEAR;
     private static final boolean DEAULT_SHOW_SWAP_ARROWS = false;
     private static final String DEAULT_FONT_FAMILY       = "Courier New";
     private static final int DEAULT_FONT_SIZE            = 16;
@@ -96,6 +99,7 @@ public class Options {
                 else if (option.equals("BACKGROUND_COLOR"))         this.BACKGROUND_COLOR =         readAsColor(optionValue);
                 else if (option.equals("TEXT_COLOR"))               this.TEXT_COLOR =               readAsColor(optionValue);
                 else if (option.equals("IS_ANIMATED"))              this.IS_ANIMATED =              readAsBool(optionValue);
+                else if (option.equals("TRANSITION_TYPE"))          this.TRANSITION_TYPE =          readAsTransition(optionValue);
                 else if (option.equals("SHOW_SWAP_ARROWS"))         this.SHOW_SWAP_ARROWS =         readAsBool(optionValue);
                 else if (option.equals("FONT_FAMILY"))              this.FONT_FAMILY =              readAsString(optionValue);
                 else if (option.equals("FONT_SIZE"))                this.FONT_SIZE =                readAsInt(optionValue);
@@ -200,6 +204,18 @@ public class Options {
                 readAsInt(split[1]),
                 readAsInt(split[2]),
                 readAsInt(split[3]) );
+    }
+    
+    public TransitionType readAsTransition(String s) {
+        s = s.trim();
+        for (int i = 0; i < TransitionType.values().length; i++) {
+            TransitionType type = TransitionType.values()[i];
+            if (s.equals(type.toString()))
+                return type;
+        }
+        System.out.println("COULD NOT RECOGNIZE THE TRANSITION NAME");
+        System.exit(1);
+        return null;
     }
 
 

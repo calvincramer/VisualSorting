@@ -18,7 +18,7 @@ public class Transition {
     private boolean transitionDone;
     private TransitionType transitionType;
     
-    private enum TransitionType {
+    public enum TransitionType {
         LINEAR, SIGMOID, TANH, INVERSE, INVERSEINVERSE
     }
     
