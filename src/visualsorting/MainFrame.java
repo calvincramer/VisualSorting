@@ -224,10 +224,22 @@ public class MainFrame extends JFrame{
         return options.GRAPH_INSETS.left + this.getInsets().left + index * (columnWidth + options.GAP_WIDTH);
     }
     
+    /**
+     * Calculates the y coordinate of the top of the number at a specific index
+     * This refers to the y coordinate of the top of each bar
+     * @param index
+     * @return 
+     */
     private double getTop(int index) {
-        return this.getHeight() - this.getInsets().bottom - options.GRAPH_INSETS.bottom - (sorter.array[index] * 1.0 / highestNum) * graphHeight;
+        return this.getHeight() - this.getInsets().bottom - options.GRAPH_INSETS.bottom - getHeight(index);
     }
     
+    /**
+     * Calculates the height of the number at a specific index
+     * The height corresponds to the visual hight on the window
+     * @param index
+     * @return 
+     */
     private double getHeight(int index) {
         return (sorter.array[index] * 1.0 / highestNum) * graphHeight;
     }
@@ -251,10 +263,11 @@ public class MainFrame extends JFrame{
                 x2, y2);    //second point
         offScreen.draw(path);
         
-        //TODO
+        //TODO: MAKE THESE AN OPTION
         double lineLength = Math.min(15, columnWidth);
         double arrowAngleHalf = Math.PI / 11;
         //draw arrows
+        //first arrow
         double slopeStart = this.getSlopeOfCubicBezierCurve(0.0, path);
         double slopeStartLeft  = slopeStart - arrowAngleHalf;
         double slopeStartRight = slopeStart + arrowAngleHalf;
@@ -268,6 +281,7 @@ public class MainFrame extends JFrame{
         arrowStart.closePath();
         offScreen.fill(arrowStart);
         
+        //second arrow
         double slopeEnd = this.getSlopeOfCubicBezierCurve(1.0, path);
         slopeEnd += Math.PI;
         double slopeEndLeft  = slopeEnd - arrowAngleHalf;
