@@ -31,6 +31,7 @@ public class Options {
     public boolean IS_ANIMATED      = DEAULT_IS_ANIMATED;
     public TransitionType TRANSITION_TYPE = DEFAULT_TRANSITION_TYPE;
     public boolean SHOW_SWAP_ARROWS = DEAULT_SHOW_SWAP_ARROWS;
+    public Color SWAP_ARROW_COLOR   = DEFAULT_SWAP_ARROW_COLOR;
     public String FONT_FAMILY       = DEAULT_FONT_FAMILY;
     public int FONT_SIZE            = DEAULT_FONT_SIZE;
     public boolean ANTI_ALIAS       = DEAULT_ANTI_ALIAS;
@@ -47,21 +48,22 @@ public class Options {
     private static final NumberType DEAULT_START_ARRAY_NUMBERS_TYPE  = NumberType.UNIQUE;
     private static final ArrayStructure DEAULT_START_ARRAY_STRUCTURE = ArrayStructure.SHUFFLED;
     
-    private static final double DEAULT_GAP_WIDTH         = 0.5;
-    private static final Color DEAULT_DEFAULT_COLOR      = new Color(0  , 120, 255);
-    private static final Color DEFAULT_SELECTED_COLOR    = new Color(0  , 255, 180);
-    private static final Color DEFAULT_SWAP_COLOR_1      = new Color(255, 0  , 255);
-    private static final Color DEFAULT_SWAP_COLOR_2      = new Color(183, 74 , 247);
-    private static final Color DEAULT_BACKGROUND_COLOR   = new Color(20 , 20 , 20 );
-    private static final Color DEAULT_TEXT_COLOR         = Color.WHITE;
-    private static final boolean DEAULT_IS_ANIMATED      = false;
+    private static final double DEAULT_GAP_WIDTH            = 0.5;
+    private static final Color DEAULT_DEFAULT_COLOR         = new Color(0  , 120, 255);
+    private static final Color DEFAULT_SELECTED_COLOR       = new Color(0  , 255, 180);
+    private static final Color DEFAULT_SWAP_COLOR_1         = new Color(255, 0  , 255);
+    private static final Color DEFAULT_SWAP_COLOR_2         = new Color(183, 74 , 247);
+    private static final Color DEAULT_BACKGROUND_COLOR      = new Color(20 , 20 , 20 );
+    private static final Color DEAULT_TEXT_COLOR            = Color.WHITE;
+    private static final boolean DEAULT_IS_ANIMATED         = false;
     private static final TransitionType DEFAULT_TRANSITION_TYPE     = TransitionType.LINEAR;
-    private static final boolean DEAULT_SHOW_SWAP_ARROWS = false;
-    private static final String DEAULT_FONT_FAMILY       = "Courier New";
-    private static final int DEAULT_FONT_SIZE            = 16;
-    private static final boolean DEAULT_ANTI_ALIAS       = true;
-    private static final boolean DEAULT_ANTI_ALIAS_FONT  = true;
-    private static final Insets DEAULT_GRAPH_INSETS      = new Insets(15, 15, 15, 15);
+    private static final boolean DEAULT_SHOW_SWAP_ARROWS    = false;
+    private static final Color DEFAULT_SWAP_ARROW_COLOR     = new Color(0  , 255, 0  );
+    private static final String DEAULT_FONT_FAMILY          = "Courier New";
+    private static final int DEAULT_FONT_SIZE               = 16;
+    private static final boolean DEAULT_ANTI_ALIAS          = true;
+    private static final boolean DEAULT_ANTI_ALIAS_FONT     = true;
+    private static final Insets DEAULT_GRAPH_INSETS         = new Insets(15, 15, 15, 15);
     
     /**
      * Creates default options object
@@ -101,6 +103,7 @@ public class Options {
                 else if (option.equals("IS_ANIMATED"))              this.IS_ANIMATED =              readAsBool(optionValue);
                 else if (option.equals("TRANSITION_TYPE"))          this.TRANSITION_TYPE =          readAsTransition(optionValue);
                 else if (option.equals("SHOW_SWAP_ARROWS"))         this.SHOW_SWAP_ARROWS =         readAsBool(optionValue);
+                else if (option.equals("SWAP_ARROW_COLOR"))        this.SWAP_ARROW_COLOR =         readAsColor(optionValue);
                 else if (option.equals("FONT_FAMILY"))              this.FONT_FAMILY =              readAsString(optionValue);
                 else if (option.equals("FONT_SIZE"))                this.FONT_SIZE =                readAsInt(optionValue);
                 else if (option.equals("ANTI_ALIAS"))               this.ANTI_ALIAS =               readAsBool(optionValue);
