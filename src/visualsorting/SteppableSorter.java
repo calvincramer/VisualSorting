@@ -158,7 +158,7 @@ public abstract class SteppableSorter {
     
     /**
      * Removes all colored indices with a specific color
-     * @param c 
+     * @param c the color
      */
     public void clearColoredIndiciesOf(Color c) {
         for (int i = 0; i < this.coloredIndicies.size(); i++) {
