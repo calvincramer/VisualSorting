@@ -3,8 +3,8 @@ package visualsorting.sorters;
 import visualsorting.SteppableSorter;
 import visualsorting.Util;
 
-public class InsertionSort 
-    extends SteppableSorter {
+public class InsertionSort<T extends Number & Comparable<T>>  
+    extends SteppableSorter<T> {
 
     private int stage = 0;
     private int i;
@@ -29,7 +29,7 @@ public class InsertionSort
                 if (j > 0) {
                     this.numComparisons++;
                     this.numArrayAccesses += 2;
-                    if (array[j-1] > array[j]) {
+                    if (array[j-1].compareTo(array[j]) > 0) {
                         swap(j, j-1);
                         this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                         this.addColoredIndex(j, this.SWAP_COLOR_1, true);
@@ -67,12 +67,12 @@ public class InsertionSort
     }
     
     
-    public static int[] doInsertionSort(int[] arr) {
+    public static Integer[] doInsertionSort(Integer[] arr) {
          int i = 1;
          while (i < arr.length) {
              int j = i;
              while (j > 0 && arr[j-1] > arr[j]) {
-                 SteppableSorter.swap(j, j-1, arr);
+                 Util.swap(j, j-1, arr);
                  j--;
              }
              i++;
@@ -82,10 +82,10 @@ public class InsertionSort
     
     
     public static void main(String[] args) {
-        int[] array = {7,6,5,4,3,2,1};
+        Integer[] array = {7,6,5,4,3,2,1};
         array = Util.shuffleArray(array);
         array = InsertionSort.doInsertionSort(array);
-        SteppableSorter.printArray(array);
+        Util.printArray(array);
     }
 
 }

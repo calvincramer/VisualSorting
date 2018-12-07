@@ -1,6 +1,7 @@
 package visualsorting.sorters;
 
 import visualsorting.SteppableSorter;
+import visualsorting.Util;
 
 /**
  * Credit to Wikipedia for the algorithm:
@@ -10,8 +11,8 @@ import visualsorting.SteppableSorter;
  * for the siftDown method since Wikipedia doesn't does something weird 
  * @author Calvin
  */
-public class HeapSort 
-    extends SteppableSorter {
+public class HeapSort<T extends Number & Comparable<T>>  
+    extends SteppableSorter<T> {
 
     private int stage;
     private int start;
@@ -25,8 +26,6 @@ public class HeapSort
         this.stage = 0;
     }
     
-    
-    
     public int iParent(int i) {
         return (int) ((i-1) / 2);
     }
@@ -37,12 +36,12 @@ public class HeapSort
         return 2*i + 2;
     }
     
-    public void heapSort(int[] arr) {
+    public void heapSort(T[] arr) {
         heapify(arr);
         int end = arr.length - 1;
         while (end > 0) {
             //swap
-            int temp = arr[end];
+            T temp = arr[end];
             arr[end] = arr[0];
             arr[0] = temp;
             
@@ -52,7 +51,7 @@ public class HeapSort
         }
     }
     
-    public void heapify(int[] arr) {
+    public void heapify(T[] arr) {
         int start = iParent(arr.length - 1);
         while (start >= 0) {
             siftDown(arr, start, arr.length - 1);
@@ -60,16 +59,16 @@ public class HeapSort
         }
     }
     
-    public void siftDown(int[] arr, int start, int end) {
+    public void siftDown(T[] arr, int start, int end) {
         int root = start;
         while (iLeftChild(root) <= end) {
             int child = iLeftChild(root);
             
-            if (child + 1 <= end && arr[child] < arr[child + 1]) 
+            if (child + 1 <= end && arr[child].compareTo(arr[child + 1]) < 0) 
                 child = child + 1;
 
-            if (arr[root] < arr[child]) {
-                int temp = arr[root];
+            if (arr[root].compareTo(arr[child]) < 0) {
+                T temp = arr[root];
                 arr[root] = arr[child];
                 arr[child] = temp;
 
@@ -139,13 +138,13 @@ public class HeapSort
                 if (child + 1 <= siftEnd) {
                     this.numComparisons++;
                     this.numArrayAccesses += 2;
-                    if (array[child] < array[child + 1]) 
+                    if (array[child].compareTo(array[child + 1]) < 0) 
                        child = child + 1;
                 }
                 
                 this.numComparisons++;
                 this.numArrayAccesses += 2;
-                if (array[root] < array[child]) {
+                if (array[root].compareTo(array[child]) < 0) {
                     this.swap(root, child);
                     
                     this.clearColoredIndiciesOf(this.SWAP_COLOR_2);
@@ -172,13 +171,13 @@ public class HeapSort
     
     
     public static void main(String[] args) {
-        int[] arr = {1,5,3,7,5,9,56,3,9,7,4,2,9,6,3,89,6};
-        SteppableSorter.printArray(arr);
+        Integer[] arr = {1,5,3,7,5,9,56,3,9,7,4,2,9,6,3,89,6};
+        Util.printArray(arr);
         
         HeapSort hs = new HeapSort();
         hs.setArray(arr);
         hs.heapSort(arr);
 
-        SteppableSorter.printArray(arr);
+        Util.printArray(arr);
     }
 }

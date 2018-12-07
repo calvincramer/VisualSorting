@@ -3,15 +3,16 @@ package visualsorting.sorters;
 import java.util.List;
 import java.util.ArrayList;
 import visualsorting.SteppableSorter;
+import visualsorting.Util;
 
 /**
  * Credit https://en.wikipedia.org/wiki/Merge_sort#Top-down_implementation
  * @author Calvin
  */
-public class MergeSort 
-    extends SteppableSorter {
+public class MergeSort<T extends Number & Comparable<T>>
+    extends SteppableSorter<T> {
 
-    private int[] copyArr;
+    private T[] copyArr;
     private List<Pair> intervals;
     private int state;
     private Pair currentInterval;
@@ -21,11 +22,11 @@ public class MergeSort
     private int k;
     
     @Override
-    public void setArray(int[] arr) {
+    public void setArray(T[] arr) {
         super.setArray(arr);
         
         this.state = 0;
-        this.copyArr = new int[arr.length];
+        this.copyArr = new T[arr.length];
         for (int i = 0; i < arr.length; i++)
             this.copyArr[i] = arr[i];
         
@@ -137,27 +138,20 @@ public class MergeSort
         }
     }
     
-    private static void printArr(int[] a) {
-        for (int n : a) {
-            System.out.print(n + " ");
-        }
-        System.out.println();
-    }
-    
     public static void main(String[] args) {
-        int[] arr = new int[]{8,7,6,5,4,3,2,1};
+        Integer[] arr = new Integer[]{8,7,6,5,4,3,2,1};
         MergeSort ms = new MergeSort();
         ms.setArray(arr);
         
         while (!ms.isFinished()) {
-            printArr(ms.array);
-            printArr(ms.copyArr);
+            Util.printArray(ms.array);
+            Util.printArray(ms.copyArr);
             ms.step();
             
             System.out.println();
         }
-        printArr(ms.array);
-            printArr(ms.copyArr);
+        Util.printArray(ms.array);
+            Util.printArray(ms.copyArr);
     }
 
 }

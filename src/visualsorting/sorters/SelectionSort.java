@@ -3,8 +3,8 @@ package visualsorting.sorters;
 import visualsorting.SteppableSorter;
 import visualsorting.Util;
 
-public class SelectionSort 
-    extends SteppableSorter {
+public class SelectionSort<T extends Number & Comparable<T>>
+    extends SteppableSorter<T> {
     
     private int i;
     private int j;
@@ -37,7 +37,7 @@ public class SelectionSort
         
         this.numComparisons++;
         this.numArrayAccesses += 2;
-        if (array[j] < array[index])
+        if (array[j].compareTo(array[index]) < 0)
             index = j;
         
         j++;
@@ -45,7 +45,7 @@ public class SelectionSort
         this.numComparisons++;
         if (j >= array.length) {
             //swap
-            int smallerNumber = array[index];
+            T smallerNumber = array[index];
             array[index] = array[i];
             array[i] = smallerNumber;
             this.numSwaps++;
@@ -78,20 +78,19 @@ public class SelectionSort
     
     public static void main(String args[]) {
          
-        int[] array = {7,6,5,4,3,2,1};
+        Integer[] array = {7,6,5,4,3,2,1};
         array = Util.shuffleArray(array);
         
         SelectionSort ss = new SelectionSort();
         ss.setArray(array);
         
         System.out.println("Initial:");
-        SteppableSorter.printArray(ss.array);
+        Util.printArray(ss.array);
         System.out.println();
         
         while(!ss.done) {
             ss.step();
-            SteppableSorter.printArray(ss.array);
+            Util.printArray(ss.array);
         }
-        
     }
 }

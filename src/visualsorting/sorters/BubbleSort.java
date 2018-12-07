@@ -1,16 +1,21 @@
 package visualsorting.sorters;
 
 import visualsorting.SteppableSorter;
+import visualsorting.Util;
 
 /**
  * A steppable bubble sort algorithm
  * @author Calvin Cramer
  */
-public class BubbleSort 
-    extends SteppableSorter {
+public class BubbleSort<T extends Number & Comparable<T>> 
+    extends SteppableSorter<T> {
+    
+    //sorting variables
+    int m;
+    int i;
     
     @Override
-    public void setArray(int[] array) {
+    public void setArray(T[] array) {
         super.setArray(array);
         
         this.m = array.length;
@@ -22,16 +27,10 @@ public class BubbleSort
      * For debug purposes
      */
     public void sort() {
-
-        for (int m = array.length; m >= 0; m--) {
-            for (int i = 0; i < array.length - 1; i++) {
-                
-                if (array[i] > array[i+1]) {
+        for (int m = array.length; m >= 0; m--)
+            for (int i = 0; i < array.length - 1; i++)
+                if (array[i].compareTo(array[i+1]) > 0)
                     swap(i, i+1);
-                }
-                
-            }
-        }
     }
 
     @Override
@@ -42,7 +41,7 @@ public class BubbleSort
         if (i < array.length - 1) {
             this.numComparisons++;
             this.numArrayAccesses += 2;
-            if (array[i] > array[i + 1]) {
+            if (array[i].compareTo(array[i + 1]) > 0) {
                 swap(i, i + 1);
                 this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                 this.addColoredIndex(i, this.SWAP_COLOR_1, false);
@@ -74,7 +73,7 @@ public class BubbleSort
     }
     
     public static void main(String[] args) {
-        int[] input = new int[7];
+        Integer[] input = new Integer[7];
         for (int i = 1; i <= input.length; i++) {
             input[i - 1] = Math.abs(i - input.length) + 1;
         }
@@ -83,13 +82,9 @@ public class BubbleSort
         
         while (!bs.isFinished()) {
             bs.step();
-            SteppableSorter.printArray(bs.array);
+            Util.printArray(bs.array);
             System.out.println();
         }
   
     }
-     
-    //sorting variables
-    int m;
-    int i;
 }

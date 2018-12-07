@@ -98,17 +98,18 @@ public class Util {
     }
     
     /**
-     * Shuffles an array
+     * Shuffles an array of generic type
+     * Doesn't support primitive types :(
      * @param array
-     * @return 
+     * @return A shuffled array, such that there is no discernable pattern to the array
      */
-    public static int[] shuffleArray(int[] array) {
+    public static <T> T[] shuffleArray(T[] array) {
         Random r = new Random(System.currentTimeMillis());
         for (int i = array.length - 1; i > 0; i--) {
           int index = r.nextInt(i + 1);
           
           // swap
-          int a = array[index];
+          T a = array[index];
           array[index] = array[i];
           array[i] = a;
         }

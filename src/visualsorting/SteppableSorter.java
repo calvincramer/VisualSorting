@@ -14,7 +14,7 @@ import javafx.util.Pair;
  */
 public abstract class SteppableSorter<T extends Number & Comparable<T>> {
     
-    private T[] array;
+    protected List<T> array;
     private T maxNum;
 
     private List<Pair<Integer, List<Color>>> coloredIndicies;
@@ -46,7 +46,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * Gets the array
      * @return 
      */
-    public T[] getArray() {
+    public List getArray() {
         return array;
     }
     
@@ -55,7 +55,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * Resets the algorithm to the beginning 
      * @param arr 
      */
-    public void setArray(T[] arr) {
+    public void setArray(List<T> arr) {
         this.array = arr;
         //this.lastSwappedIndicies = null;
         //this.selectedIndicies = null;
@@ -69,11 +69,11 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
         
         //find max
         this.maxNum = null;
-        if (this.array != null && this.array.length != 0) {
-            this.maxNum = this.array[0];
-            for (int i = 0; i < this.array.length; i++) {
-                if (this.maxNum.compareTo(this.array[i]) < 0)
-                    this.maxNum = this.array[i];
+        if (array != null && array.size() != 0) {
+            this.maxNum = array.get(0);
+            for (int i = 0; i < array.size(); i++) {
+                if (this.maxNum.compareTo(array.get(i)) < 0)
+                    this.maxNum = array.get(i);
             }
         }
     }
@@ -97,7 +97,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * @param playSoundHere 
      */
     public void addColoredIndex(int i, Color c, boolean playSoundHere) {
-        if (i < 0 || i >= this.array.length) {
+        if (i < 0 || i >= array.size()) {
             //System.err.println("CANT COLOR THE INDEX, IT IS OUT OF RANGE");
             return;
         }
@@ -154,7 +154,8 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * @param secondIndex second index
      */
     public void addSwapArrow(int firstIndex, int secondIndex, Color c) {
-        if (firstIndex < 0 || secondIndex < 0 || firstIndex >= array.length || secondIndex >= array.length) {
+        if (firstIndex < 0 || secondIndex < 0 
+                || firstIndex >= array.size() || secondIndex >= array.size()) {
             return;
         }
         this.swapArrowIndicies.add(new Triplet<>(firstIndex, secondIndex, c));
@@ -272,8 +273,8 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * @return 
      */
     public boolean isFinished() {
-        for (int i = 0; i < array.length - 1; i++) {
-            if (this.array[i].compareTo(this.array[i+1]) > 0)
+        for (int i = 0; i < array.size() - 1; i++) {
+            if (array.get(i).compareTo(array.get(i+1)) > 0)
                 return false;
         }
         return true;
@@ -287,9 +288,9 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * @param j 
      */
     protected void swap(int i, int j) {
-        T temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+        T temp = array.get(i);
+        array.set(i, array.get(j));
+        array.set(j, temp);
         
         this.numArrayAccesses += 4;
         this.numSwaps++;

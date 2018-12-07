@@ -11,10 +11,10 @@ import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.CubicCurve2D;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
 import javax.swing.JFrame;
 
 /**
@@ -102,7 +102,7 @@ public class MainFrame extends JFrame{
         //redo some math
         this.graphWidth = this.getWidth() - this.getInsets().left - this.getInsets().right - options.GRAPH_INSETS.left - options.GRAPH_INSETS.right;
         this.graphHeight = this.getHeight() - this.getInsets().top - this.getInsets().bottom - options.GRAPH_INSETS.top - options.GRAPH_INSETS.bottom;
-        this.columnWidth = (graphWidth * 1.0 / sorter.getArray().length ) - options.GAP_WIDTH;    
+        this.columnWidth = (graphWidth * 1.0 / sorter.getArray().size() ) - options.GAP_WIDTH;    
     }
     
     private void createOffScreen() {
@@ -142,14 +142,14 @@ public class MainFrame extends JFrame{
         
         //getting the array from the sorter to draw
         //convert to double
-        Number[] array = sorter.getArray();
+        List<Number> array = sorter.getArray();
         
         //set up math
         //double y = this.getHeight() - this.getInsets().bottom - options.GRAPH_INSETS.bottom;
         
         //drawing the array
         Rectangle2D.Double tempRect = new Rectangle2D.Double();
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < array.size(); i++) {
             //set color
             offScreen.setColor(sorter.getColorAt(i));
             tempRect.setRect(getX(i), getTop(i), columnWidth, getHeight(i));
@@ -159,7 +159,8 @@ public class MainFrame extends JFrame{
         double x;
         //draw swap lines
         if (options.SHOW_SWAP_ARROWS) {
-            for (Triplet<Integer, Integer, Color> p : this.sorter.getSwapIndicies()) {
+            List<Triplet<Integer, Integer, Color>> tempList = sorter.getSwapIndicies();
+            for (Triplet<Integer, Integer, Color> p : tempList) {
                 offScreen.setColor(p.getThird());
                 
                 if (p.getFirst() > p.getSecond())   //first is the lowest x value
@@ -201,7 +202,7 @@ public class MainFrame extends JFrame{
         offScreen.setColor(options.TEXT_COLOR);
         offScreen.drawString("Name: " + sorter.getSorterName(), (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Size: " + sorter.array.length, (int) x, (int) y);
+        offScreen.drawString("Size: " + sorter.getArray().size(), (int) x, (int) y);
         y += textHeight;
         offScreen.drawString("Comparisons: " + sorter.numComparisons, (int) x, (int) y);
         y += textHeight;
@@ -242,7 +243,8 @@ public class MainFrame extends JFrame{
      * @return 
      */
     private double getHeight(int index) {
-        return (sorter.getArray()[index].doubleValue() * 1.0 / highestNum) * graphHeight;
+        List<Number> s = sorter.getArray();
+        return (s.get(index).doubleValue() / sorter.getMax().doubleValue()) * graphHeight;
     }
     
     /**
@@ -321,21 +323,11 @@ public class MainFrame extends JFrame{
         return Math.atan2(dy, dx);
     }
     
-    
     /**
      * Sets the sorter, which is the algorithm that sorts the array.
      * @param sorter  the sorter
      */
     public final void setSorter(SteppableSorter sorter) {
         this.sorter = sorter;
-        
-        int[] array = sorter.getArray();
-        
-        this.highestNum = array[0];
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] > highestNum)
-                highestNum = array[i];
-        }
-        
     }
 }
