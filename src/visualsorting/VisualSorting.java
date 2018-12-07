@@ -22,7 +22,10 @@ public class VisualSorting {
     private Player player;
     private SteppableSorter sorter = null;
     private int[] copyArr;
-    protected long startTime = -1;
+    protected long startTime;
+    protected long currentTime;
+    private int numSortTicks = 0;
+    private boolean currentlySorting = false;
     
     /**
      * Creates the window to show the visual sorting algorithm
@@ -57,39 +60,25 @@ public class VisualSorting {
         this.window = new MainFrame(sorter, this, options);
         this.window.setSorter(sorter);
         this.window.setVisible(true);
-        //why is the graph not showing on the laptop?
-        windowRepaintTick();
-        this.window.setSize(this.window.getSize());
+        //why is the graph not showing on the laptop? -- because of the Thread.sleep
         
-        //timer tasks
+        //create timer tasks
         this.updateSortingStepperTask = new TimerTask() {
             @Override public void run() {
                 sortTick();
-            }
-        };
+        }};
         this.windowRepaintTask = new TimerTask() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 windowRepaintTick();
-            }
-        };
+        }};
         timer = new Timer(true);
         
-        //wait a little right after the window pops up
-        try {
-            Thread.sleep( options.START_DELAY );
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-        
-        //start timer
-        startTime = System.currentTimeMillis();
-        //VisualSorting.currentTime = System.currentTimeMillis();
+        //start timers
         if (options.CLOCK_SPEED == 0) {
             while (sortTick()) {}
         } else {
             timer.scheduleAtFixedRate(windowRepaintTask, 0, 17); //17ms about 60fps
-            timer.scheduleAtFixedRate(updateSortingStepperTask, 0, options.CLOCK_SPEED); 
+            timer.scheduleAtFixedRate(updateSortingStepperTask, options.START_DELAY, options.CLOCK_SPEED); 
         }
     }
     
@@ -130,9 +119,16 @@ public class VisualSorting {
      * @return returns whether the process is complete (false) or is still running (true)
      */
     public boolean sortTick() {
+        if (this.numSortTicks == 0) {
+            this.currentTime = 0;
+            this.startTime = System.currentTimeMillis();
+            this.currentlySorting = true;
+        }
+        this.numSortTicks++;
         
         if (sorter.isFinished() && !doingEndCheck) {
             this.doingEndCheck = true;
+            this.currentlySorting = false;
             sorter.clearColoredIndices();
             sorter.clearSwapArrows();
             sorter.addColoredIndex(0, sorter.SELECTED_COLOR, true);
@@ -163,6 +159,8 @@ public class VisualSorting {
      * Repaints the window
      */
     public void windowRepaintTick() {
+        if (this.currentlySorting == true)
+            this.currentTime = System.currentTimeMillis() - this.startTime;
         this.window.repaint();
     }
     
