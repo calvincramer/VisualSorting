@@ -241,7 +241,7 @@ public class MainFrame extends JFrame{
      * @return 
      */
     private double getHeight(int index) {
-        return (sorter.array[index] * 1.0 / highestNum) * graphHeight;
+        return (sorter.getArray()[index].doubleValue() * 1.0 / highestNum) * graphHeight;
     }
     
     /**

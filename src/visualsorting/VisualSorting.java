@@ -20,7 +20,7 @@ public class VisualSorting {
     private MainFrame window;
     private Options options;
     private Player player;
-    private SteppableSorter sorter = null;
+    private SteppableSorter<Integer> sorter = null;
     private Integer[] copyArr;
     protected long startTime;
     protected long currentTime;
@@ -150,7 +150,7 @@ public class VisualSorting {
         
         //play sound
         if (sorter.indexToPlaySound() >= 0 && sorter.indexToPlaySound() < sorter.getArray().length) {
-            player.playSound(1, sorter.getMax().doubleValue(), sorter.getArray()[sorter.indexToPlaySound()].doubleValue());
+            player.playSound(1, sorter.getMax(), sorter.getArray()[sorter.indexToPlaySound()]);
         }
         return true;
     }
