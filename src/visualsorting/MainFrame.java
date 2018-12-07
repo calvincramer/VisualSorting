@@ -141,7 +141,8 @@ public class MainFrame extends JFrame{
         offScreen.fillRect(0, 0, offScreenImage.getWidth(null), offScreenImage.getHeight(null));
         
         //getting the array from the sorter to draw
-        int[] array = sorter.getArray();
+        //convert to double
+        Number[] array = sorter.getArray();
         
         //set up math
         //double y = this.getHeight() - this.getInsets().bottom - options.GRAPH_INSETS.bottom;
