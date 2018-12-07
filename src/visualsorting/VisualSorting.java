@@ -21,7 +21,7 @@ public class VisualSorting {
     private Options options;
     private Player player;
     private SteppableSorter sorter = null;
-    private int[] copyArr;
+    private Integer[] copyArr;
     protected long startTime;
     protected long currentTime;
     private int numSortTicks = 0;
@@ -34,10 +34,10 @@ public class VisualSorting {
         this.init();
         
         //start array
-        int[] array = StartArrayFactory.generate(options.NUM_ELEMENTS, options.START_ARRAY_STRUCTURE, options.START_ARRAY_NUMBERS_TYPE);
-                
+        Integer[] array = StartArrayFactory.generate(options.NUM_ELEMENTS, options.START_ARRAY_STRUCTURE, options.START_ARRAY_NUMBERS_TYPE);
+           
         //copy original array
-        this.copyArr = new int[array.length];
+        this.copyArr = new Integer[array.length];
         for (int i = 0; i < array.length; i++)
             this.copyArr[i] = array[i];
         
@@ -150,7 +150,7 @@ public class VisualSorting {
         
         //play sound
         if (sorter.indexToPlaySound() >= 0 && sorter.indexToPlaySound() < sorter.getArray().length) {
-            player.playSound(1, sorter.getMax(), sorter.getArray()[sorter.indexToPlaySound()]);
+            player.playSound(1, sorter.getMax().doubleValue(), sorter.getArray()[sorter.indexToPlaySound()].doubleValue());
         }
         return true;
     }
@@ -173,19 +173,19 @@ public class VisualSorting {
         
         //check if the array was sorted properly
         System.out.println("Original array: " + Util.toStringArr(this.copyArr));
-        System.out.println("Sorted array: " + Util.toStringArr(sorter.array));
+        System.out.println("Sorted array: " + Util.toStringArr(sorter.getArray()));
         
         Arrays.sort(this.copyArr);
         
         System.out.println("Array.sort() original: " + Util.toStringArr(this.copyArr));
 
         int numErrors = 0;
-        if (this.copyArr.length != sorter.array.length) {
+        if (this.copyArr.length != sorter.getArray().length) {
             System.out.println("ERROR: lengths of sorted and original arrays not the same");
             numErrors++;
         }
         for (int i = 0; i < copyArr.length; i++) {
-            if (copyArr[i] != sorter.array[i]) {
+            if (copyArr[i].compareTo(sorter.getArray()[i]) != 0) {
                 System.out.println("ERROR: not sorted properly at index " + i);
                 numErrors++;
             }

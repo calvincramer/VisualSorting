@@ -60,11 +60,10 @@ public class Util {
      * @param a
      * @return 
      */
-    protected static String toStringArr(int[] a) {
+    protected static <T> String toStringArr(T[] a) {
         String s = "";
-        for (int n : a) {
-            s += n + " ";
-        }
+        for (T obj : a)
+            s += obj.toString() + " ";
         return s;
     }
     
@@ -114,5 +113,41 @@ public class Util {
           array[i] = a;
         }
         return array;
+    }
+    
+    /**
+     * Determines if the algorithm is finished.
+     * It is finished if the array is sorted.
+     * @return 
+     */
+    public static <U extends Comparable<U>> boolean isSorted(U[] array) {
+        for(int i = 0; i < array.length - 1; i++) {
+            if (array[i].compareTo(array[i+1]) > 0)
+                return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Convenience method to swap two elements in the array  
+     * @param i
+     * @param j 
+     */
+    public static <U extends Comparable<U>> void swap(int i, int j, U[] array) {
+        U temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    
+    /**
+     * Convenience method to print an array in the form [o1, o2, ... , on]
+     * @param array the input array
+     */
+    public static <T> void printArray(T[] array) {
+        System.out.print("[");
+        for (int i = 0; i < array.length - 1; i++) {
+            System.out.print(array[i].toString() + ", ");
+        }
+        System.out.println(array[array.length - 1].toString() + "]");
     }
 }
