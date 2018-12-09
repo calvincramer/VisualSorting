@@ -21,21 +21,26 @@ public class HeapSort
     private int returnToStage;
     private int root;
     
+    
     public HeapSort() {
         this.stage = 0;
     }
     
     
-    
     public int iParent(int i) {
         return (int) ((i-1) / 2);
     }
+    
+    
     public int iLeftChild(int i) {
         return 2*i + 1;
     }
+    
+    
     public int iRightChild(int i) {
         return 2*i + 2;
     }
+    
     
     public void heapSort(int[] arr) {
         heapify(arr);
@@ -52,6 +57,7 @@ public class HeapSort
         }
     }
     
+    
     public void heapify(int[] arr) {
         int start = iParent(arr.length - 1);
         while (start >= 0) {
@@ -59,6 +65,7 @@ public class HeapSort
             start--;
         }
     }
+    
     
     public void siftDown(int[] arr, int start, int end) {
         int root = start;
@@ -79,6 +86,7 @@ public class HeapSort
         }
     }
 
+    
     @Override
     protected void step() {
         if (stage == 0) {   //heapify init
@@ -165,6 +173,7 @@ public class HeapSort
         }
     }
 
+    
     @Override
     protected String getSorterName() {
         return "HeapSort";

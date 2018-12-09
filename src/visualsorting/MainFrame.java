@@ -23,23 +23,15 @@ import javax.swing.JFrame;
  */
 public class MainFrame extends JFrame{
     
-    //private static final Font MONO = new Font("Courier New", Font.PLAIN, 16);
-    
     private SteppableSorter sorter;
     private VisualSorting vs;
-    private Options options;
-
+    private final Options options;
     private int highestNum;
     private Graphics2D offScreen;
     private Image offScreenImage;
-    
     private double graphWidth;
     private double graphHeight;
     private double columnWidth;
-    //private static final Color BACKGROUND_COLOR = new Color(20,20,20);
-
-    //private static final double NUMBER_PADDING = 0.0;
-    //private static final Insets GRAPH_INSETS = new Insets(15,15,15,15);
     
     public MainFrame(SteppableSorter sorter, VisualSorting vs, Options options) {
         this.init(sorter.getSorterName());
@@ -47,6 +39,7 @@ public class MainFrame extends JFrame{
         this.vs = vs;
         this.options = options;
     }
+    
     
     /**
      * Initializes the frames components
@@ -81,10 +74,12 @@ public class MainFrame extends JFrame{
         
     }
     
+    
     @Override
     public void update(Graphics g) {
         
     }
+    
     
     private void frameResized() {
         //makes sure the off screen buffer is updated to the new size of the frame
@@ -101,6 +96,7 @@ public class MainFrame extends JFrame{
         this.graphHeight = this.getHeight() - this.getInsets().top - this.getInsets().bottom - insets.top - insets.bottom;
         this.columnWidth = (graphWidth * 1.0 / sorter.getArray().length ) - gap_width;    
     }
+    
     
     private void createOffScreen() {
         Boolean anti_alias = (Boolean) options.getOption("ANTI_ALIAS").getData();
@@ -123,6 +119,7 @@ public class MainFrame extends JFrame{
         offScreen.setFont(new Font(font_family, Font.PLAIN, font_size));
     }
 
+    
     @Override
     public void paint(Graphics g) {
         
@@ -223,6 +220,7 @@ public class MainFrame extends JFrame{
         g.drawImage(offScreenImage, 0, 0, null);
     }
     
+    
     /**
      * Calculates the leftmost coordinate of the index'th number
      * @param index
@@ -234,14 +232,17 @@ public class MainFrame extends JFrame{
         return insets.left + this.getInsets().left + index * (columnWidth + gap_width);
     }
     
+    
     private double getTop(int index) {
         Insets insets = (Insets) options.getOption("GRAPH_INSETS").getData();
         return this.getHeight() - this.getInsets().bottom - insets.bottom - (sorter.array[index] * 1.0 / highestNum) * graphHeight;
     }
     
+    
     private double getHeight(int index) {
         return (sorter.array[index] * 1.0 / highestNum) * graphHeight;
     }
+    
     
     /**
      * Draws a swap arrow between the two points
@@ -291,6 +292,7 @@ public class MainFrame extends JFrame{
         arrowEnd.closePath();
         offScreen.fill(arrowEnd);
     }
+    
     
     /**
      * Calculates the slope of a cubic Bezier curve at a point in time along its curve

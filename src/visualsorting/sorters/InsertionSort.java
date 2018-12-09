@@ -10,10 +10,12 @@ public class InsertionSort
     private int i;
     private int j;
     
+    
     public InsertionSort() {
         i = 1;
         j = i;
     }
+    
     
     @Override
     protected void step() {
@@ -61,6 +63,7 @@ public class InsertionSort
         }
     }
 
+    
     @Override
     protected String getSorterName() {
         return "InsertionSort";
@@ -87,5 +90,4 @@ public class InsertionSort
         array = InsertionSort.doInsertionSort(array);
         SteppableSorter.printArray(array);
     }
-
 }

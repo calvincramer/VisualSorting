@@ -20,6 +20,7 @@ public class MergeSort
     private int j;
     private int k;
     
+    
     @Override
     public void setArray(int[] arr) {
         super.setArray(arr);
@@ -38,6 +39,7 @@ public class MergeSort
         this.state = 0;
     }
     
+    
     private void addIntervals(List<Pair> collect, int left, int right) {
         if (right - left < 2)
             return;
@@ -48,6 +50,7 @@ public class MergeSort
         
         collect.add(new Pair(left, right));
     }
+    
     
     @Override
     protected void step() {
@@ -107,20 +110,24 @@ public class MergeSort
         }   
     }
     
+    
     private boolean lteCheck(int a, int b) {
         this.numComparisons++;
         return a <= b;
     }
+    
     
     private int arrayAccessCheck(int[] array, int index) {
         this.numArrayAccesses++;
         return array[index];
     }
 
+    
     @Override
     protected String getSorterName() {
         return "MergeSort";
     }
+    
     
     private class Pair {
         int left;
@@ -137,12 +144,14 @@ public class MergeSort
         }
     }
     
+    
     private static void printArr(int[] a) {
         for (int n : a) {
             System.out.print(n + " ");
         }
         System.out.println();
     }
+    
     
     public static void main(String[] args) {
         int[] arr = new int[]{8,7,6,5,4,3,2,1};
@@ -159,5 +168,4 @@ public class MergeSort
         printArr(ms.array);
             printArr(ms.copyArr);
     }
-
 }

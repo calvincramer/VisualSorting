@@ -10,12 +10,14 @@ public class SelectionSort
     private int j;
     private int index;
 
+    
     public SelectionSort() {
         this.i = 0;
         this.j = i + 1;
         this.index = i;
     }
  
+    
     public static int[] doSelectionSort(int[] arr) {
          for (int i = 0; i < arr.length - 1; i++) {
             int index = i;
@@ -71,10 +73,12 @@ public class SelectionSort
         
     }
     
+    
     @Override
     protected String getSorterName() {
         return "SelectionSort";
     }
+    
     
     public static void main(String args[]) {
          

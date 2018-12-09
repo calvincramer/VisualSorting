@@ -25,6 +25,7 @@ public class StartArrayFactory {
         CHOOSE_RANDOMLY,
     }
     
+    
     /**
      * The overall structure of the whole array
      */
@@ -35,20 +36,24 @@ public class StartArrayFactory {
         PARTIALLY_SHUFFLED,
     }
     
+    
     public static int[] generate(int size) {
         return generate(size, ArrayStructure.SHUFFLED, NumberType.UNIQUE);
     }
+    
     
     public static int[] generate(int size, NumberType numType) {
         return generate(size, ArrayStructure.SHUFFLED, numType);
     }
     
+    
     public static int[] generate(int size, ArrayStructure structure) {
         return generate(size, structure, NumberType.UNIQUE);
     }
     
+    
     /**
-     * TODO: IMPLEMENT
+     * Generates an array given the array structure and number type
      * @param size
      * @param structure
      * @param numType
@@ -143,5 +148,4 @@ public class StartArrayFactory {
             toReturn[i] = arr.get(i);
         return toReturn;
     }
-
 }

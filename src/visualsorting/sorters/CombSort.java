@@ -10,11 +10,8 @@ public class CombSort
     private double shrink;
     private boolean sorted;
     private int i;
-    
-    //private static final Color HEAP_SORT_SWAP_COLOR = new Color(226, 93, 11);
-    //private static final Color HEAP_SORT_SELECT_COLOR = new Color(255, 255, 0);
-    
     private int stage;
+    
     
     public CombSort() {
         //this.gap = arr.length;
@@ -24,11 +21,13 @@ public class CombSort
         this.stage = 0;
     }
     
+    
     @Override 
     public void setArray(int[] arr) {
         super.setArray(arr);
         this.gap = arr.length;
     }
+    
     
     @Override
     protected void step() {
@@ -87,6 +86,7 @@ public class CombSort
  
     }
 
+    
     @Override
     protected String getSorterName() {
         return "CombSort";
@@ -121,11 +121,11 @@ public class CombSort
         return arr;
     }
     
+    
     public static void main(String[] args) {
         int[] array = {7,6,5,4,3,2,1};
         array = Util.shuffleArray(array);
         array = CombSort.doCombSort(array);
         SteppableSorter.printArray(array);
     }
-
 }

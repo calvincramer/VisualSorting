@@ -9,6 +9,10 @@ import visualsorting.SteppableSorter;
 public class BubbleSort 
     extends SteppableSorter {
     
+    //sorting variables
+    int m;
+    int i;
+    
     @Override
     public void setArray(int[] array) {
         super.setArray(array);
@@ -17,6 +21,7 @@ public class BubbleSort
         this.i = 0;
     }
   
+    
     /**
      * Sorts the array in one go
      * For debug purposes
@@ -34,6 +39,7 @@ public class BubbleSort
         }
     }
 
+    
     @Override
     protected void step() {
         if (done) return;
@@ -68,10 +74,12 @@ public class BubbleSort
         //this.selectedIndicies = new int[]{i};
     }
     
+    
     @Override
     protected String getSorterName() {
         return "Bubble Sort";
     }
+    
     
     public static void main(String[] args) {
         int[] input = new int[7];
@@ -88,8 +96,4 @@ public class BubbleSort
         }
   
     }
-     
-    //sorting variables
-    int m;
-    int i;
 }

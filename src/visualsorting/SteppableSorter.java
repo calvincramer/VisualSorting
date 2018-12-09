@@ -30,7 +30,6 @@ public abstract class SteppableSorter {
     public Color SWAP_COLOR_1;
     public Color SWAP_COLOR_2;
 
-    
     /**
      * Step once in the algorithm
      */

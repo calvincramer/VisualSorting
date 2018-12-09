@@ -13,6 +13,7 @@ import visualsorting.StartArrayFactory.*;
  * @author Calvin
  */
 public class Options {
+    
     //default values
     private static final Class<?> DEFAULT_SORTER_CLASS   = InsertionSort.class;
     private static final int DEAULT_NUM_ELEMENTS         = 64;
@@ -37,32 +38,6 @@ public class Options {
     private static final boolean DEAULT_ANTI_ALIAS_FONT  = true;
     private static final Insets DEAULT_GRAPH_INSETS      = new Insets(15, 15, 15, 15);
     
-    //all options
-    /*
-    public Class<?> SORTER_CLASS    = DEFAULT_SORTER_CLASS;
-    public int NUM_ELEMENTS         = DEAULT_NUM_ELEMENTS;
-    public String SOUND_PACK        = DEAULT_SOUND_PACK;
-    public int CLOCK_SPEED          = DEAULT_CLOCK_SPEED;
-    public int START_DELAY          = DEAULT_START_DELAY;
-    public int NUM_SIMUL_SOUNDS     = DEAULT_NUM_SIMUL_SOUNDS;
-    public NumberType START_ARRAY_NUMBERS_TYPE  = DEAULT_START_ARRAY_NUMBERS_TYPE;
-    public ArrayStructure START_ARRAY_STRUCTURE = DEAULT_START_ARRAY_STRUCTURE;
-    
-    public double GAP_WIDTH         = DEAULT_GAP_WIDTH;
-    public Color DEFAULT_COLOR      = DEAULT_DEFAULT_COLOR;
-    public Color SELECTED_COLOR     = DEFAULT_SELECTED_COLOR;
-    public Color SWAP_COLOR_1       = DEFAULT_SWAP_COLOR_1;
-    public Color SWAP_COLOR_2       = DEFAULT_SWAP_COLOR_2;
-    public Color BACKGROUND_COLOR   = DEAULT_BACKGROUND_COLOR;
-    public Color TEXT_COLOR         = DEAULT_TEXT_COLOR;
-    public boolean IS_ANIMATED      = DEAULT_IS_ANIMATED;
-    public boolean SHOW_SWAP_ARROWS = DEAULT_SHOW_SWAP_ARROWS;
-    public String FONT_FAMILY       = DEAULT_FONT_FAMILY;
-    public int FONT_SIZE            = DEAULT_FONT_SIZE;
-    public boolean ANTI_ALIAS       = DEAULT_ANTI_ALIAS;
-    public boolean ANTI_ALIAS_FONT  = DEAULT_ANTI_ALIAS_FONT;
-    public Insets GRAPH_INSETS      = DEAULT_GRAPH_INSETS;
-    */
     
     /**
      * Option enum that lists ALL options
@@ -105,7 +80,6 @@ public class Options {
         }};
     }
     
-    
     public static void main(String[] args) {
         Option<Integer> opt = new Option<>(new Integer(5));
         Integer data = opt.getData();
@@ -131,6 +105,7 @@ public class Options {
         this(new String[0]);
     }
     
+    
     /**
      * Parses the options
      * @param options the array of option lines from the file
@@ -153,6 +128,7 @@ public class Options {
                 this.setOption(option, optionValue);
         }
     }
+    
     
     public Option<?> getOption(String optionStr) {
         return this.optionsMap.get(optionStr);
@@ -197,8 +173,8 @@ public class Options {
     }
     
     
-    
     //convienence methods to read strings as certain types
+    //<editor-fold defaultstate="collapsed" desc="readAs...  ">
     public Class<?> readAsSorterClass(String s) {
         try {
             return Class.forName("visualsorting.sorters." + s);
@@ -210,17 +186,21 @@ public class Options {
         return null;
     }
     
+    
     public int readAsInt(String s) {
         return Integer.parseInt(s);
     }
+    
     
     public double readAsDouble(String s) {
         return Double.parseDouble(s);
     }
     
+    
     public String readAsString(String s) {
         return s.trim();
     }
+    
     
     public NumberType readAsNumberType(String s) {
         s = s.trim();
@@ -235,6 +215,7 @@ public class Options {
         return null;
     }
     
+    
     public ArrayStructure readAsArrayStructure(String s) {
         s = s.trim();
         if (s.equals("ASCENDING"))                  return ArrayStructure.ASCENDING;
@@ -248,16 +229,17 @@ public class Options {
         return null;
     }
     
+    
     public Color readAsColor(String s) {
         String[] split = s.trim().split(" ");
         if (split.length == 3) {
-            return new Color(readAsInt(split[0]), 
-                    readAsInt(split[1]), 
+            return new Color(readAsInt(split[0]),
+                    readAsInt(split[1]),
                     readAsInt(split[2]) );
         }
         else if (split.length == 4) {
-            return new Color(readAsInt(split[0]), 
-                    readAsInt(split[1]), 
+            return new Color(readAsInt(split[0]),
+                    readAsInt(split[1]),
                     readAsInt(split[2]),
                     readAsInt(split[3]) );
         }
@@ -267,6 +249,7 @@ public class Options {
         }
         return null;
     }
+    
     
     public boolean readAsBool(String s) {
         if (s.trim().equals("true"))
@@ -280,6 +263,7 @@ public class Options {
         return false;
     }
     
+    
     public Insets readAsInsets(String s) {
         String[] split = s.trim().split(" ");
         if (split.length != 4) {
@@ -291,6 +275,5 @@ public class Options {
                 readAsInt(split[2]),
                 readAsInt(split[3]) );
     }
-
-
+//</editor-fold>
 }

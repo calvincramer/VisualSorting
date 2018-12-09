@@ -32,6 +32,7 @@ public class Util {
         return lines.toArray(new String[lines.size()]);
     }
     
+    
     /**
      * Writes a file
      * @param data
@@ -55,6 +56,7 @@ public class Util {
         return true;
     }
     
+    
     /**
      * integer[] |-> string in the form: "n1 n2 n3 n4 ..."
      * @param a
@@ -67,6 +69,7 @@ public class Util {
         }
         return s;
     }
+    
     
     /**
      * Places commas in a string according to where they would be in an integer number
@@ -81,6 +84,7 @@ public class Util {
         }
         return numStr;
     }
+    
     
     /**
      * Determines if the array contains the number i
@@ -97,6 +101,7 @@ public class Util {
         }
         return false;
     }
+    
     
     /**
      * Shuffles an array

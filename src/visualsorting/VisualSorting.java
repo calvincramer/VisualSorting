@@ -25,6 +25,7 @@ public class VisualSorting {
     private int[] copyArr;
     protected long startTime = -1;
     
+    
     /**
      * Creates the window to show the visual sorting algorithm
      */
@@ -102,6 +103,7 @@ public class VisualSorting {
         }
     }
     
+    
     /**
      * Read all options from file
      */
@@ -135,6 +137,7 @@ public class VisualSorting {
             System.exit(1);
         }
     }
+    
     
     /**
      * Clock tick to update window and step the algorithm
@@ -174,12 +177,14 @@ public class VisualSorting {
         return true;
     }
     
+    
     /**
      * Repaints the window
      */
     public void windowRepaintTick() {
         this.window.repaint();
     }
+    
     
     /**
      * When the sorter ends
@@ -214,7 +219,8 @@ public class VisualSorting {
             System.out.println("NUM ERRORS: " + numErrors);
         
     }
-        
+       
+    
     /**
      * Start
      * @param args 
