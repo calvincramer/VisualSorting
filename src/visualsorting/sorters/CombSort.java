@@ -1,5 +1,6 @@
 package visualsorting.sorters;
 
+import java.util.List;
 import visualsorting.SteppableSorter;
 import visualsorting.Util;
 
@@ -23,9 +24,9 @@ public class CombSort<T extends Number & Comparable<T>>
     }
     
     @Override 
-    public void setArray(T[] arr) {
+    public void setArray(List<T> arr) {
         super.setArray(arr);
-        this.gap = arr.length;
+        this.gap = arr.size();
     }
     
     @Override
@@ -47,10 +48,10 @@ public class CombSort<T extends Number & Comparable<T>>
                 break;
             case 1:
                 this.numComparisons++;
-                if (i + gap < array.length) {
+                if (i + gap < array.size()) {
                     this.numComparisons++;
                     this.numArrayAccesses += 2;
-                    if (array[i].compareTo(array[i + gap]) > 0) {
+                    if (array.get(i).compareTo(array.get(i + gap)) > 0) {
                         swap(i, i + gap);
                         
                         this.clearColoredIndiciesOf(this.SWAP_COLOR_1);

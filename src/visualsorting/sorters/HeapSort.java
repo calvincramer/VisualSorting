@@ -1,5 +1,6 @@
 package visualsorting.sorters;
 
+import java.util.List;
 import visualsorting.SteppableSorter;
 import visualsorting.Util;
 
@@ -81,14 +82,14 @@ public class HeapSort<T extends Number & Comparable<T>>
     @Override
     protected void step() {
         if (stage == 0) {   //heapify init
-            start = iParent(array.length - 1);
+            start = iParent(array.size() - 1);
             stage = 1;
         }
         if (stage == 1) {   //heapify loop
             this.numComparisons++;
             if (start >= 0) {
                 siftStart = start;
-                siftEnd = array.length - 1;
+                siftEnd = array.size() - 1;
                 returnToStage = 1;
                 stage = 4;
                 start--;
@@ -100,7 +101,7 @@ public class HeapSort<T extends Number & Comparable<T>>
             
         }
         if (stage == 2) {   //heapsort while loop init
-            end = array.length - 1;
+            end = array.size() - 1;
             stage = 3;
         }
         if (stage == 3) {   //heapsort while loop
@@ -138,13 +139,13 @@ public class HeapSort<T extends Number & Comparable<T>>
                 if (child + 1 <= siftEnd) {
                     this.numComparisons++;
                     this.numArrayAccesses += 2;
-                    if (array[child].compareTo(array[child + 1]) < 0) 
+                    if (array.get(child).compareTo(array.get(child + 1)) < 0) 
                        child = child + 1;
                 }
                 
                 this.numComparisons++;
                 this.numArrayAccesses += 2;
-                if (array[root].compareTo(array[child]) < 0) {
+                if (array.get(root).compareTo(array.get(child)) < 0) {
                     this.swap(root, child);
                     
                     this.clearColoredIndiciesOf(this.SWAP_COLOR_2);
@@ -172,10 +173,10 @@ public class HeapSort<T extends Number & Comparable<T>>
     
     public static void main(String[] args) {
         Integer[] arr = {1,5,3,7,5,9,56,3,9,7,4,2,9,6,3,89,6};
+        //List<Integer> arr = Util.oneLineInitList(new Integer[]{1,5,3,7,5,9,56,3,9,7,4,2,9,6,3,89,6});
         Util.printArray(arr);
         
         HeapSort hs = new HeapSort();
-        hs.setArray(arr);
         hs.heapSort(arr);
 
         Util.printArray(arr);

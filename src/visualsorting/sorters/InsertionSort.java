@@ -29,7 +29,7 @@ public class InsertionSort<T extends Number & Comparable<T>>
                 if (j > 0) {
                     this.numComparisons++;
                     this.numArrayAccesses += 2;
-                    if (array[j-1].compareTo(array[j]) > 0) {
+                    if (array.get(j-1).compareTo(array.get(j)) > 0) {
                         swap(j, j-1);
                         this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                         this.addColoredIndex(j, this.SWAP_COLOR_1, true);

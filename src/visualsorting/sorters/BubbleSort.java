@@ -1,11 +1,14 @@
 package visualsorting.sorters;
 
+import java.util.ArrayList;
+import java.util.List;
 import visualsorting.SteppableSorter;
 import visualsorting.Util;
 
 /**
  * A steppable bubble sort algorithm
  * @author Calvin Cramer
+ * @param <T>
  */
 public class BubbleSort<T extends Number & Comparable<T>> 
     extends SteppableSorter<T> {
@@ -15,10 +18,10 @@ public class BubbleSort<T extends Number & Comparable<T>>
     int i;
     
     @Override
-    public void setArray(T[] array) {
+    public void setArray(List<T> array) {
         super.setArray(array);
         
-        this.m = array.length;
+        this.m = array.size();
         this.i = 0;
     }
   
@@ -27,9 +30,9 @@ public class BubbleSort<T extends Number & Comparable<T>>
      * For debug purposes
      */
     public void sort() {
-        for (int m = array.length; m >= 0; m--)
-            for (int i = 0; i < array.length - 1; i++)
-                if (array[i].compareTo(array[i+1]) > 0)
+        for (int m = array.size(); m >= 0; m--)
+            for (int i = 0; i < array.size() - 1; i++)
+                if (array.get(i).compareTo(array.get(i+1)) > 0)
                     swap(i, i+1);
     }
 
@@ -38,10 +41,10 @@ public class BubbleSort<T extends Number & Comparable<T>>
         if (done) return;
         
         this.numComparisons++;
-        if (i < array.length - 1) {
+        if (i < array.size() - 1) {
             this.numComparisons++;
             this.numArrayAccesses += 2;
-            if (array[i].compareTo(array[i + 1]) > 0) {
+            if (array.get(i).compareTo(array.get(i+1)) > 0) {
                 swap(i, i + 1);
                 this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                 this.addColoredIndex(i, this.SWAP_COLOR_1, false);
@@ -73,9 +76,9 @@ public class BubbleSort<T extends Number & Comparable<T>>
     }
     
     public static void main(String[] args) {
-        Integer[] input = new Integer[7];
-        for (int i = 1; i <= input.length; i++) {
-            input[i - 1] = Math.abs(i - input.length) + 1;
+        List<Integer>input = new ArrayList<>();
+        for (int i = 1; i <= input.size(); i++) {
+            input.set(i-1, Math.abs(i - input.size()) + 1);
         }
         BubbleSort bs = new BubbleSort();
         bs.setArray(input);

@@ -46,7 +46,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * Gets the array
      * @return 
      */
-    public List getArray() {
+    public List<T> getArray() {
         return array;
     }
     

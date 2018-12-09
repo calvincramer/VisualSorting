@@ -38,7 +38,7 @@ public class VisualSorting {
         
         //start array
         Integer[] arrayTemp = StartArrayFactory.generate(options.NUM_ELEMENTS, options.START_ARRAY_STRUCTURE, options.START_ARRAY_NUMBERS_TYPE);
-        List<Integer> array = StartArrayFactory.arrayToList(arrayTemp);
+        List<Integer> array = Util.arrayToList(arrayTemp);
         
         //copy original array
         this.copyArr = new ArrayList<>(array);

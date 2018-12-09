@@ -1,5 +1,6 @@
 package visualsorting.sorters;
 
+import java.util.List;
 import visualsorting.SteppableSorter;
 import visualsorting.Util;
 
@@ -37,19 +38,15 @@ public class SelectionSort<T extends Number & Comparable<T>>
         
         this.numComparisons++;
         this.numArrayAccesses += 2;
-        if (array[j].compareTo(array[index]) < 0)
+        if (array.get(j).compareTo(array.get(index)) < 0)
             index = j;
         
         j++;
         
         this.numComparisons++;
-        if (j >= array.length) {
+        if (j >= array.size()) {
             //swap
-            T smallerNumber = array[index];
-            array[index] = array[i];
-            array[i] = smallerNumber;
-            this.numSwaps++;
-            this.numArrayAccesses += 4;
+            this.swap(index, i);
             //this.lastSwappedIndicies = new int[] {index, i};
             this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
             this.addColoredIndex(index, this.SWAP_COLOR_1);
@@ -61,7 +58,7 @@ public class SelectionSort<T extends Number & Comparable<T>>
             index = i;
             j = i + 1;
             this.numComparisons++;
-            if (i >= array.length - 1) {
+            if (i >= array.size() - 1) {
                 done = true;
             }
         }
@@ -77,8 +74,7 @@ public class SelectionSort<T extends Number & Comparable<T>>
     }
     
     public static void main(String args[]) {
-         
-        Integer[] array = {7,6,5,4,3,2,1};
+        List<Integer> array = Util.oneLineInitList(new Integer[]{7,6,5,4,3,2,1});
         array = Util.shuffleArray(array);
         
         SelectionSort ss = new SelectionSort();

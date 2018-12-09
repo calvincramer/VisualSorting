@@ -12,7 +12,7 @@ import visualsorting.Util;
 public class MergeSort<T extends Number & Comparable<T>>
     extends SteppableSorter<T> {
 
-    private T[] copyArr;
+    private List<T> copyArr;
     private List<Pair> intervals;
     private int state;
     private Pair currentInterval;
@@ -22,17 +22,15 @@ public class MergeSort<T extends Number & Comparable<T>>
     private int k;
     
     @Override
-    public void setArray(T[] arr) {
+    public void setArray(List<T> arr) {
         super.setArray(arr);
         
         this.state = 0;
-        this.copyArr = new T[arr.length];
-        for (int i = 0; i < arr.length; i++)
-            this.copyArr[i] = arr[i];
+        this.copyArr = new ArrayList<>(arr);
         
         //make all split calls
         intervals = new ArrayList<>();
-        addIntervals(intervals, 0, arr.length);
+        addIntervals(intervals, 0, arr.size());
         //for (Pair p : intervals)
         //    System.out.println(p);
         
@@ -62,11 +60,8 @@ public class MergeSort<T extends Number & Comparable<T>>
                     this.k = currentInterval.left;
                     this.state = 1;
                     //copy array into copy so we can merge successfully
-                    this.copyArr = new int[array.length];
-                    for (int i = 0; i < array.length; i++) {
-                        this.numArrayAccesses++;
-                        this.copyArr[i] = array[i];
-                    }
+                    this.copyArr = new ArrayList<>(array);
+                    this.numArrayAccesses += array.size() * 2;  //copy whole array requires 2x accesses (one get one set)
                 }
                 else {
                     return; //should be done with algorithm
@@ -75,7 +70,7 @@ public class MergeSort<T extends Number & Comparable<T>>
             case 1:
                 if (k < currentInterval.right) {
                     if (i < currentMiddle && (j >= currentInterval.right || lteCheck(arrayAccessCheck(copyArr, i), arrayAccessCheck(copyArr, j))) ) {
-                        array[k] = copyArr[i];
+                        array.set(k, copyArr.get(i));
                         this.numArrayAccesses++;
                         this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                         this.addColoredIndex(k, this.SWAP_COLOR_1, true);
@@ -86,7 +81,7 @@ public class MergeSort<T extends Number & Comparable<T>>
                         i++;
                     }
                     else {
-                        array[k] = copyArr[j];
+                        array.set(k, copyArr.get(j));
                         this.numArrayAccesses++;
                         this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                         this.addColoredIndex(k, this.SWAP_COLOR_1, true);
@@ -108,14 +103,14 @@ public class MergeSort<T extends Number & Comparable<T>>
         }   
     }
     
-    private boolean lteCheck(int a, int b) {
+    private boolean lteCheck(T a, T b) {
         this.numComparisons++;
-        return a <= b;
+        return a.compareTo(b) <= 0;
     }
     
-    private int arrayAccessCheck(int[] array, int index) {
+    private T arrayAccessCheck(List<T> array, int index) {
         this.numArrayAccesses++;
-        return array[index];
+        return array.get(index);
     }
 
     @Override
@@ -139,7 +134,7 @@ public class MergeSort<T extends Number & Comparable<T>>
     }
     
     public static void main(String[] args) {
-        Integer[] arr = new Integer[]{8,7,6,5,4,3,2,1};
+        List<Integer> arr = Util.oneLineInitList(new Integer[]{8,7,6,5,4,3,2,1});
         MergeSort ms = new MergeSort();
         ms.setArray(arr);
         
