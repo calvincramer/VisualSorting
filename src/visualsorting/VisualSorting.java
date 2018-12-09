@@ -2,7 +2,10 @@ package visualsorting;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import visualsorting.StartArrayFactory.*;
@@ -21,9 +24,12 @@ public class VisualSorting {
     private MainFrame window;
     private Options options;
     private Player player;
-    private SteppableSorter sorter = null;
-    private int[] copyArr;
-    protected long startTime = -1;
+    private SteppableSorter<Integer> sorter = null;
+    private List<Integer> copyArr;
+    protected long startTime;
+    protected long currentTime;
+    private int numSortTicks = 0;
+    private boolean currentlySorting = false;
     
     
     /**
@@ -41,12 +47,14 @@ public class VisualSorting {
         Integer clock_speed = (Integer) options.getOption("CLOCK_SPEED").getData();
         
         //start array
-        int[] array = StartArrayFactory.generate(num_elements, start_array_structure, start_array_numbers_type);
-                
+        Integer[] arrayTemp = StartArrayFactory.generate(options.NUM_ELEMENTS, options.START_ARRAY_STRUCTURE, options.START_ARRAY_NUMBERS_TYPE);
+        List<Integer> array = Util.arrayToList(arrayTemp);
+        
         //copy original array
-        this.copyArr = new int[array.length];
-        for (int i = 0; i < array.length; i++)
-            this.copyArr[i] = array[i];
+        this.copyArr = new ArrayList<>(array);
+        //this.copyArr = new Integer[array.length];
+        //for (int i = 0; i < array.length; i++)
+        //    this.copyArr[i] = array[i];
         
         //sorter to be used
         try {
@@ -67,39 +75,25 @@ public class VisualSorting {
         this.window = new MainFrame(sorter, this, options);
         this.window.setSorter(sorter);
         this.window.setVisible(true);
-        //why is the graph not showing on the laptop?
-        windowRepaintTick();
-        this.window.setSize(this.window.getSize());
+        //why is the graph not showing on the laptop? -- because of the Thread.sleep
         
-        //timer tasks
+        //create timer tasks
         this.updateSortingStepperTask = new TimerTask() {
             @Override public void run() {
                 sortTick();
-            }
-        };
+        }};
         this.windowRepaintTask = new TimerTask() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 windowRepaintTick();
-            }
-        };
+        }};
         timer = new Timer(true);
         
-        //wait a little right after the window pops up
-        try {
-            Thread.sleep( start_delay );
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-        
-        //start timer
-        startTime = System.currentTimeMillis();
-        //VisualSorting.currentTime = System.currentTimeMillis();
-        if (clock_speed == 0) {
+        //start timers
+        if (options.CLOCK_SPEED == 0) {
             while (sortTick()) {}
         } else {
-            timer.scheduleAtFixedRate(windowRepaintTask, 0, 17);    //17ms about 60fps
-            timer.scheduleAtFixedRate(updateSortingStepperTask, 0, clock_speed); 
+            timer.scheduleAtFixedRate(windowRepaintTask, 0, 17); //17ms about 60fps
+            timer.scheduleAtFixedRate(updateSortingStepperTask, options.START_DELAY, options.CLOCK_SPEED); 
         }
     }
     
@@ -148,9 +142,16 @@ public class VisualSorting {
      * @return returns whether the process is complete (false) or is still running (true)
      */
     public boolean sortTick() {
+        if (this.numSortTicks == 0) {
+            this.currentTime = 0;
+            this.startTime = System.currentTimeMillis();
+            this.currentlySorting = true;
+        }
+        this.numSortTicks++;
         
         if (sorter.isFinished() && !doingEndCheck) {
             this.doingEndCheck = true;
+            this.currentlySorting = false;
             sorter.clearColoredIndices();
             sorter.clearSwapArrows();
             sorter.addColoredIndex(0, sorter.SELECTED_COLOR, true);
@@ -160,7 +161,7 @@ public class VisualSorting {
         if (doingEndCheck) {    //sweep from left to right
             int nextIndex = sorter.getColoredIndices().get(0).getKey()+ 1;
             sorter.clearColoredIndices();
-            if (nextIndex >= sorter.getArray().length) {
+            if (nextIndex >= sorter.getArray().size()) {
                 endProcedure();
                 return false;
             }
@@ -171,8 +172,8 @@ public class VisualSorting {
         }
         
         //play sound
-        if (sorter.indexToPlaySound() >= 0 && sorter.indexToPlaySound() < sorter.getArray().length) {
-            player.playSound(1, sorter.getMax(), sorter.getArray()[sorter.indexToPlaySound()]);
+        if (sorter.indexToPlaySound() >= 0 && sorter.indexToPlaySound() < sorter.getArray().size()) {
+            player.playSound(1, sorter.getMax(), sorter.getArray().get(sorter.indexToPlaySound()));
         }
         return true;
     }
@@ -182,6 +183,8 @@ public class VisualSorting {
      * Repaints the window
      */
     public void windowRepaintTick() {
+        if (this.currentlySorting == true)
+            this.currentTime = System.currentTimeMillis() - this.startTime;
         this.window.repaint();
     }
     
@@ -195,19 +198,20 @@ public class VisualSorting {
         
         //check if the array was sorted properly
         System.out.println("Original array: " + Util.toStringArr(this.copyArr));
-        System.out.println("Sorted array: " + Util.toStringArr(sorter.array));
+        System.out.println("Sorted array: " + Util.toStringArr(sorter.getArray()));
         
-        Arrays.sort(this.copyArr);
+        //Arrays.sort(this.copyArr);
+        Collections.sort(copyArr);
         
         System.out.println("Array.sort() original: " + Util.toStringArr(this.copyArr));
 
         int numErrors = 0;
-        if (this.copyArr.length != sorter.array.length) {
+        if (copyArr.size() != sorter.getArray().size()) {
             System.out.println("ERROR: lengths of sorted and original arrays not the same");
             numErrors++;
         }
-        for (int i = 0; i < copyArr.length; i++) {
-            if (copyArr[i] != sorter.array[i]) {
+        for (int i = 0; i < copyArr.size(); i++) {
+            if (copyArr.get(i).compareTo(sorter.getArray().get(i)) != 0) {
                 System.out.println("ERROR: not sorted properly at index " + i);
                 numErrors++;
             }

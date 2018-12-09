@@ -15,6 +15,7 @@ import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
 import javax.swing.JFrame;
 
 /**
@@ -38,6 +39,7 @@ public class MainFrame extends JFrame{
         this.setSorter(sorter);
         this.vs = vs;
         this.options = options;
+        this.frameResized();
     }
     
     
@@ -67,7 +69,6 @@ public class MainFrame extends JFrame{
             public void componentHidden( ComponentEvent e ) {}
             @Override
             public void componentResized( ComponentEvent e ) {
-                //System.out.println("I got resized!");
                 frameResized();
             }
         });
@@ -83,11 +84,16 @@ public class MainFrame extends JFrame{
     
     private void frameResized() {
         //makes sure the off screen buffer is updated to the new size of the frame
-        if (offScreenImage == null) return;
-        
-        if (offScreenImage.getWidth(null) < this.getWidth() || offScreenImage.getHeight(null) < this.getHeight()) {
+        //try to create off screen image
+        if (offScreenImage == null) 
             createOffScreen();
-        }
+        //if still not able, give up
+        if (offScreenImage == null)
+            return;
+        
+        if (offScreenImage.getWidth(null) < this.getWidth() || offScreenImage.getHeight(null) < this.getHeight())
+            createOffScreen();
+        
         
         //redo some math
         Insets insets = (Insets) options.getOption("GRAPH_INSETS").getData();
@@ -105,11 +111,21 @@ public class MainFrame extends JFrame{
         Integer font_size = (Integer) options.getOption("FONT_SIZE").getData();
         
         offScreenImage = this.createImage(this.getWidth(), this.getHeight());
+        if (this.offScreenImage == null)
+            return; //couldn't create offscreen image, due to frame not visible yet?
         offScreen = (Graphics2D) offScreenImage.getGraphics();
         if (anti_alias)
             offScreen.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        else 
+            offScreen.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+            offScreen.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+            offScreen.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            offScreen.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
+
+        }
+        else {
             offScreen.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+            
+        }
         
         if (anti_alias_font)
             offScreen.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -143,14 +159,15 @@ public class MainFrame extends JFrame{
         offScreen.fillRect(0, 0, offScreenImage.getWidth(null), offScreenImage.getHeight(null));
         
         //getting the array from the sorter to draw
-        int[] array = sorter.getArray();
+        //convert to double
+        List<Number> array = sorter.getArray();
         
         //set up math
         //double y = this.getHeight() - this.getInsets().bottom - options.GRAPH_INSETS.bottom;
         
         //drawing the array
         Rectangle2D.Double tempRect = new Rectangle2D.Double();
-        for (int i = 0; i < array.length; i++) {
+        for (int i = 0; i < array.size(); i++) {
             //set color
             offScreen.setColor(sorter.getColorAt(i));
             tempRect.setRect(getX(i), getTop(i), columnWidth, getHeight(i));
@@ -202,7 +219,7 @@ public class MainFrame extends JFrame{
         offScreen.setColor(text_color);
         offScreen.drawString("Name: " + sorter.getSorterName(), (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Size: " + sorter.array.length, (int) x, (int) y);
+        offScreen.drawString("Size: " + sorter.getArray().size(), (int) x, (int) y);
         y += textHeight;
         offScreen.drawString("Comparisons: " + sorter.numComparisons, (int) x, (int) y);
         y += textHeight;
@@ -212,10 +229,7 @@ public class MainFrame extends JFrame{
         y += textHeight;
         offScreen.drawString("Clock Speed: " + clock_speed + "ms", (int) x, (int) y);
         y += textHeight;
-        if (vs.startTime == -1)
-            offScreen.drawString("Time Elapsed: 0", (int) x, (int) y);
-        else
-            offScreen.drawString("Time Elapsed: " + Util.commifyString("" + (System.currentTimeMillis() - vs.startTime)) + "ms", (int) x, (int) y);
+        offScreen.drawString("Time Elapsed: " + Util.commifyString("" + vs.currentTime) + "ms", (int) x, (int) y);
         
         g.drawImage(offScreenImage, 0, 0, null);
     }
@@ -238,9 +252,16 @@ public class MainFrame extends JFrame{
         return this.getHeight() - this.getInsets().bottom - insets.bottom - (sorter.array[index] * 1.0 / highestNum) * graphHeight;
     }
     
-    
+     
+    /**
+     * Calculates the height of the number at a specific index
+     * The height corresponds to the visual hight on the window
+     * @param index
+     * @return 
+     */
     private double getHeight(int index) {
-        return (sorter.array[index] * 1.0 / highestNum) * graphHeight;
+        List<Number> s = sorter.getArray();
+        return (s.get(index).doubleValue() / sorter.getMax().doubleValue()) * graphHeight;
     }
     
     
@@ -254,6 +275,8 @@ public class MainFrame extends JFrame{
      * @param y2 
      */
     public void drawSwapLine(double x1, double y1, double x2, double y2, double cntrX1, double cntrY1, double cntrX2, double cntrY2) {
+        offScreen.setColor(options.SWAP_ARROW_COLOR);
+        
         CubicCurve2D.Double path = new CubicCurve2D.Double(
                 x1, y1,     //first point
                 cntrX1, cntrY1,     //control point 1
@@ -261,10 +284,11 @@ public class MainFrame extends JFrame{
                 x2, y2);    //second point
         offScreen.draw(path);
         
-        //TODO
+        //TODO: MAKE THESE AN OPTION
         double lineLength = Math.min(15, columnWidth);
         double arrowAngleHalf = Math.PI / 11;
         //draw arrows
+        //first arrow
         double slopeStart = this.getSlopeOfCubicBezierCurve(0.0, path);
         double slopeStartLeft  = slopeStart - arrowAngleHalf;
         double slopeStartRight = slopeStart + arrowAngleHalf;
@@ -278,6 +302,7 @@ public class MainFrame extends JFrame{
         arrowStart.closePath();
         offScreen.fill(arrowStart);
         
+        //second arrow
         double slopeEnd = this.getSlopeOfCubicBezierCurve(1.0, path);
         slopeEnd += Math.PI;
         double slopeEndLeft  = slopeEnd - arrowAngleHalf;
@@ -317,21 +342,11 @@ public class MainFrame extends JFrame{
         return Math.atan2(dy, dx);
     }
     
-    
     /**
      * Sets the sorter, which is the algorithm that sorts the array.
      * @param sorter  the sorter
      */
     public final void setSorter(SteppableSorter sorter) {
         this.sorter = sorter;
-        
-        int[] array = sorter.getArray();
-        
-        this.highestNum = array[0];
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] > highestNum)
-                highestNum = array[i];
-        }
-        
     }
 }

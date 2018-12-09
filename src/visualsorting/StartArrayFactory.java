@@ -59,7 +59,7 @@ public class StartArrayFactory {
      * @param numType
      * @return 
      */
-    public static int[] generate(int size, ArrayStructure structure, NumberType numType) {
+    public static Integer[] generate(int size, ArrayStructure structure, NumberType numType) {
         Random rng = new Random(System.currentTimeMillis());
         List<Integer> arr = new ArrayList<>(size);
         //get numbers
@@ -143,7 +143,7 @@ public class StartArrayFactory {
         }
         
         //convert into int array
-        int[] toReturn = new int[size];
+        Integer[] toReturn = new Integer[size];
         for (int i = 0; i < size; i++)
             toReturn[i] = arr.get(i);
         return toReturn;

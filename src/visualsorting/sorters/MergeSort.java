@@ -3,15 +3,16 @@ package visualsorting.sorters;
 import java.util.List;
 import java.util.ArrayList;
 import visualsorting.SteppableSorter;
+import visualsorting.Util;
 
 /**
  * Credit https://en.wikipedia.org/wiki/Merge_sort#Top-down_implementation
  * @author Calvin
  */
-public class MergeSort 
-    extends SteppableSorter {
+public class MergeSort<T extends Number & Comparable<T>>
+    extends SteppableSorter<T> {
 
-    private int[] copyArr;
+    private List<T> copyArr;
     private List<Pair> intervals;
     private int state;
     private Pair currentInterval;
@@ -22,17 +23,15 @@ public class MergeSort
     
     
     @Override
-    public void setArray(int[] arr) {
+    public void setArray(List<T> arr) {
         super.setArray(arr);
         
         this.state = 0;
-        this.copyArr = new int[arr.length];
-        for (int i = 0; i < arr.length; i++)
-            this.copyArr[i] = arr[i];
+        this.copyArr = new ArrayList<>(arr);
         
         //make all split calls
         intervals = new ArrayList<>();
-        addIntervals(intervals, 0, arr.length);
+        addIntervals(intervals, 0, arr.size());
         //for (Pair p : intervals)
         //    System.out.println(p);
         
@@ -64,11 +63,8 @@ public class MergeSort
                     this.k = currentInterval.left;
                     this.state = 1;
                     //copy array into copy so we can merge successfully
-                    this.copyArr = new int[array.length];
-                    for (int i = 0; i < array.length; i++) {
-                        this.numArrayAccesses++;
-                        this.copyArr[i] = array[i];
-                    }
+                    this.copyArr = new ArrayList<>(array);
+                    this.numArrayAccesses += array.size() * 2;  //copy whole array requires 2x accesses (one get one set)
                 }
                 else {
                     return; //should be done with algorithm
@@ -77,7 +73,7 @@ public class MergeSort
             case 1:
                 if (k < currentInterval.right) {
                     if (i < currentMiddle && (j >= currentInterval.right || lteCheck(arrayAccessCheck(copyArr, i), arrayAccessCheck(copyArr, j))) ) {
-                        array[k] = copyArr[i];
+                        array.set(k, copyArr.get(i));
                         this.numArrayAccesses++;
                         this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                         this.addColoredIndex(k, this.SWAP_COLOR_1, true);
@@ -88,7 +84,7 @@ public class MergeSort
                         i++;
                     }
                     else {
-                        array[k] = copyArr[j];
+                        array.set(k, copyArr.get(j));
                         this.numArrayAccesses++;
                         this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
                         this.addColoredIndex(k, this.SWAP_COLOR_1, true);
@@ -110,16 +106,16 @@ public class MergeSort
         }   
     }
     
-    
-    private boolean lteCheck(int a, int b) {
+
+    private boolean lteCheck(T a, T b) {
         this.numComparisons++;
-        return a <= b;
+        return a.compareTo(b) <= 0;
     }
     
-    
-    private int arrayAccessCheck(int[] array, int index) {
+
+    private T arrayAccessCheck(List<T> array, int index) {
         this.numArrayAccesses++;
-        return array[index];
+        return array.get(index);
     }
 
     
@@ -144,7 +140,7 @@ public class MergeSort
         }
     }
     
-    
+
     private static void printArr(int[] a) {
         for (int n : a) {
             System.out.print(n + " ");
@@ -152,20 +148,20 @@ public class MergeSort
         System.out.println();
     }
     
-    
+
     public static void main(String[] args) {
-        int[] arr = new int[]{8,7,6,5,4,3,2,1};
+        List<Integer> arr = Util.oneLineInitList(new Integer[]{8,7,6,5,4,3,2,1});
         MergeSort ms = new MergeSort();
         ms.setArray(arr);
         
         while (!ms.isFinished()) {
-            printArr(ms.array);
-            printArr(ms.copyArr);
+            Util.printArray(ms.array);
+            Util.printArray(ms.copyArr);
             ms.step();
             
             System.out.println();
         }
-        printArr(ms.array);
-            printArr(ms.copyArr);
+        Util.printArray(ms.array);
+            Util.printArray(ms.copyArr);
     }
 }

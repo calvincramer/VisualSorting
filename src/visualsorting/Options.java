@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import visualsorting.sorters.InsertionSort;
 import visualsorting.StartArrayFactory.*;
+import visualsorting.Transition.TransitionType;
 
 /**
  * Encapsulates all of the options
@@ -23,20 +24,22 @@ public class Options {
     private static final int DEAULT_NUM_SIMUL_SOUNDS     = 1;
     private static final NumberType DEAULT_START_ARRAY_NUMBERS_TYPE  = NumberType.UNIQUE;
     private static final ArrayStructure DEAULT_START_ARRAY_STRUCTURE = ArrayStructure.SHUFFLED;
-    private static final double DEAULT_GAP_WIDTH         = 0.5;
-    private static final Color DEAULT_DEFAULT_COLOR      = new Color(0  , 120, 255);
-    private static final Color DEFAULT_SELECTED_COLOR    = new Color(0  , 255, 180);
-    private static final Color DEFAULT_SWAP_COLOR_1      = new Color(255, 0  , 255);
-    private static final Color DEFAULT_SWAP_COLOR_2      = new Color(183, 74 , 247);
-    private static final Color DEAULT_BACKGROUND_COLOR   = new Color(20 , 20 , 20 );
-    private static final Color DEAULT_TEXT_COLOR         = Color.WHITE;
-    private static final boolean DEAULT_IS_ANIMATED      = false;
-    private static final boolean DEAULT_SHOW_SWAP_ARROWS = false;
-    private static final String DEAULT_FONT_FAMILY       = "Courier New";
-    private static final int DEAULT_FONT_SIZE            = 16;
-    private static final boolean DEAULT_ANTI_ALIAS       = true;
-    private static final boolean DEAULT_ANTI_ALIAS_FONT  = true;
-    private static final Insets DEAULT_GRAPH_INSETS      = new Insets(15, 15, 15, 15);
+    private static final double DEAULT_GAP_WIDTH            = 0.5;
+    private static final Color DEAULT_DEFAULT_COLOR         = new Color(0  , 120, 255);
+    private static final Color DEFAULT_SELECTED_COLOR       = new Color(0  , 255, 180);
+    private static final Color DEFAULT_SWAP_COLOR_1         = new Color(255, 0  , 255);
+    private static final Color DEFAULT_SWAP_COLOR_2         = new Color(183, 74 , 247);
+    private static final Color DEAULT_BACKGROUND_COLOR      = new Color(20 , 20 , 20 );
+    private static final Color DEAULT_TEXT_COLOR            = Color.WHITE;
+    private static final boolean DEAULT_IS_ANIMATED         = false;
+    private static final TransitionType DEFAULT_TRANSITION_TYPE     = TransitionType.LINEAR;
+    private static final boolean DEAULT_SHOW_SWAP_ARROWS    = false;
+    private static final Color DEFAULT_SWAP_ARROW_COLOR     = new Color(0  , 255, 0  );
+    private static final String DEAULT_FONT_FAMILY          = "Courier New";
+    private static final int DEAULT_FONT_SIZE               = 16;
+    private static final boolean DEAULT_ANTI_ALIAS          = true;
+    private static final boolean DEAULT_ANTI_ALIAS_FONT     = true;
+    private static final Insets DEAULT_GRAPH_INSETS         = new Insets(15, 15, 15, 15);
     
     
     /**
@@ -134,6 +137,7 @@ public class Options {
         return this.optionsMap.get(optionStr);
     }
     
+  
     /**
      * Called at initialization, sets the option given the specified default class for the data
      * @param option
@@ -275,5 +279,18 @@ public class Options {
                 readAsInt(split[2]),
                 readAsInt(split[3]) );
     }
-//</editor-fold>
+
+  
+    public TransitionType readAsTransition(String s) {
+        s = s.trim();
+        for (int i = 0; i < TransitionType.values().length; i++) {
+            TransitionType type = TransitionType.values()[i];
+            if (s.equals(type.toString()))
+                return type;
+        }
+        System.out.println("COULD NOT RECOGNIZE THE TRANSITION NAME");
+        System.exit(1);
+        return null;
+    }
+    //</editor-fold>
 }

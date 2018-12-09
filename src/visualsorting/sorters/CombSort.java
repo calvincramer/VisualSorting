@@ -1,14 +1,14 @@
 package visualsorting.sorters;
 
+import java.util.List;
 import visualsorting.SteppableSorter;
 import visualsorting.Util;
 
-public class CombSort 
-    extends SteppableSorter {
+public class CombSort<T extends Number & Comparable<T>> 
+    extends SteppableSorter<T> {
 
     private int gap;
     private double shrink;
-    private boolean sorted;
     private int i;
     private int stage;
     
@@ -16,16 +16,15 @@ public class CombSort
     public CombSort() {
         //this.gap = arr.length;
         this.shrink = 1.3;
-        this.sorted = false;
         this.i = 0;
         this.stage = 0;
     }
     
     
     @Override 
-    public void setArray(int[] arr) {
+    public void setArray(List<T> arr) {
         super.setArray(arr);
-        this.gap = arr.length;
+        this.gap = arr.size();
     }
     
     
@@ -36,14 +35,10 @@ public class CombSort
         switch (stage) {
             case 0:
                 gap = (int) Math.floor(gap / shrink);
-                if (gap > 1) {
-                    sorted = false; //not sorted yet
+                if (gap > 1)
                     this.numComparisons++;
-                } 
-                else {
+                else
                     gap = 1;
-                    sorted = true;
-                }
                 i = 0;
                 this.clearColoredIndiciesOf(this.SELECTED_COLOR);
                 this.addColoredIndex(i, this.SELECTED_COLOR, true);
@@ -52,10 +47,10 @@ public class CombSort
                 break;
             case 1:
                 this.numComparisons++;
-                if (i + gap < array.length) {
+                if (i + gap < array.size()) {
                     this.numComparisons++;
                     this.numArrayAccesses += 2;
-                    if (array[i] > array[i + gap]) {
+                    if (array.get(i).compareTo(array.get(i + gap)) > 0) {
                         swap(i, i + gap);
                         
                         this.clearColoredIndiciesOf(this.SWAP_COLOR_1);
@@ -64,8 +59,6 @@ public class CombSort
                         this.clearSwapArrowsOf(this.SWAP_COLOR_1);
                         this.addSwapArrow(i, i + gap, this.SWAP_COLOR_1);
                         //this.lastSwappedIndicies = new int[] {i, i + gap};
-                        //sorted is false
-                        sorted = false;
                     }
                     i++;
                     this.clearColoredIndiciesOf(this.SELECTED_COLOR);
@@ -80,10 +73,8 @@ public class CombSort
                     //this.selectedIndicies = new int[]{i};
                     stage = 0;
                 }
-                break;
-                
+                break;   
         }
- 
     }
 
     
@@ -92,8 +83,7 @@ public class CombSort
         return "CombSort";
     }
     
-    
-    public static int[] doCombSort(int[] arr) {
+    public static Integer[] doCombSort(Integer[] arr) {
         int gap = arr.length;
         double shrink = 1.3;
         boolean sorted = false;
@@ -111,7 +101,7 @@ public class CombSort
             int i = 0;
             while (i + gap < arr.length) {
                 if (arr[i] > arr[i + gap]) {
-                    SteppableSorter.swap(i, i + gap, arr);
+                    Util.swap(i, i + gap, arr);
                     //sorted is false
                     sorted = false;
                 }
@@ -123,9 +113,9 @@ public class CombSort
     
     
     public static void main(String[] args) {
-        int[] array = {7,6,5,4,3,2,1};
+        Integer[] array = {7,6,5,4,3,2,1};
         array = Util.shuffleArray(array);
         array = CombSort.doCombSort(array);
-        SteppableSorter.printArray(array);
+        Util.printArray(array);
     }
 }

@@ -98,8 +98,8 @@ public class Player {
      * @param num - the number that represents the note to be played
      * @return the note number, inclusively between low and high
      */
-    private int getNoteNumber(int low, int high, int num) {
-        double n = num * 1.0 / (high - low);
+    private int getNoteNumber(double low, double high, double num) {
+        double n = num / (high - low);
         double note = n * NUM_SOUND_FILES;
         int noteNumber = (int) Math.round(note);
         if (noteNumber < 1) noteNumber = 1;
@@ -115,7 +115,7 @@ public class Player {
      * @param max the maximum value that num can be
      * @param num the actual number that represents the sound played
      */
-    protected void playSound(int min, int max, int num) {
+    protected void playSound(double min, double max, double num) {
         this.playSound(getNoteNumber(min, max, num));
     }
 }
