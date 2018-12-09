@@ -9,15 +9,14 @@ import javafx.util.Pair;
 /**
  * Abstract class that represents a sorting algorithm that can be called to incrementally step through the algorithm
  * Note that this class only supports sorting the array once, if you want to redo it then you will need to reinitialize.
+ * Supports generic types that implement Comparable
  * @author Calvin Cramer
  */
-public abstract class SteppableSorter {
+public abstract class SteppableSorter<T extends Number & Comparable<T>> {
     
-    public int[] array;
-    public int[] sortedFinalArray;
+    protected List<T> array;
+    private T maxNum;
 
-    //public int[] lastSwappedIndicies;
-    //public int[] selectedIndicies;
     private List<Pair<Integer, List<Color>>> coloredIndicies;
     private List<Triplet<Integer, Integer, Color>> swapArrowIndicies;
     private int indexToPlaySound;
@@ -47,15 +46,16 @@ public abstract class SteppableSorter {
      * Gets the array
      * @return 
      */
-    public int[] getArray() {
+    public List<T> getArray() {
         return array;
     }
     
     /**
      * Sets the array
+     * Resets the algorithm to the beginning 
      * @param arr 
      */
-    public void setArray(int[] arr) {
+    public void setArray(List<T> arr) {
         this.array = arr;
         //this.lastSwappedIndicies = null;
         //this.selectedIndicies = null;
@@ -67,11 +67,15 @@ public abstract class SteppableSorter {
         this.numSwaps = 0;
         this.numArrayAccesses = 0;
         
-        //end goal
-        this.sortedFinalArray = new int[array.length];
-        for (int i = 0; i < array.length; i++)
-            this.sortedFinalArray[i] = array[i];
-        Arrays.sort(sortedFinalArray);
+        //find max
+        this.maxNum = null;
+        if (array != null && array.size() != 0) {
+            this.maxNum = array.get(0);
+            for (int i = 0; i < array.size(); i++) {
+                if (this.maxNum.compareTo(array.get(i)) < 0)
+                    this.maxNum = array.get(i);
+            }
+        }
     }
     
     /**
@@ -93,7 +97,7 @@ public abstract class SteppableSorter {
      * @param playSoundHere 
      */
     public void addColoredIndex(int i, Color c, boolean playSoundHere) {
-        if (i < 0 || i >= this.array.length) {
+        if (i < 0 || i >= array.size()) {
             //System.err.println("CANT COLOR THE INDEX, IT IS OUT OF RANGE");
             return;
         }
@@ -146,19 +150,20 @@ public abstract class SteppableSorter {
     /**
      * Records a pair of indices to draw swap arrows on them
      * Swap arrows will only be drawn if allowed by the options file
-     * @param first first index
-     * @param second second index
+     * @param firstIndex first index
+     * @param secondIndex second index
      */
-    public void addSwapArrow(int first, int second, Color c) {
-        if (first < 0 || second < 0 || first >= array.length || second >= array.length) {
+    public void addSwapArrow(int firstIndex, int secondIndex, Color c) {
+        if (firstIndex < 0 || secondIndex < 0 
+                || firstIndex >= array.size() || secondIndex >= array.size()) {
             return;
         }
-        this.swapArrowIndicies.add(new Triplet<>(first, second, c));
+        this.swapArrowIndicies.add(new Triplet<>(firstIndex, secondIndex, c));
     }
     
     /**
      * Removes all colored indices with a specific color
-     * @param c 
+     * @param c the color
      */
     public void clearColoredIndiciesOf(Color c) {
         for (int i = 0; i < this.coloredIndicies.size(); i++) {
@@ -188,12 +193,12 @@ public abstract class SteppableSorter {
     /**
      * Returns the list of desired colors at the index i
      * If no desired color is set for the index then the default color is returned
-     * @param i
-     * @return 
+     * @param index the index
+     * @return The colors to draw at the index
      */
-    public List<Color> getColorsAt(int i) {
+    public List<Color> getColorsAt(int index) {
         for (Pair<Integer, List<Color>> p : this.coloredIndicies)
-            if (p.getKey()== i)
+            if (p.getKey()== index)
                 return p.getValue();
         List<Color> temp = new ArrayList<>();
         temp.add(this.DEFAULT_COLOR);
@@ -204,11 +209,11 @@ public abstract class SteppableSorter {
      * Returns the desired color at the index i
      * If the list of colors for this index is larger than 1 then the average color is returned
      * If no desired color is set for the index then the default color is returned
-     * @param i 
+     * @param index the index
      */
-    public Color getColorAt(int i) {
+    public Color getColorAt(int index) {
         for (Pair<Integer, List<Color>> p : this.coloredIndicies)
-            if (p != null && p.getKey()== i)
+            if (p != null && p.getKey()== index)
                 return getAverageColor(p.getValue());
         return this.DEFAULT_COLOR;
     }
@@ -217,7 +222,7 @@ public abstract class SteppableSorter {
      * Returns the average color from the list
      * If the list is null or empty, null is returned
      * @param colors
-     * @return 
+     * @return returns the average color at the index
      */
     public Color getAverageColor(List<Color> colors) {
         if (colors == null || colors.size() == 0)
@@ -263,26 +268,13 @@ public abstract class SteppableSorter {
     
     /**
      * Determines if the algorithm is finished.
-     * It is finished if the array is sorted exactly as Arrays.sort would sort the original array
+     * It is finished if the array is in order according to T.compareTo
      * Optionally (considering a very bad sorting algorithm), a subclass may define its own finishing criteria, before the array is sorted completely
      * @return 
      */
     public boolean isFinished() {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] != this.sortedFinalArray[i])
-                return false;
-        }
-        return true;
-    }
-    
-    /**
-     * Determines if the algorithm is finished.
-     * It is finished if the array is sorted.
-     * @return 
-     */
-    public static boolean isSorted(int[] array) {
-        for(int i = 0; i < array.length - 1; i++) {
-            if (array[i] > array[i+1])
+        for (int i = 0; i < array.size() - 1; i++) {
+            if (array.get(i).compareTo(array.get(i+1)) > 0)
                 return false;
         }
         return true;
@@ -296,42 +288,19 @@ public abstract class SteppableSorter {
      * @param j 
      */
     protected void swap(int i, int j) {
-        int temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+        T temp = array.get(i);
+        array.set(i, array.get(j));
+        array.set(j, temp);
         
         this.numArrayAccesses += 4;
         this.numSwaps++;
     }
     
     /**
-     * Convenience method to swap two elements in the array  
-     * @param i
-     * @param j 
-     */
-    public static void swap(int i, int j, int[] array) {
-        int temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-    
-    /**
-     * Convenience method to print an array
-     * @param array 
-     */
-    public static void printArray(int[] array) { 
-        for (int i = 0; i < array.length; i++) {
-            System.out.print(array[i] + ", ");
-        }
-        System.out.println("\n");
-    }
-
-    
-    /**
      * Returns the maximum number in the array
      * @return 
      */
-    public int getMax() {
-        return this.sortedFinalArray[this.sortedFinalArray.length - 1];
+    public T getMax() {
+        return this.maxNum;
     }
 }
