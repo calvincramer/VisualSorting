@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
+import visualsorting.StartArrayFactory.*;
 
 /**
  * Main class to show sorting algorithms visualized
@@ -30,8 +31,16 @@ public class VisualSorting {
     public VisualSorting() {        
         this.init();
         
+        //gather options
+        Integer num_elements = (Integer) options.getOption("NUM_ELEMENTS").getData();
+        NumberType start_array_numbers_type = (NumberType) options.getOption("START_ARRAY_NUMBERS_TYPE").getData();
+        ArrayStructure start_array_structure = (ArrayStructure) options.getOption("START_ARRAY_STRUCTURE").getData();
+        Class<?> sorter_class = (Class<?>) options.getOption("SORTER_CLASS").getData();
+        Integer start_delay = (Integer) options.getOption("START_DELAY").getData();
+        Integer clock_speed = (Integer) options.getOption("CLOCK_SPEED").getData();
+        
         //start array
-        int[] array = StartArrayFactory.generate(options.NUM_ELEMENTS, options.START_ARRAY_STRUCTURE, options.START_ARRAY_NUMBERS_TYPE);
+        int[] array = StartArrayFactory.generate(num_elements, start_array_structure, start_array_numbers_type);
                 
         //copy original array
         this.copyArr = new int[array.length];
@@ -40,7 +49,7 @@ public class VisualSorting {
         
         //sorter to be used
         try {
-            this.sorter = (SteppableSorter) options.SORTER_CLASS.newInstance();
+            this.sorter = (SteppableSorter) sorter_class.newInstance();
         } catch (InstantiationException ex) {
             ex.printStackTrace();
         } catch (IllegalAccessException ex) {
@@ -77,7 +86,7 @@ public class VisualSorting {
         
         //wait a little right after the window pops up
         try {
-            Thread.sleep( options.START_DELAY );
+            Thread.sleep( start_delay );
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
@@ -85,11 +94,11 @@ public class VisualSorting {
         //start timer
         startTime = System.currentTimeMillis();
         //VisualSorting.currentTime = System.currentTimeMillis();
-        if (options.CLOCK_SPEED == 0) {
+        if (clock_speed == 0) {
             while (sortTick()) {}
         } else {
-            timer.scheduleAtFixedRate(windowRepaintTask, 0, 17); //17ms about 60fps
-            timer.scheduleAtFixedRate(updateSortingStepperTask, 0, options.CLOCK_SPEED); 
+            timer.scheduleAtFixedRate(windowRepaintTask, 0, 17);    //17ms about 60fps
+            timer.scheduleAtFixedRate(updateSortingStepperTask, 0, clock_speed); 
         }
     }
     
@@ -108,14 +117,20 @@ public class VisualSorting {
             this.options = new Options();
         }
         
+        //System.err.println("Testing options!");
+        //System.exit(1);
+        
         //find number of sound files in the selected soundPack
-        this.player = new Player(options.SOUND_PACK, options.NUM_SIMUL_SOUNDS);
+        String sound_pack = (String) options.getOption("SOUND_PACK").getData();
+        Integer num_simul_sounds = (Integer) options.getOption("NUM_SIMUL_SOUNDS").getData();
+        this.player = new Player(sound_pack, num_simul_sounds);
         
         //other init stuff ...
 
         
         //checks
-        if (options.CLOCK_SPEED < 0) {
+        Integer clock_speed = (Integer) options.getOption("CLOCK_SPEED").getData();
+        if (clock_speed < 0) {
             System.out.println("NEGTIVE CLOCK SPEEDS ARE NOT ALLOWED DUMMY, I CAN'T TIME TRAVEL.\nAlthough it would make sense to undo all of the steps from a sorting algorithm in reverse");
             System.exit(1);
         }

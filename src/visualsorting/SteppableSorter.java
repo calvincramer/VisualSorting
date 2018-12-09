@@ -16,8 +16,6 @@ public abstract class SteppableSorter {
     public int[] array;
     public int[] sortedFinalArray;
 
-    //public int[] lastSwappedIndicies;
-    //public int[] selectedIndicies;
     private List<Pair<Integer, List<Color>>> coloredIndicies;
     private List<Triplet<Integer, Integer, Color>> swapArrowIndicies;
     private int indexToPlaySound;
@@ -32,16 +30,19 @@ public abstract class SteppableSorter {
     public Color SWAP_COLOR_1;
     public Color SWAP_COLOR_2;
 
+    
     /**
      * Step once in the algorithm
      */
     protected abstract void step();
+    
     
     /**
      * Returns the name of the sorter
      * @return 
      */
     protected abstract String getSorterName();
+    
     
     /**
      * Gets the array
@@ -50,6 +51,7 @@ public abstract class SteppableSorter {
     public int[] getArray() {
         return array;
     }
+    
     
     /**
      * Sets the array
@@ -74,16 +76,18 @@ public abstract class SteppableSorter {
         Arrays.sort(sortedFinalArray);
     }
     
+    
     /**
      * Sets the default colors according to the options
      * @param options 
      */
     public void setColors(Options options) {
-        this.DEFAULT_COLOR = options.DEFAULT_COLOR;
-        this.SWAP_COLOR_1 = options.SWAP_COLOR_1;
-        this.SWAP_COLOR_2 = options.SWAP_COLOR_2;
-        this.SELECTED_COLOR = options.SELECTED_COLOR;
+        this.DEFAULT_COLOR = (Color) options.getOption("DEFAULT_COLOR").getData();
+        this.SWAP_COLOR_1 = (Color) options.getOption("SWAP_COLOR_1").getData();
+        this.SWAP_COLOR_2 = (Color) options.getOption("SWAP_COLOR_2").getData();
+        this.SELECTED_COLOR = (Color) options.getOption("SELECTED_COLOR").getData();
     }
+    
     
     /**
      * Adds a color to a specific index
@@ -119,6 +123,7 @@ public abstract class SteppableSorter {
             this.indexToPlaySound = i;
     }
     
+    
     /**
      * Adds a color to a specific index
      * If a color is already present at that index, it is replaced with the average of the two colors
@@ -129,6 +134,7 @@ public abstract class SteppableSorter {
         addColoredIndex(i, c, false);
     }
     
+    
     /**
      * Removes all colored indices
      */
@@ -136,12 +142,14 @@ public abstract class SteppableSorter {
         this.coloredIndicies.clear();;
     }
     
+    
     /**
      * Removes all swap arrows
      */
     public void clearSwapArrows() {
         this.swapArrowIndicies.clear();
     }
+    
     
     /**
      * Records a pair of indices to draw swap arrows on them
@@ -155,6 +163,7 @@ public abstract class SteppableSorter {
         }
         this.swapArrowIndicies.add(new Triplet<>(first, second, c));
     }
+    
     
     /**
      * Removes all colored indices with a specific color
@@ -172,6 +181,7 @@ public abstract class SteppableSorter {
         }
     }
     
+    
     /**
      * Removes all swapped arrow of a certain color
      * @param c the color to remove
@@ -184,6 +194,7 @@ public abstract class SteppableSorter {
             }
         }
     }
+    
     
     /**
      * Returns the list of desired colors at the index i
@@ -200,6 +211,7 @@ public abstract class SteppableSorter {
         return temp;
     }
     
+    
     /**
      * Returns the desired color at the index i
      * If the list of colors for this index is larger than 1 then the average color is returned
@@ -208,10 +220,11 @@ public abstract class SteppableSorter {
      */
     public Color getColorAt(int i) {
         for (Pair<Integer, List<Color>> p : this.coloredIndicies)
-            if (p != null && p.getKey()== i)
+            if (p != null && p.getKey() == i)
                 return getAverageColor(p.getValue());
         return this.DEFAULT_COLOR;
     }
+    
     
     /**
      * Returns the average color from the list
@@ -237,6 +250,7 @@ public abstract class SteppableSorter {
         return new Color(totalR / colors.size(), totalG / colors.size(), totalB / colors.size());
     }
 
+    
     /**
      * Returns the index whose sound is going to be played
      * @return 
@@ -244,6 +258,7 @@ public abstract class SteppableSorter {
     public int indexToPlaySound() {
         return this.indexToPlaySound;
     }
+    
     
     /**
      * Returns all colored indices
@@ -253,6 +268,7 @@ public abstract class SteppableSorter {
         return this.coloredIndicies;
     }
     
+    
     /**
      * Returns list of pairs of indices to show swap arrows between
      * @return 
@@ -260,6 +276,7 @@ public abstract class SteppableSorter {
     public List<Triplet<Integer, Integer, Color>> getSwapIndicies() {
         return this.swapArrowIndicies;
     }
+    
     
     /**
      * Determines if the algorithm is finished.
@@ -275,6 +292,7 @@ public abstract class SteppableSorter {
         return true;
     }
     
+    
     /**
      * Determines if the algorithm is finished.
      * It is finished if the array is sorted.
@@ -287,6 +305,7 @@ public abstract class SteppableSorter {
         }
         return true;
     }
+    
     
     /**
      * Convenience method to swap two elements in the array  
@@ -304,6 +323,7 @@ public abstract class SteppableSorter {
         this.numSwaps++;
     }
     
+    
     /**
      * Convenience method to swap two elements in the array  
      * @param i
@@ -314,6 +334,7 @@ public abstract class SteppableSorter {
         array[i] = array[j];
         array[j] = temp;
     }
+    
     
     /**
      * Convenience method to print an array

@@ -6,12 +6,12 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.CubicCurve2D;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -95,25 +95,32 @@ public class MainFrame extends JFrame{
         }
         
         //redo some math
-        this.graphWidth = this.getWidth() - this.getInsets().left - this.getInsets().right - options.GRAPH_INSETS.left - options.GRAPH_INSETS.right;
-        this.graphHeight = this.getHeight() - this.getInsets().top - this.getInsets().bottom - options.GRAPH_INSETS.top - options.GRAPH_INSETS.bottom;
-        this.columnWidth = (graphWidth * 1.0 / sorter.getArray().length ) - options.GAP_WIDTH;    
+        Insets insets = (Insets) options.getOption("GRAPH_INSETS").getData();
+        Double gap_width = (Double) options.getOption("GAP_WIDTH").getData();
+        this.graphWidth = this.getWidth() - this.getInsets().left - this.getInsets().right - insets.left - insets.right;
+        this.graphHeight = this.getHeight() - this.getInsets().top - this.getInsets().bottom - insets.top - insets.bottom;
+        this.columnWidth = (graphWidth * 1.0 / sorter.getArray().length ) - gap_width;    
     }
     
     private void createOffScreen() {
+        Boolean anti_alias = (Boolean) options.getOption("ANTI_ALIAS").getData();
+        Boolean anti_alias_font = (Boolean) options.getOption("ANTI_ALIAS_FONT").getData();
+        String font_family = (String) options.getOption("FONT_FAMILY").getData();
+        Integer font_size = (Integer) options.getOption("FONT_SIZE").getData();
+        
         offScreenImage = this.createImage(this.getWidth(), this.getHeight());
         offScreen = (Graphics2D) offScreenImage.getGraphics();
-        if (options.ANTI_ALIAS)
+        if (anti_alias)
             offScreen.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         else 
             offScreen.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         
-        if (options.ANTI_ALIAS_FONT)
+        if (anti_alias_font)
             offScreen.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         else 
             offScreen.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         
-        offScreen.setFont(new Font(options.FONT_FAMILY, Font.PLAIN, options.FONT_SIZE));
+        offScreen.setFont(new Font(font_family, Font.PLAIN, font_size));
     }
 
     @Override
@@ -127,9 +134,15 @@ public class MainFrame extends JFrame{
         if (this.offScreenImage == null || this.offScreen == null) {
             createOffScreen();
         }
+        
+        //gather options
+        Color background_color = (Color) options.getOption("BACKGROUND_COLOR").getData();
+        Boolean show_swap_arrows = (Boolean) options.getOption("SHOW_SWAP_ARROWS").getData();
+        Color text_color = (Color) options.getOption("TEXT_COLOR").getData();
+        Integer clock_speed = (Integer) options.getOption("CLOCK_SPEED").getData();
 
         //clearing the off screen buffer
-        offScreen.setColor(options.BACKGROUND_COLOR);
+        offScreen.setColor(background_color);
         offScreen.fillRect(0, 0, offScreenImage.getWidth(null), offScreenImage.getHeight(null));
         
         //getting the array from the sorter to draw
@@ -149,7 +162,7 @@ public class MainFrame extends JFrame{
         }
         double x;
         //draw swap lines
-        if (options.SHOW_SWAP_ARROWS) {
+        if (show_swap_arrows) {
             for (Triplet<Integer, Integer, Color> p : this.sorter.getSwapIndicies()) {
                 offScreen.setColor(p.getThird());
                 
@@ -189,7 +202,7 @@ public class MainFrame extends JFrame{
         double y = textHeight + 30;
         x = 15;
         
-        offScreen.setColor(options.TEXT_COLOR);
+        offScreen.setColor(text_color);
         offScreen.drawString("Name: " + sorter.getSorterName(), (int) x, (int) y);
         y += textHeight;
         offScreen.drawString("Size: " + sorter.array.length, (int) x, (int) y);
@@ -200,7 +213,7 @@ public class MainFrame extends JFrame{
         y += textHeight;
         offScreen.drawString("Array Accesses: " + sorter.numArrayAccesses, (int) x, (int) y);
         y += textHeight;
-        offScreen.drawString("Clock Speed: " + options.CLOCK_SPEED + "ms", (int) x, (int) y);
+        offScreen.drawString("Clock Speed: " + clock_speed + "ms", (int) x, (int) y);
         y += textHeight;
         if (vs.startTime == -1)
             offScreen.drawString("Time Elapsed: 0", (int) x, (int) y);
@@ -216,11 +229,14 @@ public class MainFrame extends JFrame{
      * @return 
      */
     private double getX(int index) {
-        return options.GRAPH_INSETS.left + this.getInsets().left + index * (columnWidth + options.GAP_WIDTH);
+        Insets insets = (Insets) options.getOption("GRAPH_INSETS").getData();
+        Double gap_width = (Double) options.getOption("GAP_WIDTH").getData();
+        return insets.left + this.getInsets().left + index * (columnWidth + gap_width);
     }
     
     private double getTop(int index) {
-        return this.getHeight() - this.getInsets().bottom - options.GRAPH_INSETS.bottom - (sorter.array[index] * 1.0 / highestNum) * graphHeight;
+        Insets insets = (Insets) options.getOption("GRAPH_INSETS").getData();
+        return this.getHeight() - this.getInsets().bottom - insets.bottom - (sorter.array[index] * 1.0 / highestNum) * graphHeight;
     }
     
     private double getHeight(int index) {
