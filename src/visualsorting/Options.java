@@ -10,6 +10,22 @@ import visualsorting.StartArrayFactory.*;
  * @author Calvin
  */
 public class Options {
+    /**
+     * Better options
+     * Have a map of all options
+     * immutable Map for default options
+     * methods to get options from elsewhere in the program:
+     * getOption(Option)
+     * getDefaultOption(Option)
+     * 
+     * Option enum that lists ALL options
+     * Or class option that specifies the data type for the options as well?
+     * 
+     * If the file does not have all options, add those options to the file
+     * If the file doesn't specify all options, default ones are used for the ones not specified 
+     * 
+     * What about the options that are enums, should print all options in the options file?
+     */
     //all options
     public Class<?> SORTER_CLASS    = DEFAULT_SORTER_CLASS;
     public int NUM_ELEMENTS         = DEAULT_NUM_ELEMENTS;
