@@ -11,16 +11,25 @@ START_ARRAY_STRUCTURE can be:
         DESCENDING, 
         SHUFFLED, 
         PARTIALLY_SHUFFLED
-########################################################################################
-SORTER_CLASS=SelectionSort
-NUM_ELEMENTS=50
-SOUND_PACK=sopranoSax
-CLOCK_SPEED=20
-START_DELAY=1000
-NUM_SIMUL_SOUNDS=1
-START_ARRAY_NUMBERS_TYPE=UNIQUE
-START_ARRAY_STRUCTURE=SHUFFLED
 
+########################################################################################
+### Sorting options ###
+########################################################################################
+SORTER_CLASS				= MergeSort
+NUM_ELEMENTS				= 64
+CLOCK_SPEED					= 100
+START_DELAY					= 250
+START_ARRAY_NUMBERS_TYPE	= UNIQUE
+START_ARRAY_STRUCTURE		= SHUFFLED
+
+########################################################################################
+### Sound options ###
+########################################################################################
+SOUND_ENABLED				= true
+SOUND_PACK					= sopranoSax
+NUM_SIMUL_SOUNDS			= 1
+
+########################################################################################
 ### Visual options ###
 GAP_WIDTH=0.3
 DEFAULT_COLOR=100 100 100
@@ -38,4 +47,3 @@ FONT_SIZE=20
 ANTI_ALIAS=true
 ANTI_ALIAS_FONT=true
 GRAPH_INSETS=50 50 50 50
-########################################################################################

@@ -21,6 +21,7 @@ public class MergeSort<T extends Number & Comparable<T>>
     private int j;
     private int k;
     
+    
     @Override
     public void setArray(List<T> arr) {
         super.setArray(arr);
@@ -37,6 +38,7 @@ public class MergeSort<T extends Number & Comparable<T>>
         this.state = 0;
     }
     
+    
     private void addIntervals(List<Pair> collect, int left, int right) {
         if (right - left < 2)
             return;
@@ -47,6 +49,7 @@ public class MergeSort<T extends Number & Comparable<T>>
         
         collect.add(new Pair(left, right));
     }
+    
     
     @Override
     protected void step() {
@@ -103,20 +106,24 @@ public class MergeSort<T extends Number & Comparable<T>>
         }   
     }
     
+
     private boolean lteCheck(T a, T b) {
         this.numComparisons++;
         return a.compareTo(b) <= 0;
     }
     
+
     private T arrayAccessCheck(List<T> array, int index) {
         this.numArrayAccesses++;
         return array.get(index);
     }
 
+    
     @Override
     protected String getSorterName() {
         return "MergeSort";
     }
+    
     
     private class Pair {
         int left;
@@ -133,6 +140,15 @@ public class MergeSort<T extends Number & Comparable<T>>
         }
     }
     
+
+    private static void printArr(int[] a) {
+        for (int n : a) {
+            System.out.print(n + " ");
+        }
+        System.out.println();
+    }
+    
+
     public static void main(String[] args) {
         List<Integer> arr = Util.oneLineInitList(new Integer[]{8,7,6,5,4,3,2,1});
         MergeSort ms = new MergeSort();
@@ -148,5 +164,4 @@ public class MergeSort<T extends Number & Comparable<T>>
         Util.printArray(ms.array);
             Util.printArray(ms.copyArr);
     }
-
 }

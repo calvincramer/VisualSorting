@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import visualsorting.StartArrayFactory.*;
 
 /**
  * Main class to show sorting algorithms visualized
@@ -30,11 +31,20 @@ public class VisualSorting {
     private int numSortTicks = 0;
     private boolean currentlySorting = false;
     
+    
     /**
      * Creates the window to show the visual sorting algorithm
      */
     public VisualSorting() {        
         this.init();
+        
+        //gather options
+        Integer num_elements = (Integer) options.getOption("NUM_ELEMENTS").getData();
+        NumberType start_array_numbers_type = (NumberType) options.getOption("START_ARRAY_NUMBERS_TYPE").getData();
+        ArrayStructure start_array_structure = (ArrayStructure) options.getOption("START_ARRAY_STRUCTURE").getData();
+        Class<?> sorter_class = (Class<?>) options.getOption("SORTER_CLASS").getData();
+        Integer start_delay = (Integer) options.getOption("START_DELAY").getData();
+        Integer clock_speed = (Integer) options.getOption("CLOCK_SPEED").getData();
         
         //start array
         Integer[] arrayTemp = StartArrayFactory.generate(options.NUM_ELEMENTS, options.START_ARRAY_STRUCTURE, options.START_ARRAY_NUMBERS_TYPE);
@@ -48,7 +58,7 @@ public class VisualSorting {
         
         //sorter to be used
         try {
-            this.sorter = (SteppableSorter) options.SORTER_CLASS.newInstance();
+            this.sorter = (SteppableSorter) sorter_class.newInstance();
         } catch (InstantiationException ex) {
             ex.printStackTrace();
         } catch (IllegalAccessException ex) {
@@ -87,6 +97,7 @@ public class VisualSorting {
         }
     }
     
+    
     /**
      * Read all options from file
      */
@@ -102,18 +113,25 @@ public class VisualSorting {
             this.options = new Options();
         }
         
+        //System.err.println("Testing options!");
+        //System.exit(1);
+        
         //find number of sound files in the selected soundPack
-        this.player = new Player(options.SOUND_PACK, options.NUM_SIMUL_SOUNDS);
+        String sound_pack = (String) options.getOption("SOUND_PACK").getData();
+        Integer num_simul_sounds = (Integer) options.getOption("NUM_SIMUL_SOUNDS").getData();
+        this.player = new Player(sound_pack, num_simul_sounds);
         
         //other init stuff ...
 
         
         //checks
-        if (options.CLOCK_SPEED < 0) {
+        Integer clock_speed = (Integer) options.getOption("CLOCK_SPEED").getData();
+        if (clock_speed < 0) {
             System.out.println("NEGTIVE CLOCK SPEEDS ARE NOT ALLOWED DUMMY, I CAN'T TIME TRAVEL.\nAlthough it would make sense to undo all of the steps from a sorting algorithm in reverse");
             System.exit(1);
         }
     }
+    
     
     /**
      * Clock tick to update window and step the algorithm
@@ -160,6 +178,7 @@ public class VisualSorting {
         return true;
     }
     
+    
     /**
      * Repaints the window
      */
@@ -168,6 +187,7 @@ public class VisualSorting {
             this.currentTime = System.currentTimeMillis() - this.startTime;
         this.window.repaint();
     }
+    
     
     /**
      * When the sorter ends
@@ -203,7 +223,8 @@ public class VisualSorting {
             System.out.println("NUM ERRORS: " + numErrors);
         
     }
-        
+       
+    
     /**
      * Start
      * @param args 

@@ -11,12 +11,14 @@ public class SelectionSort<T extends Number & Comparable<T>>
     private int j;
     private int index;
 
+    
     public SelectionSort() {
         this.i = 0;
         this.j = i + 1;
         this.index = i;
     }
  
+    
     public static int[] doSelectionSort(int[] arr) {
          for (int i = 0; i < arr.length - 1; i++) {
             int index = i;
@@ -68,10 +70,12 @@ public class SelectionSort<T extends Number & Comparable<T>>
         
     }
     
+    
     @Override
     protected String getSorterName() {
         return "SelectionSort";
     }
+    
     
     public static void main(String args[]) {
         List<Integer> array = Util.oneLineInitList(new Integer[]{7,6,5,4,3,2,1});

@@ -36,11 +36,13 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      */
     protected abstract void step();
     
+    
     /**
      * Returns the name of the sorter
      * @return 
      */
     protected abstract String getSorterName();
+    
     
     /**
      * Gets the array
@@ -49,6 +51,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
     public List<T> getArray() {
         return array;
     }
+    
     
     /**
      * Sets the array
@@ -78,16 +81,18 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
         }
     }
     
+    
     /**
      * Sets the default colors according to the options
      * @param options 
      */
     public void setColors(Options options) {
-        this.DEFAULT_COLOR = options.DEFAULT_COLOR;
-        this.SWAP_COLOR_1 = options.SWAP_COLOR_1;
-        this.SWAP_COLOR_2 = options.SWAP_COLOR_2;
-        this.SELECTED_COLOR = options.SELECTED_COLOR;
+        this.DEFAULT_COLOR = (Color) options.getOption("DEFAULT_COLOR").getData();
+        this.SWAP_COLOR_1 = (Color) options.getOption("SWAP_COLOR_1").getData();
+        this.SWAP_COLOR_2 = (Color) options.getOption("SWAP_COLOR_2").getData();
+        this.SELECTED_COLOR = (Color) options.getOption("SELECTED_COLOR").getData();
     }
+    
     
     /**
      * Adds a color to a specific index
@@ -123,6 +128,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
             this.indexToPlaySound = i;
     }
     
+    
     /**
      * Adds a color to a specific index
      * If a color is already present at that index, it is replaced with the average of the two colors
@@ -133,6 +139,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
         addColoredIndex(i, c, false);
     }
     
+    
     /**
      * Removes all colored indices
      */
@@ -140,12 +147,14 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
         this.coloredIndicies.clear();;
     }
     
+    
     /**
      * Removes all swap arrows
      */
     public void clearSwapArrows() {
         this.swapArrowIndicies.clear();
     }
+    
     
     /**
      * Records a pair of indices to draw swap arrows on them
@@ -160,6 +169,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
         }
         this.swapArrowIndicies.add(new Triplet<>(firstIndex, secondIndex, c));
     }
+    
     
     /**
      * Removes all colored indices with a specific color
@@ -177,6 +187,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
         }
     }
     
+    
     /**
      * Removes all swapped arrow of a certain color
      * @param c the color to remove
@@ -189,6 +200,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
             }
         }
     }
+    
     
     /**
      * Returns the list of desired colors at the index i
@@ -205,6 +217,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
         return temp;
     }
     
+    
     /**
      * Returns the desired color at the index i
      * If the list of colors for this index is larger than 1 then the average color is returned
@@ -217,6 +230,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
                 return getAverageColor(p.getValue());
         return this.DEFAULT_COLOR;
     }
+    
     
     /**
      * Returns the average color from the list
@@ -242,6 +256,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
         return new Color(totalR / colors.size(), totalG / colors.size(), totalB / colors.size());
     }
 
+    
     /**
      * Returns the index whose sound is going to be played
      * @return 
@@ -249,6 +264,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
     public int indexToPlaySound() {
         return this.indexToPlaySound;
     }
+    
     
     /**
      * Returns all colored indices
@@ -258,6 +274,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
         return this.coloredIndicies;
     }
     
+    
     /**
      * Returns list of pairs of indices to show swap arrows between
      * @return 
@@ -266,6 +283,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
         return this.swapArrowIndicies;
     }
     
+    
     /**
      * Determines if the algorithm is finished.
      * It is finished if the array is in order according to T.compareTo
@@ -273,12 +291,27 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * @return 
      */
     public boolean isFinished() {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] != this.sortedFinalArray[i])
+                return false;
+        }
+        return true;
+    }
+    
+    
+    /**
+     * Determines if the algorithm is finished.
+     * It is finished if the array is sorted.
+     * @return 
+     */
+    public static boolean isSorted(int[] array) {
         for (int i = 0; i < array.size() - 1; i++) {
             if (array.get(i).compareTo(array.get(i+1)) > 0)
                 return false;
         }
         return true;
     }
+    
     
     /**
      * Convenience method to swap two elements in the array  
@@ -295,6 +328,31 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
         this.numArrayAccesses += 4;
         this.numSwaps++;
     }
+    
+    
+    /**
+     * Convenience method to swap two elements in the array  
+     * @param i
+     * @param j 
+     */
+    public static void swap(int i, int j, int[] array) {
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    
+    
+    /**
+     * Convenience method to print an array
+     * @param array 
+     */
+    public static void printArray(int[] array) { 
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i] + ", ");
+        }
+        System.out.println("\n");
+    }
+
     
     /**
      * Returns the maximum number in the array

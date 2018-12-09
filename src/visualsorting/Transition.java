@@ -22,6 +22,7 @@ public class Transition {
         LINEAR, SIGMOID, TANH, INVERSE, INVERSEINVERSE
     }
     
+    
     public Transition(Point2D.Double start, Point2D.Double end, double transitionTime, RectangularShape shape, TransitionType transitionType) {
         this.startPoint = start;
         this.currentPoint = (Point2D.Double) this.startPoint.clone();
@@ -38,11 +39,13 @@ public class Transition {
             this.transitionDone = false;
     }
     
+    
     //set shape to final location
     public void finalizeTransition() {
         this.currentPoint = this.endPoint;
         this.transitionDone = true;
     }
+    
     
     //step in time
     public void step(double timeElapsed) {
@@ -53,9 +56,9 @@ public class Transition {
         
     }
     
+    
     //draw shape to graphics
     public void draw(Graphics2D graphics) {
         graphics.draw(this.shape);
-    }
-        
+    }   
 }

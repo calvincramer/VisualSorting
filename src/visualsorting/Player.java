@@ -24,7 +24,6 @@ public class Player {
     private List<Integer> currentlyPlayingStack = new ArrayList<>();
     private int allowedSimul;
     
-    
     public Player(String soundPack, int numContinuousSoundsPlayingAllowed) {
         this.allowedSimul = numContinuousSoundsPlayingAllowed;
         if (this.allowedSimul <= 0)
@@ -42,6 +41,7 @@ public class Player {
             this.NUM_SOUND_FILES = 0;
         }
     }
+    
     
     private void init() {
         //initialize all sounds
@@ -67,6 +67,7 @@ public class Player {
         }
     }
     
+    
     /**
      * Plays a sound from url
      * Credit to: greenLizard and m13r on stack overflow:
@@ -89,6 +90,7 @@ public class Player {
         this.currentlyPlayingStack.add(noteNumber - 1);
     }
     
+    
     /**
      * Calculates the note to be played based upon a value and range
      * @param low - the lowest value that num can be
@@ -105,6 +107,7 @@ public class Player {
         
         return noteNumber;
     }
+    
     
     /**
      * Plays a note from the sound pack

@@ -10,11 +10,8 @@ public class CombSort<T extends Number & Comparable<T>>
     private int gap;
     private double shrink;
     private int i;
-    
-    //private static final Color HEAP_SORT_SWAP_COLOR = new Color(226, 93, 11);
-    //private static final Color HEAP_SORT_SELECT_COLOR = new Color(255, 255, 0);
-    
     private int stage;
+    
     
     public CombSort() {
         //this.gap = arr.length;
@@ -23,11 +20,13 @@ public class CombSort<T extends Number & Comparable<T>>
         this.stage = 0;
     }
     
+    
     @Override 
     public void setArray(List<T> arr) {
         super.setArray(arr);
         this.gap = arr.size();
     }
+    
     
     @Override
     protected void step() {
@@ -78,6 +77,7 @@ public class CombSort<T extends Number & Comparable<T>>
         }
     }
 
+    
     @Override
     protected String getSorterName() {
         return "CombSort";
@@ -111,11 +111,11 @@ public class CombSort<T extends Number & Comparable<T>>
         return arr;
     }
     
+    
     public static void main(String[] args) {
         Integer[] array = {7,6,5,4,3,2,1};
         array = Util.shuffleArray(array);
         array = CombSort.doCombSort(array);
         Util.printArray(array);
     }
-
 }

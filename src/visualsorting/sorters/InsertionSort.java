@@ -10,10 +10,12 @@ public class InsertionSort<T extends Number & Comparable<T>>
     private int i;
     private int j;
     
+    
     public InsertionSort() {
         i = 1;
         j = i;
     }
+    
     
     @Override
     protected void step() {
@@ -61,6 +63,7 @@ public class InsertionSort<T extends Number & Comparable<T>>
         }
     }
 
+    
     @Override
     protected String getSorterName() {
         return "InsertionSort";
@@ -87,5 +90,4 @@ public class InsertionSort<T extends Number & Comparable<T>>
         array = InsertionSort.doInsertionSort(array);
         Util.printArray(array);
     }
-
 }

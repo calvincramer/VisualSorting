@@ -17,6 +17,10 @@ public class BubbleSort<T extends Number & Comparable<T>>
     int m;
     int i;
     
+    //sorting variables
+    int m;
+    int i;
+    
     @Override
     public void setArray(List<T> array) {
         super.setArray(array);
@@ -25,6 +29,7 @@ public class BubbleSort<T extends Number & Comparable<T>>
         this.i = 0;
     }
   
+    
     /**
      * Sorts the array in one go
      * For debug purposes
@@ -36,6 +41,7 @@ public class BubbleSort<T extends Number & Comparable<T>>
                     swap(i, i+1);
     }
 
+    
     @Override
     protected void step() {
         if (done) return;
@@ -70,10 +76,12 @@ public class BubbleSort<T extends Number & Comparable<T>>
         //this.selectedIndicies = new int[]{i};
     }
     
+    
     @Override
     protected String getSorterName() {
         return "Bubble Sort";
     }
+    
     
     public static void main(String[] args) {
         List<Integer>input = new ArrayList<>();

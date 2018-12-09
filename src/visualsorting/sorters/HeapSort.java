@@ -23,20 +23,27 @@ public class HeapSort<T extends Number & Comparable<T>>
     private int returnToStage;
     private int root;
     
+    
     public HeapSort() {
         this.stage = 0;
     }
     
+
     public int iParent(int i) {
         return (int) ((i-1) / 2);
     }
+    
+    
     public int iLeftChild(int i) {
         return 2*i + 1;
     }
+    
+    
     public int iRightChild(int i) {
         return 2*i + 2;
     }
     
+
     public void heapSort(T[] arr) {
         heapify(arr);
         int end = arr.length - 1;
@@ -52,6 +59,7 @@ public class HeapSort<T extends Number & Comparable<T>>
         }
     }
     
+
     public void heapify(T[] arr) {
         int start = iParent(arr.length - 1);
         while (start >= 0) {
@@ -60,6 +68,7 @@ public class HeapSort<T extends Number & Comparable<T>>
         }
     }
     
+
     public void siftDown(T[] arr, int start, int end) {
         int root = start;
         while (iLeftChild(root) <= end) {
@@ -79,6 +88,7 @@ public class HeapSort<T extends Number & Comparable<T>>
         }
     }
 
+    
     @Override
     protected void step() {
         if (stage == 0) {   //heapify init
@@ -165,6 +175,7 @@ public class HeapSort<T extends Number & Comparable<T>>
         }
     }
 
+    
     @Override
     protected String getSorterName() {
         return "HeapSort";
