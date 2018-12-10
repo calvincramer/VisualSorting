@@ -17,9 +17,6 @@ public class BubbleSort<T extends Number & Comparable<T>>
     int m;
     int i;
     
-    //sorting variables
-    int m;
-    int i;
     
     @Override
     public void setArray(List<T> array) {
@@ -91,7 +88,7 @@ public class BubbleSort<T extends Number & Comparable<T>>
         BubbleSort bs = new BubbleSort();
         bs.setArray(input);
         
-        while (!bs.isFinished()) {
+        while (!bs.isSorted()) {
             bs.step();
             Util.printArray(bs.array);
             System.out.println();

@@ -154,7 +154,7 @@ public class MergeSort<T extends Number & Comparable<T>>
         MergeSort ms = new MergeSort();
         ms.setArray(arr);
         
-        while (!ms.isFinished()) {
+        while (!ms.isSorted()) {
             Util.printArray(ms.array);
             Util.printArray(ms.copyArr);
             ms.step();

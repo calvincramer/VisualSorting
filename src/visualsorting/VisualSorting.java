@@ -47,7 +47,7 @@ public class VisualSorting {
         Integer clock_speed = (Integer) options.getOption("CLOCK_SPEED").getData();
         
         //start array
-        Integer[] arrayTemp = StartArrayFactory.generate(options.NUM_ELEMENTS, options.START_ARRAY_STRUCTURE, options.START_ARRAY_NUMBERS_TYPE);
+        Integer[] arrayTemp = StartArrayFactory.generate(num_elements, start_array_structure, start_array_numbers_type);
         List<Integer> array = Util.arrayToList(arrayTemp);
         
         //copy original array
@@ -89,11 +89,11 @@ public class VisualSorting {
         timer = new Timer(true);
         
         //start timers
-        if (options.CLOCK_SPEED == 0) {
+        if (clock_speed == 0) {
             while (sortTick()) {}
         } else {
             timer.scheduleAtFixedRate(windowRepaintTask, 0, 17); //17ms about 60fps
-            timer.scheduleAtFixedRate(updateSortingStepperTask, options.START_DELAY, options.CLOCK_SPEED); 
+            timer.scheduleAtFixedRate(updateSortingStepperTask, start_delay, clock_speed); 
         }
     }
     

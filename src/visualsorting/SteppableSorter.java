@@ -11,6 +11,7 @@ import javafx.util.Pair;
  * Note that this class only supports sorting the array once, if you want to redo it then you will need to reinitialize.
  * Supports generic types that implement Comparable
  * @author Calvin Cramer
+ * @param <T>
  */
 public abstract class SteppableSorter<T extends Number & Comparable<T>> {
     
@@ -290,13 +291,11 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * Optionally (considering a very bad sorting algorithm), a subclass may define its own finishing criteria, before the array is sorted completely
      * @return 
      */
+    
     public boolean isFinished() {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] != this.sortedFinalArray[i])
-                return false;
-        }
-        return true;
+        return isSorted();
     }
+    
     
     
     /**
@@ -304,7 +303,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * It is finished if the array is sorted.
      * @return 
      */
-    public static boolean isSorted(int[] array) {
+    public final boolean isSorted() {
         for (int i = 0; i < array.size() - 1; i++) {
             if (array.get(i).compareTo(array.get(i+1)) > 0)
                 return false;

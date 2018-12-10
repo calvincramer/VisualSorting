@@ -17,29 +17,29 @@ public class Options {
     
     //default values
     private static final Class<?> DEFAULT_SORTER_CLASS   = InsertionSort.class;
-    private static final int DEAULT_NUM_ELEMENTS         = 64;
-    private static final String DEAULT_SOUND_PACK        = "piano";
-    private static final int DEAULT_CLOCK_SPEED          = 70;
-    private static final int DEAULT_START_DELAY          = 1000;
-    private static final int DEAULT_NUM_SIMUL_SOUNDS     = 1;
-    private static final NumberType DEAULT_START_ARRAY_NUMBERS_TYPE  = NumberType.UNIQUE;
-    private static final ArrayStructure DEAULT_START_ARRAY_STRUCTURE = ArrayStructure.SHUFFLED;
-    private static final double DEAULT_GAP_WIDTH            = 0.5;
-    private static final Color DEAULT_DEFAULT_COLOR         = new Color(0  , 120, 255);
+    private static final int DEFAULT_NUM_ELEMENTS         = 64;
+    private static final String DEFAULT_SOUND_PACK        = "piano";
+    private static final int DEFAULT_CLOCK_SPEED          = 70;
+    private static final int DEFAULT_START_DELAY          = 1000;
+    private static final int DEFAULT_NUM_SIMUL_SOUNDS     = 1;
+    private static final NumberType DEFAULT_START_ARRAY_NUMBERS_TYPE  = NumberType.UNIQUE;
+    private static final ArrayStructure DEFAULT_START_ARRAY_STRUCTURE = ArrayStructure.SHUFFLED;
+    private static final double DEFAULT_GAP_WIDTH            = 0.5;
+    private static final Color DEFAULT_DEFAULT_COLOR         = new Color(0  , 120, 255);
     private static final Color DEFAULT_SELECTED_COLOR       = new Color(0  , 255, 180);
     private static final Color DEFAULT_SWAP_COLOR_1         = new Color(255, 0  , 255);
     private static final Color DEFAULT_SWAP_COLOR_2         = new Color(183, 74 , 247);
-    private static final Color DEAULT_BACKGROUND_COLOR      = new Color(20 , 20 , 20 );
-    private static final Color DEAULT_TEXT_COLOR            = Color.WHITE;
-    private static final boolean DEAULT_IS_ANIMATED         = false;
+    private static final Color DEFAULT_BACKGROUND_COLOR      = new Color(20 , 20 , 20 );
+    private static final Color DEFAULT_TEXT_COLOR            = Color.WHITE;
+    private static final boolean DEFAULT_IS_ANIMATED         = false;
     private static final TransitionType DEFAULT_TRANSITION_TYPE     = TransitionType.LINEAR;
-    private static final boolean DEAULT_SHOW_SWAP_ARROWS    = false;
+    private static final boolean DEFAULT_SHOW_SWAP_ARROWS    = false;
     private static final Color DEFAULT_SWAP_ARROW_COLOR     = new Color(0  , 255, 0  );
     private static final String DEAULT_FONT_FAMILY          = "Courier New";
-    private static final int DEAULT_FONT_SIZE               = 16;
-    private static final boolean DEAULT_ANTI_ALIAS          = true;
-    private static final boolean DEAULT_ANTI_ALIAS_FONT     = true;
-    private static final Insets DEAULT_GRAPH_INSETS         = new Insets(15, 15, 15, 15);
+    private static final int DEFAULT_FONT_SIZE               = 16;
+    private static final boolean DEFAULT_ANTI_ALIAS          = true;
+    private static final boolean DEFAULT_ANTI_ALIAS_FONT     = true;
+    private static final Insets DEFAULT_GRAPH_INSETS         = new Insets(15, 15, 15, 15);
     
     
     /**
@@ -59,27 +59,28 @@ public class Options {
         //initialize allOptionsDefault
         allOptionsDefault = new HashMap<String, Option<?>>() {{
             put("SORTER_CLASS",         new Option<>(DEFAULT_SORTER_CLASS));
-            put("NUM_ELEMENTS",         new Option<>(DEAULT_NUM_ELEMENTS));
-            put("SOUND_PACK",           new Option<>(DEAULT_SOUND_PACK));
-            put("CLOCK_SPEED",          new Option<>(DEAULT_CLOCK_SPEED));
-            put("START_DELAY",          new Option<>(DEAULT_START_DELAY));
-            put("NUM_SIMUL_SOUNDS",     new Option<>(DEAULT_NUM_SIMUL_SOUNDS));
-            put("START_ARRAY_NUMBERS_TYPE", new Option<>(DEAULT_START_ARRAY_NUMBERS_TYPE));
-            put("START_ARRAY_STRUCTURE", new Option<>(DEAULT_START_ARRAY_STRUCTURE));
-            put("GAP_WIDTH",            new Option<>(DEAULT_GAP_WIDTH));
-            put("DEFAULT_COLOR",        new Option<>(DEAULT_DEFAULT_COLOR));
+            put("NUM_ELEMENTS",         new Option<>(DEFAULT_NUM_ELEMENTS));
+            put("SOUND_PACK",           new Option<>(DEFAULT_SOUND_PACK));
+            put("CLOCK_SPEED",          new Option<>(DEFAULT_CLOCK_SPEED));
+            put("START_DELAY",          new Option<>(DEFAULT_START_DELAY));
+            put("NUM_SIMUL_SOUNDS",     new Option<>(DEFAULT_NUM_SIMUL_SOUNDS));
+            put("START_ARRAY_NUMBERS_TYPE", new Option<>(DEFAULT_START_ARRAY_NUMBERS_TYPE));
+            put("START_ARRAY_STRUCTURE", new Option<>(DEFAULT_START_ARRAY_STRUCTURE));
+            put("GAP_WIDTH",            new Option<>(DEFAULT_GAP_WIDTH));
+            put("DEFAULT_COLOR",        new Option<>(DEFAULT_DEFAULT_COLOR));
             put("SELECTED_COLOR",       new Option<>(DEFAULT_SELECTED_COLOR));
             put("SWAP_COLOR_1",         new Option<>(DEFAULT_SWAP_COLOR_1));
             put("SWAP_COLOR_2",         new Option<>(DEFAULT_SWAP_COLOR_2));
-            put("BACKGROUND_COLOR",     new Option<>(DEAULT_BACKGROUND_COLOR));
-            put("TEXT_COLOR",           new Option<>(DEAULT_TEXT_COLOR));
-            put("IS_ANIMATED",          new Option<>(DEAULT_IS_ANIMATED));
-            put("SHOW_SWAP_ARROWS",     new Option<>(DEAULT_SHOW_SWAP_ARROWS));
+            put("BACKGROUND_COLOR",     new Option<>(DEFAULT_BACKGROUND_COLOR));
+            put("TEXT_COLOR",           new Option<>(DEFAULT_TEXT_COLOR));
+            put("IS_ANIMATED",          new Option<>(DEFAULT_IS_ANIMATED));
+            put("SHOW_SWAP_ARROWS",     new Option<>(DEFAULT_SHOW_SWAP_ARROWS));
             put("FONT_FAMILY",          new Option<>(DEAULT_FONT_FAMILY));
-            put("FONT_SIZE",            new Option<>(DEAULT_FONT_SIZE));
-            put("ANTI_ALIAS",           new Option<>(DEAULT_ANTI_ALIAS));
-            put("ANTI_ALIAS_FONT",      new Option<>(DEAULT_ANTI_ALIAS_FONT));
-            put("GRAPH_INSETS",         new Option<>(DEAULT_GRAPH_INSETS));
+            put("FONT_SIZE",            new Option<>(DEFAULT_FONT_SIZE));
+            put("ANTI_ALIAS",           new Option<>(DEFAULT_ANTI_ALIAS));
+            put("ANTI_ALIAS_FONT",      new Option<>(DEFAULT_ANTI_ALIAS_FONT));
+            put("GRAPH_INSETS",         new Option<>(DEFAULT_GRAPH_INSETS));
+            put("SWAP_ARROW_COLOR",     new Option<>(DEFAULT_SWAP_ARROW_COLOR));
         }};
     }
     
@@ -94,7 +95,7 @@ public class Options {
         System.out.println(opt2.getData());
         System.out.println(opt2.getData().getClass());
         
-        Option<NumberType> opt3 = new Option<NumberType>(DEAULT_START_ARRAY_NUMBERS_TYPE);
+        Option<NumberType> opt3 = new Option<NumberType>(DEFAULT_START_ARRAY_NUMBERS_TYPE);
         NumberType data3 = opt3.getData();
         System.out.println(opt3.getData());
         System.out.println(opt3.getData().getClass());

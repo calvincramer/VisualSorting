@@ -37,17 +37,17 @@ public class StartArrayFactory {
     }
     
     
-    public static int[] generate(int size) {
+    public static Integer[] generate(int size) {
         return generate(size, ArrayStructure.SHUFFLED, NumberType.UNIQUE);
     }
     
     
-    public static int[] generate(int size, NumberType numType) {
+    public static Integer[] generate(int size, NumberType numType) {
         return generate(size, ArrayStructure.SHUFFLED, numType);
     }
     
     
-    public static int[] generate(int size, ArrayStructure structure) {
+    public static Integer[] generate(int size, ArrayStructure structure) {
         return generate(size, structure, NumberType.UNIQUE);
     }
     

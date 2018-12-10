@@ -27,7 +27,6 @@ public class MainFrame extends JFrame{
     private SteppableSorter sorter;
     private VisualSorting vs;
     private final Options options;
-    private int highestNum;
     private Graphics2D offScreen;
     private Image offScreenImage;
     private double graphWidth;
@@ -100,7 +99,7 @@ public class MainFrame extends JFrame{
         Double gap_width = (Double) options.getOption("GAP_WIDTH").getData();
         this.graphWidth = this.getWidth() - this.getInsets().left - this.getInsets().right - insets.left - insets.right;
         this.graphHeight = this.getHeight() - this.getInsets().top - this.getInsets().bottom - insets.top - insets.bottom;
-        this.columnWidth = (graphWidth * 1.0 / sorter.getArray().length ) - gap_width;    
+        this.columnWidth = (graphWidth * 1.0 / sorter.getArray().size() ) - gap_width;    
     }
     
     
@@ -114,7 +113,7 @@ public class MainFrame extends JFrame{
         if (this.offScreenImage == null)
             return; //couldn't create offscreen image, due to frame not visible yet?
         offScreen = (Graphics2D) offScreenImage.getGraphics();
-        if (anti_alias)
+        if (anti_alias) {
             offScreen.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             offScreen.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
             offScreen.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
@@ -177,7 +176,8 @@ public class MainFrame extends JFrame{
         double x;
         //draw swap lines
         if (show_swap_arrows) {
-            for (Triplet<Integer, Integer, Color> p : this.sorter.getSwapIndicies()) {
+            List<Triplet<Integer, Integer, Color>> temp = this.sorter.getSwapIndicies();
+            for (Triplet<Integer, Integer, Color> p : temp) {
                 offScreen.setColor(p.getThird());
                 
                 if (p.getFirst() > p.getSecond())   //first is the lowest x value
@@ -247,21 +247,31 @@ public class MainFrame extends JFrame{
     }
     
     
+    /**
+     * Calculates.....
+     * @param index
+     * @return 
+     */
     private double getTop(int index) {
         Insets insets = (Insets) options.getOption("GRAPH_INSETS").getData();
-        return this.getHeight() - this.getInsets().bottom - insets.bottom - (sorter.array[index] * 1.0 / highestNum) * graphHeight;
+        List<Number> arr = sorter.getArray();
+        double ans = this.getHeight() 
+                - this.getInsets().bottom 
+                - insets.bottom 
+                - (arr.get(index).doubleValue() * 1.0 / sorter.getMax().doubleValue()) * graphHeight;
+        return ans;
     }
     
      
     /**
      * Calculates the height of the number at a specific index
-     * The height corresponds to the visual hight on the window
+     * The height corresponds to the visual height on the window
      * @param index
      * @return 
      */
     private double getHeight(int index) {
-        List<Number> s = sorter.getArray();
-        return (s.get(index).doubleValue() / sorter.getMax().doubleValue()) * graphHeight;
+        List<Number> arr = sorter.getArray();
+        return (arr.get(index).doubleValue() / sorter.getMax().doubleValue()) * graphHeight;
     }
     
     
@@ -273,9 +283,14 @@ public class MainFrame extends JFrame{
      * @param y1
      * @param x2
      * @param y2 
+     * @param cntrX1 
+     * @param cntrY1 
+     * @param cntrX2 
+     * @param cntrY2 
      */
     public void drawSwapLine(double x1, double y1, double x2, double y2, double cntrX1, double cntrY1, double cntrX2, double cntrY2) {
-        offScreen.setColor(options.SWAP_ARROW_COLOR);
+        Color swap_arrow_color = (Color) options.getOption("SWAP_ARROW_COLOR").getData();
+        offScreen.setColor(swap_arrow_color);
         
         CubicCurve2D.Double path = new CubicCurve2D.Double(
                 x1, y1,     //first point
