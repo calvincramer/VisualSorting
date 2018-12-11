@@ -13,10 +13,10 @@ FONT_FAMILY					can be any of: currently installed fonts recognizable to java?
 ################################################################################
 ### Sorting options ###
 ################################################################################
-SORTER_CLASS				= MergeSort		|string
-NUM_ELEMENTS				= 10			|integer, positive
-CLOCK_SPEED					= 40			|integer, non-negative
-START_DELAY					= 200			|integer, non-negative
+SORTER_CLASS				= CombSort		|string
+NUM_ELEMENTS				= 80			|integer, positive
+CLOCK_SPEED					= 100			|integer, non-negative
+START_DELAY					= 3000			|integer, non-negative
 START_ARRAY_NUMBERS_TYPE	= UNIQUE		|string
 START_ARRAY_STRUCTURE		= SHUFFLED 		|string
 
@@ -31,7 +31,7 @@ QUIET_OLD_SOUNDS 			= true			|boolean
 ################################################################################
 ### Visual options ###
 ################################################################################
-GAP_WIDTH					= 0.3			|float
+GAP_WIDTH					= 0.7			|float
 DEFAULT_COLOR				= 120 120 120	|color, three integers 0 - 255
 SELECTED_COLOR				= 0 255 180		|color, three integers 0 - 255
 SWAP_COLOR_1				= 255 0 255		|color, three integers 0 - 255
@@ -46,4 +46,6 @@ FONT_FAMILY					= Courier New	|string
 FONT_SIZE					= 20			|integer, positive
 ANTI_ALIAS_FONT 			= true			|boolean
 ANTI_ALIAS_FONT				= true			|boolean
-GRAPH_INSETS				= 100 20 20 20	|integer: up, right, down, left
+GRAPH_INSETS				= 250 900 20 20	|integer: up, left, down, right
+WINDOW_WIDTH 				= 0				|integer, positive
+WINDOW_HEIGHT				= 0 			|integer, positive

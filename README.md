@@ -1,5 +1,5 @@
 # VisualSorting
 Sorting Visualized
-Sorting Algorithms step by step visualized
+Sorting Algorithms step by step visualized:
 <br/>
-<img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" width="400" height="400" />
+<img src="https://media.giphy.com/media/2iqKYRPZyGJgprW9i6/giphy.gif" width="800" height="800" />
