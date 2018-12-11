@@ -103,6 +103,7 @@ public class VisualSorting {
      */
     private void init() {
         //parse options file
+        long startReadingOptionsTime = System.currentTimeMillis();
         URL optionsFileURL = VisualSorting.class.getResource("/options.txt");
         if (optionsFileURL != null) {
             File optionsFile = new File(optionsFileURL.getFile());
@@ -112,22 +113,23 @@ public class VisualSorting {
             System.out.println("Options file could not be found, using default options.");
             this.options = new Options();
         }
+        System.out.println("Time to init options: " + (System.currentTimeMillis() - startReadingOptionsTime) + "ms");
         
-        //System.err.println("Testing options!");
-        //System.exit(1);
         
         //find number of sound files in the selected soundPack
+        long startSoundTime = System.currentTimeMillis();
         String sound_pack = (String) options.getOption("SOUND_PACK").getData();
         Integer num_simul_sounds = (Integer) options.getOption("NUM_SIMUL_SOUNDS").getData();
         this.player = new Player(sound_pack, num_simul_sounds);
+        System.out.println("Time to init sounds: " + (System.currentTimeMillis() - startSoundTime) + "ms");
         
         //other init stuff ...
 
-        
         //checks
         Integer clock_speed = (Integer) options.getOption("CLOCK_SPEED").getData();
-        if (clock_speed < 0) {
-            System.out.println("NEGTIVE CLOCK SPEEDS ARE NOT ALLOWED DUMMY, I CAN'T TIME TRAVEL.\nAlthough it would make sense to undo all of the steps from a sorting algorithm in reverse");
+        Integer start_delay = (Integer) options.getOption("START_DELAY").getData();
+        if (clock_speed < 0 || start_delay < 0) {
+            System.err.println("NEGTIVE CLOCK SPEEDS OR DELAYS ARE NOT ALLOWED DUMMY, I CAN'T TIME TRAVEL.\nAlthough it would make sense to undo all of the steps from a sorting algorithm in reverse");
             System.exit(1);
         }
     }
@@ -159,7 +161,13 @@ public class VisualSorting {
         }
 
         if (doingEndCheck) {    //sweep from left to right
-            int nextIndex = sorter.getColoredIndices().get(0).getKey()+ 1;
+            //check for an array
+            if (sorter.getArray() == null || sorter.getArray().isEmpty()) {
+                endProcedure();
+                return false;
+            }
+            
+            int nextIndex = sorter.getColoredIndices().get(0).getKey() + 1;
             sorter.clearColoredIndices();
             if (nextIndex >= sorter.getArray().size()) {
                 endProcedure();
@@ -212,7 +220,7 @@ public class VisualSorting {
         }
         for (int i = 0; i < copyArr.size(); i++) {
             if (copyArr.get(i).compareTo(sorter.getArray().get(i)) != 0) {
-                System.out.println("ERROR: not sorted properly at index " + i);
+                System.err.println("ERROR: not sorted properly at index " + i);
                 numErrors++;
             }
         }
@@ -220,7 +228,7 @@ public class VisualSorting {
         if (numErrors == 0)
             System.out.println("SORTING SUCCESSFUL");
         else
-            System.out.println("NUM ERRORS: " + numErrors);
+            System.err.println("NUM ERRORS: " + numErrors);
         
     }
        

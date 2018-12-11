@@ -1,49 +1,49 @@
-### OPTIONS ###
-OPTIONS CAN BE IN ANY ORDER
-SEE scr/visualsorting/sorters/ FOR A LIST OF SORTERS YOU CAN USE FOR THE 'sorter' OPTION
-START_ARRAY_NUMBERS_TYPE can be:
-		UNIQUE, 
-        SOME_PAIRS, 
-        ALL_PAIRED, 
-        CHOOSE_RANDOMLY
-START_ARRAY_STRUCTURE can be:
-		ASCENDING, 
-        DESCENDING, 
-        SHUFFLED, 
-        PARTIALLY_SHUFFLED
+################################################################################
+### Visual Sorting OPTIONS ###
+### options can be in any order ###
+### possibilities for string options are given below: ###
+################################################################################
+SORTER_CLASS				can be any of: {BubbleSort, CombSort, HeapSort, InsertionSort, MergeSort, QuickSort, SelectionSort, ShellSort, TreeSort}
+START_ARRAY_NUMBERS_TYPE	can be any of: {UNIQUE, SOME_PAIRS, ALL_PAIRED, CHOOSE_RANDOMLY}
+START_ARRAY_STRUCTURE		can be any of: {ASCENDING, DESCENDING, SHUFFLED, PARTIALLY_SHUFFLED}
+SOUND_PACK					can be any of: folder names in snd/soundpacks folder
+TRANSITION_TYPE				can be any of: {LINEAR, SIGMOID, TANH, INVERSE, INVERSEINVERSE}
+FONT_FAMILY					can be any of: currently installed fonts recognizable to java?
 
-########################################################################################
+################################################################################
 ### Sorting options ###
-########################################################################################
-SORTER_CLASS				= MergeSort
-NUM_ELEMENTS				= 64
-CLOCK_SPEED					= 100
-START_DELAY					= 250
-START_ARRAY_NUMBERS_TYPE	= UNIQUE
-START_ARRAY_STRUCTURE		= SHUFFLED
+################################################################################
+SORTER_CLASS				= MergeSort		|string
+NUM_ELEMENTS				= 10			|integer, positive
+CLOCK_SPEED					= 40			|integer, non-negative
+START_DELAY					= 200			|integer, non-negative
+START_ARRAY_NUMBERS_TYPE	= UNIQUE		|string
+START_ARRAY_STRUCTURE		= SHUFFLED 		|string
 
-########################################################################################
+################################################################################
 ### Sound options ###
-########################################################################################
-SOUND_ENABLED				= true
-SOUND_PACK					= sopranoSax
-NUM_SIMUL_SOUNDS			= 1
+################################################################################
+SOUND_ENABLED				= true			|boolean
+SOUND_PACK					= sopranoSax	|string
+NUM_SIMUL_SOUNDS			= 3				|integer, positive
+QUIET_OLD_SOUNDS 			= true			|boolean
 
-########################################################################################
+################################################################################
 ### Visual options ###
-GAP_WIDTH					= 0.3
-DEFAULT_COLOR				= 100 100 100
-SELECTED_COLOR				= 0 255 180
-SWAP_COLOR_1				= 255 0 255
-SWAP_COLOR_2				= 183 74 247
-BACKGROUND_COLOR			= 20 20 20
-TEXT_COLOR					= 255 255 255
-IS_ANIMATED					= false
-TRANSITION_TYPE				= SIGMOID
-SHOW_SWAP_ARROWS			= true
-SWAP_ARROW_COLOR			= 255 255 255
-FONT_FAMILY					= Courier New
-FONT_SIZE					= 20
-ANTI_ALIAS_FONT 			= true
-ANTI_ALIAS_FONT				= true
-GRAPH_INSETS				= 100 10 10 10
+################################################################################
+GAP_WIDTH					= 0.3			|float
+DEFAULT_COLOR				= 120 120 120	|color, three integers 0 - 255
+SELECTED_COLOR				= 0 255 180		|color, three integers 0 - 255
+SWAP_COLOR_1				= 255 0 255		|color, three integers 0 - 255
+SWAP_COLOR_2				= 183 74 247	|color, three integers 0 - 255
+BACKGROUND_COLOR			= 20 20 20		|color, three integers 0 - 255
+TEXT_COLOR					= 255 255 255	|color, three integers 0 - 255
+IS_ANIMATED					= false			|boolean
+TRANSITION_TYPE				= SIGMOID		|string
+SHOW_SWAP_ARROWS			= true			|boolean
+SWAP_ARROW_COLOR			= 255 255 255	|color, three integers 0 - 255
+FONT_FAMILY					= Courier New	|string
+FONT_SIZE					= 20			|integer, positive
+ANTI_ALIAS_FONT 			= true			|boolean
+ANTI_ALIAS_FONT				= true			|boolean
+GRAPH_INSETS				= 100 20 20 20	|integer: up, right, down, left

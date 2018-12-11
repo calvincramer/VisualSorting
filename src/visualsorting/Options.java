@@ -16,41 +16,40 @@ import visualsorting.Transition.TransitionType;
 public class Options {
     
     //default values
-    private static final Class<?> DEFAULT_SORTER_CLASS   = InsertionSort.class;
-    private static final int DEFAULT_NUM_ELEMENTS         = 64;
-    private static final String DEFAULT_SOUND_PACK        = "piano";
-    private static final int DEFAULT_CLOCK_SPEED          = 70;
-    private static final int DEFAULT_START_DELAY          = 1000;
-    private static final int DEFAULT_NUM_SIMUL_SOUNDS     = 1;
+    //### Sorting options ###
+    private static final Class<?> DEFAULT_SORTER_CLASS  = InsertionSort.class;
+    private static final int DEFAULT_NUM_ELEMENTS       = 64;
+    private static final int DEFAULT_CLOCK_SPEED        = 70;
+    private static final int DEFAULT_START_DELAY        = 1000;
     private static final NumberType DEFAULT_START_ARRAY_NUMBERS_TYPE  = NumberType.UNIQUE;
     private static final ArrayStructure DEFAULT_START_ARRAY_STRUCTURE = ArrayStructure.SHUFFLED;
-    private static final double DEFAULT_GAP_WIDTH            = 0.5;
-    private static final Color DEFAULT_DEFAULT_COLOR         = new Color(0  , 120, 255);
+
+    //### Sound options ###
+    private static final boolean DEFAULT_SOUND_ENABLED  = true;
+    private static final String DEFAULT_SOUND_PACK      = "piano";
+    private static final int DEFAULT_NUM_SIMUL_SOUNDS   = 1;
+
+    //### Visual options ###
+    private static final double DEFAULT_GAP_WIDTH           = 0.5;
+    private static final Color DEFAULT_DEFAULT_COLOR        = new Color(0  , 120, 255);
     private static final Color DEFAULT_SELECTED_COLOR       = new Color(0  , 255, 180);
     private static final Color DEFAULT_SWAP_COLOR_1         = new Color(255, 0  , 255);
     private static final Color DEFAULT_SWAP_COLOR_2         = new Color(183, 74 , 247);
-    private static final Color DEFAULT_BACKGROUND_COLOR      = new Color(20 , 20 , 20 );
-    private static final Color DEFAULT_TEXT_COLOR            = Color.WHITE;
-    private static final boolean DEFAULT_IS_ANIMATED         = false;
+    private static final Color DEFAULT_BACKGROUND_COLOR     = new Color(20 , 20 , 20 );
+    private static final Color DEFAULT_TEXT_COLOR           = Color.WHITE;
+    private static final boolean DEFAULT_IS_ANIMATED        = false;
     private static final TransitionType DEFAULT_TRANSITION_TYPE     = TransitionType.LINEAR;
-    private static final boolean DEFAULT_SHOW_SWAP_ARROWS    = false;
+    private static final boolean DEFAULT_SHOW_SWAP_ARROWS   = false;
     private static final Color DEFAULT_SWAP_ARROW_COLOR     = new Color(0  , 255, 0  );
     private static final String DEAULT_FONT_FAMILY          = "Courier New";
-    private static final int DEFAULT_FONT_SIZE               = 16;
-    private static final boolean DEFAULT_ANTI_ALIAS          = true;
-    private static final boolean DEFAULT_ANTI_ALIAS_FONT     = true;
-    private static final Insets DEFAULT_GRAPH_INSETS         = new Insets(15, 15, 15, 15);
+    private static final int DEFAULT_FONT_SIZE              = 16;
+    private static final boolean DEFAULT_ANTI_ALIAS         = true;
+    private static final boolean DEFAULT_ANTI_ALIAS_FONT    = true;
+    private static final Insets DEFAULT_GRAPH_INSETS        = new Insets(15, 15, 15, 15);
+    
     
     
     /**
-     * Option enum that lists ALL options
-     * Or class option that specifies the data type for the options as well?
-     * 
-     * If the file does not have all options, add those options to the file
-     * If the file doesn't specify all options, default ones are used for the ones not specified 
-     * 
-     * What about the options that are enums, should print all options in the options file?
-     * 
      * SOME WAY FOR ELSEWHERE IN THE PROJECT TO GET OPTION VALUE WITHOUT CASTING?
      */
     private static final Map<String, Option<?>> allOptionsDefault;
@@ -58,14 +57,20 @@ public class Options {
     static {
         //initialize allOptionsDefault
         allOptionsDefault = new HashMap<String, Option<?>>() {{
+            //### Sorting options ###
             put("SORTER_CLASS",         new Option<>(DEFAULT_SORTER_CLASS));
             put("NUM_ELEMENTS",         new Option<>(DEFAULT_NUM_ELEMENTS));
-            put("SOUND_PACK",           new Option<>(DEFAULT_SOUND_PACK));
             put("CLOCK_SPEED",          new Option<>(DEFAULT_CLOCK_SPEED));
             put("START_DELAY",          new Option<>(DEFAULT_START_DELAY));
-            put("NUM_SIMUL_SOUNDS",     new Option<>(DEFAULT_NUM_SIMUL_SOUNDS));
             put("START_ARRAY_NUMBERS_TYPE", new Option<>(DEFAULT_START_ARRAY_NUMBERS_TYPE));
             put("START_ARRAY_STRUCTURE", new Option<>(DEFAULT_START_ARRAY_STRUCTURE));
+            
+            //### Sound options ###
+            put("SOUND_ENABLED",        new Option<>(DEFAULT_SOUND_ENABLED));
+            put("SOUND_PACK",           new Option<>(DEFAULT_SOUND_PACK));
+            put("NUM_SIMUL_SOUNDS",     new Option<>(DEFAULT_NUM_SIMUL_SOUNDS));
+            
+            //### Visual options ###
             put("GAP_WIDTH",            new Option<>(DEFAULT_GAP_WIDTH));
             put("DEFAULT_COLOR",        new Option<>(DEFAULT_DEFAULT_COLOR));
             put("SELECTED_COLOR",       new Option<>(DEFAULT_SELECTED_COLOR));
@@ -74,6 +79,7 @@ public class Options {
             put("BACKGROUND_COLOR",     new Option<>(DEFAULT_BACKGROUND_COLOR));
             put("TEXT_COLOR",           new Option<>(DEFAULT_TEXT_COLOR));
             put("IS_ANIMATED",          new Option<>(DEFAULT_IS_ANIMATED));
+            put("TRANSITION_TYPE",      new Option<>(DEFAULT_TRANSITION_TYPE));
             put("SHOW_SWAP_ARROWS",     new Option<>(DEFAULT_SHOW_SWAP_ARROWS));
             put("FONT_FAMILY",          new Option<>(DEAULT_FONT_FAMILY));
             put("FONT_SIZE",            new Option<>(DEFAULT_FONT_SIZE));
@@ -84,6 +90,11 @@ public class Options {
         }};
     }
     
+    
+    /**
+     * For testing purposes
+     * @param args unused
+     */
     public static void main(String[] args) {
         Option<Integer> opt = new Option<>(new Integer(5));
         Integer data = opt.getData();
@@ -122,12 +133,21 @@ public class Options {
             this.optionsMap.put(entry.getKey(), entry.getValue());
         //read options from options array, replace option values
         for (String optionLine : options) {
-                //System.out.println(s);
                 String[] optionNameValue = optionLine.split("=");
-                if (optionNameValue.length != 2)    //disregard any line that doesn't have exactly one '='
+                
+                //disregard any line that doesn't have exactly one '='
+                if (optionNameValue.length != 2)    
                     continue;
                 String option = optionNameValue[0].trim();
                 String optionValue = optionNameValue[1].trim();
+                
+                //take type off end of optionValue
+                String[] optionValueType = optionValue.split("\\|");
+                if (optionValueType.length < 1) {
+                    System.err.println("Found an optionValue but when taking off the type off the end something went wrong");
+                    continue;
+                }
+                optionValue = optionValueType[0].trim();
                 
                 this.setOption(option, optionValue);
         }
@@ -159,15 +179,16 @@ public class Options {
         //System.out.println(optionClass);
         
         //set option according to the class
-        if (optionClass == Integer.class)       this.optionsMap.put(option, new Option<Integer>(readAsInt(data)));
-        else if (optionClass == Double.class)   this.optionsMap.put(option, new Option<Double>(readAsDouble(data)));
-        else if (optionClass == String.class)   this.optionsMap.put(option, new Option<String>(readAsString(data)));
-        else if (optionClass == NumberType.class)   this.optionsMap.put(option, new Option<NumberType>(readAsNumberType(data)));
-        else if (optionClass == ArrayStructure.class)   this.optionsMap.put(option, new Option<ArrayStructure>(readAsArrayStructure(data)));
-        else if (optionClass == Color.class)        this.optionsMap.put(option, new Option<Color>(readAsColor(data)));
-        else if (optionClass == Boolean.class)   this.optionsMap.put(option, new Option<Boolean>(readAsBool(data)));
-        else if (optionClass == Insets.class)   this.optionsMap.put(option, new Option<Insets>(readAsInsets(data)));
-        else if (optionClass == Class.class)    this.optionsMap.put(option, new Option<Class<?>>(readAsSorterClass(data)));
+        if (optionClass == Integer.class)               optionsMap.put(option, new Option<Integer>(readAsInt(data)));
+        else if (optionClass == Double.class)           optionsMap.put(option, new Option<Double>(readAsDouble(data)));
+        else if (optionClass == String.class)           optionsMap.put(option, new Option<String>(readAsString(data)));
+        else if (optionClass == NumberType.class)       optionsMap.put(option, new Option<NumberType>(readAsNumberType(data)));
+        else if (optionClass == ArrayStructure.class)   optionsMap.put(option, new Option<ArrayStructure>(readAsArrayStructure(data)));
+        else if (optionClass == Color.class)            optionsMap.put(option, new Option<Color>(readAsColor(data)));
+        else if (optionClass == Boolean.class)          optionsMap.put(option, new Option<Boolean>(readAsBool(data)));
+        else if (optionClass == Insets.class)           optionsMap.put(option, new Option<Insets>(readAsInsets(data)));
+        else if (optionClass == TransitionType.class)   optionsMap.put(option, new Option<TransitionType>(readAsTransitionType(data)));
+        else if (optionClass == Class.class)            optionsMap.put(option, new Option<Class<?>>(readAsSorterClass(data)));
         else {
             System.err.println("Recognized the option name, but could not read the option as a/an: " + optionClass);
             return;
@@ -282,14 +303,14 @@ public class Options {
     }
 
   
-    public TransitionType readAsTransition(String s) {
+    public TransitionType readAsTransitionType(String s) {
         s = s.trim();
         for (int i = 0; i < TransitionType.values().length; i++) {
             TransitionType type = TransitionType.values()[i];
             if (s.equals(type.toString()))
                 return type;
         }
-        System.out.println("COULD NOT RECOGNIZE THE TRANSITION NAME");
+        System.out.println("COULD NOT RECOGNIZE THE TRANSITION TYPE");
         System.exit(1);
         return null;
     }
