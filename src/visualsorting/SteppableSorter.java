@@ -2,7 +2,6 @@ package visualsorting;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javafx.util.Pair;
 
@@ -11,22 +10,30 @@ import javafx.util.Pair;
  * Note that this class only supports sorting the array once, if you want to redo it then you will need to reinitialize.
  * Supports generic types that implement Comparable
  * @author Calvin Cramer
- * @param <T>
+ * @param <T> The type of number to be used for the array of numbers. The type must be a subclass of Number and implement the Comparable interface
  */
 public abstract class SteppableSorter<T extends Number & Comparable<T>> {
     
-    protected List<T> array;
-    private T maxNum;
+    protected List<T> array;    //actual array (list) of numbers
+    private T maxNum;           //holds the maximum number in the array, set on setArray()
 
+    //determines which indicies are colored
+    //a single index can be colored with multiple colors
     private List<Pair<Integer, List<Color>>> coloredIndicies;
+    
+    //keeps track of the swap arrows
     private List<Triplet<Integer, Integer, Color>> swapArrowIndicies;
+    
+    //set by the sorting algorithm to determine which number to play a sound at
     private int indexToPlaySound;
     
+    //sorting members
     public boolean done;
     public long numComparisons;
     public long numSwaps;
     public long numArrayAccesses;
     
+    //for convienece, instead of having to call and cast from options each time
     public Color DEFAULT_COLOR;
     public Color SELECTED_COLOR;
     public Color SWAP_COLOR_1;
@@ -40,14 +47,14 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
     
     /**
      * Returns the name of the sorter
-     * @return 
+     * @return a string of the sorter's name
      */
     protected abstract String getSorterName();
     
     
     /**
      * Gets the array
-     * @return 
+     * @return the array associated with this steppable sorter
      */
     public List<T> getArray() {
         return array;
@@ -57,7 +64,8 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
     /**
      * Sets the array
      * Resets the algorithm to the beginning 
-     * @param arr 
+     * Calculates the maximum in the array
+     * @param arr the array to set
      */
     public void setArray(List<T> arr) {
         this.array = arr;
@@ -85,7 +93,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
     
     /**
      * Sets the default colors according to the options
-     * @param options 
+     * @param options an Options object
      */
     public void setColors(Options options) {
         this.DEFAULT_COLOR = (Color) options.getOption("DEFAULT_COLOR").getData();
@@ -98,9 +106,9 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
     /**
      * Adds a color to a specific index
      * If a color is already present at that index, it is replaced with the average of the two colors
-     * @param i
-     * @param c 
-     * @param playSoundHere 
+     * @param i index
+     * @param c color
+     * @param playSoundHere whether to play a sound at i or not, will override previous set soundIndex if true 
      */
     public void addColoredIndex(int i, Color c, boolean playSoundHere) {
         if (i < 0 || i >= array.size()) {
@@ -121,7 +129,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
             }
         }
         //start new list for this index
-        List<Color> temp = new ArrayList<Color>();
+        List<Color> temp = new ArrayList<>();
         temp.add(c);
         this.coloredIndicies.add(new Pair<>(i, temp));
         
@@ -133,8 +141,8 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
     /**
      * Adds a color to a specific index
      * If a color is already present at that index, it is replaced with the average of the two colors
-     * @param i
-     * @param c 
+     * @param i index
+     * @param c color
      */
     public void addColoredIndex(int i, Color c) {
         addColoredIndex(i, c, false);
@@ -145,7 +153,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * Removes all colored indices
      */
     public void clearColoredIndices() {
-        this.coloredIndicies.clear();;
+        this.coloredIndicies.clear();
     }
     
     
@@ -162,6 +170,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * Swap arrows will only be drawn if allowed by the options file
      * @param firstIndex first index
      * @param secondIndex second index
+     * @param c the color of ???
      */
     public void addSwapArrow(int firstIndex, int secondIndex, Color c) {
         if (firstIndex < 0 || secondIndex < 0 
@@ -181,7 +190,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
             if (this.coloredIndicies.get(i).getValue().contains(c)) {
                 this.coloredIndicies.get(i).getValue().remove(c);
                 //remove list if it's empty
-                if (this.coloredIndicies.get(i).getValue().size() == 0)
+                if (this.coloredIndicies.get(i).getValue().isEmpty())
                     this.coloredIndicies.remove(i);
                 i--;
             }
@@ -224,6 +233,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * If the list of colors for this index is larger than 1 then the average color is returned
      * If no desired color is set for the index then the default color is returned
      * @param index the index
+     * @return the color to be painted at index i. If no color is set, then the default color is returned
      */
     public Color getColorAt(int index) {
         for (Pair<Integer, List<Color>> p : this.coloredIndicies)
@@ -240,7 +250,7 @@ public abstract class SteppableSorter<T extends Number & Comparable<T>> {
      * @return returns the average color at the index
      */
     public Color getAverageColor(List<Color> colors) {
-        if (colors == null || colors.size() == 0)
+        if (colors == null || colors.isEmpty())
             return null;
         else if (colors.size() == 1)
             return colors.get(0);
