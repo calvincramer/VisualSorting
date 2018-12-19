@@ -1,9 +1,12 @@
 package visualsorting;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -21,7 +24,6 @@ public class Util {
     protected static String[] readFile(File file) {
         Scanner reader;
         List<String> lines = new ArrayList<>();
-
         try {
             reader = new Scanner(file);
             while (reader.hasNextLine())
@@ -30,6 +32,36 @@ public class Util {
         catch (Exception e) { e.printStackTrace(); }
         
         return lines.toArray(new String[lines.size()]);
+    }
+    
+    
+    protected static String[] readFileFromJar(String fileName) {
+        InputStream in = Util.class.getResourceAsStream("/" + fileName);
+        if (in == null) {
+            System.out.println("Could not load " + fileName + " as an inputstream from jar");
+            return null;
+        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        if (reader == null) {
+            System.out.println("Could not make BufferedReader from inputstream");
+            return null;
+        }
+        
+        List<String> lines = new ArrayList<>();
+        try {
+            String line = reader.readLine();
+            while (line != null) {
+                lines.add(line);
+                line = reader.readLine();
+            }
+        } catch (IOException e) {
+            System.out.println("IOerror while reading file");
+            e.printStackTrace();
+            return null;
+        }
+        
+        return lines.toArray(new String[lines.size()]);
+        
     }
     
     

@@ -1,9 +1,11 @@
 package visualsorting;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
@@ -105,6 +107,16 @@ public class VisualSorting {
         //parse options file
         long startReadingOptionsTime = System.currentTimeMillis();
         
+        String[] optionLines = Util.readFileFromJar("options.txt");
+        if (optionLines == null) {
+            System.out.println("Options file could not be found, using default options.");
+            this.options = new Options();
+        } 
+        else {
+            this.options = new Options(optionLines);
+        }
+        
+        /*
         URL optionsFileURL = VisualSorting.class.getResource("/options.txt");
         System.out.println("OptionsURL: " + optionsFileURL);
         if (optionsFileURL != null) {
@@ -116,6 +128,7 @@ public class VisualSorting {
             System.out.println("Options file could not be found, using default options.");
             this.options = new Options();
         }
+        */
         System.out.println("Time to init options: " + (System.currentTimeMillis() - startReadingOptionsTime) + "ms");
         
         

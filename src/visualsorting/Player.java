@@ -3,9 +3,12 @@ package visualsorting;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -19,7 +22,7 @@ public class Player {
     //base folder for all the soundpacks
     private static final String base = "soundpacks";
     private final String soundPack;
-    private final int NUM_SOUND_FILES;
+    private int NUM_SOUND_FILES;
     private List<Clip> clips;
     private List<Integer> currentlyPlayingStack = new ArrayList<>();
     private int allowedSimul;
@@ -28,8 +31,24 @@ public class Player {
         this.allowedSimul = numContinuousSoundsPlayingAllowed;
         if (this.allowedSimul <= 0)
             this.allowedSimul = 1;
+        
         this.soundPack = soundPack;
-        URL soundPackURL = VisualSorting.class.getResource("/soundpacks/" + soundPack);
+        
+        //TODO... get file from jar
+        File soundPackFolder;
+        URL url = Player.class.getResource("/soundpacks/" + soundPack);
+        String ext = url.toExternalForm();
+        soundPackFolder = new File(ext);
+        System.out.println(soundPackFolder);
+        
+        System.out.println("sound pack folder: " + soundPackFolder.getAbsolutePath());
+        this.NUM_SOUND_FILES = soundPackFolder.listFiles().length;
+        init();
+
+        
+        
+        /*
+        URL soundPackURL = VisualSorting.class.getResource("/soundpacks/" + soundPack).;
         if (soundPackURL != null) {
             File soundPackFolder = new File(soundPackURL.getFile());
             this.NUM_SOUND_FILES = soundPackFolder.listFiles().length;
@@ -40,6 +59,7 @@ public class Player {
             System.out.println("or more specifically, /soundpacks/" + soundPack);
             this.NUM_SOUND_FILES = 0;
         }
+        */
     }
     
     
