@@ -70,7 +70,12 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <!-- include options file in jar -->
     <target name="-pre-jar">
         <copy file="options.txt" todir="${build.dir}/classes/" />
+    </target>
+    <!-- makes ANT run the jar -->
+    <target name="run">
+        <java jar="dist/VisualSorting.jar" fork="true"/>
     </target>
 </project>

@@ -104,9 +104,12 @@ public class VisualSorting {
     private void init() {
         //parse options file
         long startReadingOptionsTime = System.currentTimeMillis();
+        
         URL optionsFileURL = VisualSorting.class.getResource("/options.txt");
+        System.out.println("OptionsURL: " + optionsFileURL);
         if (optionsFileURL != null) {
             File optionsFile = new File(optionsFileURL.getFile());
+            System.out.println("Option file: " + optionsFile.getAbsolutePath());
             String[] optionLines = Util.readFile(optionsFile);
             this.options = new Options(optionLines);
         } else {

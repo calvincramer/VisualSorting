@@ -34,10 +34,10 @@ public class MainFrame extends JFrame{
     private double columnWidth;
     
     public MainFrame(SteppableSorter sorter, VisualSorting vs, Options options) {
+        this.options = options;
         this.init(sorter.getSorterName());
         this.setSorter(sorter);
         this.vs = vs;
-        this.options = options;
         this.frameResized();
     }
     
@@ -51,27 +51,25 @@ public class MainFrame extends JFrame{
         this.setTitle("Visual Sorting!" + " - " + sorterMethod);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int width = (int) screenSize.getWidth();
-        int height = (int) screenSize.getHeight();
+        Integer window_width = (Integer) options.getOption("WINDOW_WIDTH").getData();
+        Integer window_height = (Integer) options.getOption("WINDOW_HEIGHT").getData();
         
-        this.setBounds(50, 50, width - 100, height - 100);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+       
+        int width  = Math.min(window_width, screenSize.width);
+        int height = Math.min(window_height, screenSize.height);
+        //nearly maximize if desired window dimension is 0
+        if (width == 0)     width = (int) (screenSize.width   - screenSize.height * 0.01);   //same padding on all sides, so use height for both
+        if (height == 0)    height = (int) (screenSize.height - screenSize.height * 0.01);
+        
+        this.setBounds(screenSize.width / 2 - width / 2, screenSize.height / 2 - height / 2, width, height);
         
         this.addComponentListener(new ComponentListener() {
-            @Override
-            public void componentMoved( ComponentEvent e ) {
-                        //System.out.println("I moved!");
-            }
-            @Override
-            public void componentShown( ComponentEvent e ) {}
-            @Override
-            public void componentHidden( ComponentEvent e ) {}
-            @Override
-            public void componentResized( ComponentEvent e ) {
-                frameResized();
-            }
+            @Override public void componentMoved( ComponentEvent e ) {}
+            @Override public void componentShown( ComponentEvent e ) {}
+            @Override public void componentHidden( ComponentEvent e ) {}
+            @Override public void componentResized( ComponentEvent e ) { frameResized(); }
         });
-        
     }
     
     
@@ -150,6 +148,7 @@ public class MainFrame extends JFrame{
         //gather options
         Color background_color = (Color) options.getOption("BACKGROUND_COLOR").getData();
         Boolean show_swap_arrows = (Boolean) options.getOption("SHOW_SWAP_ARROWS").getData();
+        Boolean show_text = (Boolean) options.getOption("SHOW_TEXT").getData();
         Color text_color = (Color) options.getOption("TEXT_COLOR").getData();
         Integer clock_speed = (Integer) options.getOption("CLOCK_SPEED").getData();
 
@@ -212,24 +211,26 @@ public class MainFrame extends JFrame{
         */
         
         //draw text for info
-        int textHeight = offScreen.getFontMetrics().getHeight();
-        double y = textHeight + 30;
-        x = 15;
-        
-        offScreen.setColor(text_color);
-        offScreen.drawString("Name: " + sorter.getSorterName(), (int) x, (int) y);
-        y += textHeight;
-        offScreen.drawString("Size: " + sorter.getArray().size(), (int) x, (int) y);
-        y += textHeight;
-        offScreen.drawString("Comparisons: " + sorter.numComparisons, (int) x, (int) y);
-        y += textHeight;
-        offScreen.drawString("Swaps: " + sorter.numSwaps, (int) x, (int) y);
-        y += textHeight;
-        offScreen.drawString("Array Accesses: " + sorter.numArrayAccesses, (int) x, (int) y);
-        y += textHeight;
-        offScreen.drawString("Clock Speed: " + clock_speed + "ms", (int) x, (int) y);
-        y += textHeight;
-        offScreen.drawString("Time Elapsed: " + Util.commifyString("" + vs.currentTime) + "ms", (int) x, (int) y);
+        if (show_text) {
+            int textHeight = offScreen.getFontMetrics().getHeight();
+            double y = textHeight + 30;
+            x = 15;
+
+            offScreen.setColor(text_color);
+            offScreen.drawString("Name: " + sorter.getSorterName(), (int) x, (int) y);
+            y += textHeight;
+            offScreen.drawString("Size: " + sorter.getArray().size(), (int) x, (int) y);
+            y += textHeight;
+            offScreen.drawString("Comparisons: " + sorter.numComparisons, (int) x, (int) y);
+            y += textHeight;
+            offScreen.drawString("Swaps: " + sorter.numSwaps, (int) x, (int) y);
+            y += textHeight;
+            offScreen.drawString("Array Accesses: " + sorter.numArrayAccesses, (int) x, (int) y);
+            y += textHeight;
+            offScreen.drawString("Clock Speed: " + clock_speed + "ms", (int) x, (int) y);
+            y += textHeight;
+            offScreen.drawString("Time Elapsed: " + Util.commifyString("" + vs.currentTime) + "ms", (int) x, (int) y);
+        }
         
         g.drawImage(offScreenImage, 0, 0, null);
     }

@@ -40,13 +40,15 @@ public class Options {
     private static final boolean DEFAULT_IS_ANIMATED        = false;
     private static final TransitionType DEFAULT_TRANSITION_TYPE     = TransitionType.LINEAR;
     private static final boolean DEFAULT_SHOW_SWAP_ARROWS   = false;
+    private static final boolean DEFAULT_SHOW_TEXT          = true;
     private static final Color DEFAULT_SWAP_ARROW_COLOR     = new Color(0  , 255, 0  );
     private static final String DEAULT_FONT_FAMILY          = "Courier New";
     private static final int DEFAULT_FONT_SIZE              = 16;
     private static final boolean DEFAULT_ANTI_ALIAS         = true;
     private static final boolean DEFAULT_ANTI_ALIAS_FONT    = true;
     private static final Insets DEFAULT_GRAPH_INSETS        = new Insets(15, 15, 15, 15);
-    
+    private static final int DEFAULT_WINDOW_WIDTH           = 1000;
+    private static final int DEFAULT_WINDOW_HEIGHT          = 500;
     
     
     /**
@@ -81,12 +83,15 @@ public class Options {
             put("IS_ANIMATED",          new Option<>(DEFAULT_IS_ANIMATED));
             put("TRANSITION_TYPE",      new Option<>(DEFAULT_TRANSITION_TYPE));
             put("SHOW_SWAP_ARROWS",     new Option<>(DEFAULT_SHOW_SWAP_ARROWS));
+            put("SHOW_TEXT",            new Option<>(DEFAULT_SHOW_TEXT));
             put("FONT_FAMILY",          new Option<>(DEAULT_FONT_FAMILY));
             put("FONT_SIZE",            new Option<>(DEFAULT_FONT_SIZE));
             put("ANTI_ALIAS",           new Option<>(DEFAULT_ANTI_ALIAS));
             put("ANTI_ALIAS_FONT",      new Option<>(DEFAULT_ANTI_ALIAS_FONT));
             put("GRAPH_INSETS",         new Option<>(DEFAULT_GRAPH_INSETS));
             put("SWAP_ARROW_COLOR",     new Option<>(DEFAULT_SWAP_ARROW_COLOR));
+            put("WINDOW_WIDTH",         new Option<>(DEFAULT_WINDOW_WIDTH));
+            put("WINDOW_HEIGHT",        new Option<>(DEFAULT_WINDOW_HEIGHT));
         }};
     }
     
