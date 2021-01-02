@@ -136,7 +136,8 @@ public class VisualSorting {
         long startSoundTime = System.currentTimeMillis();
         String sound_pack = (String) options.getOption("SOUND_PACK").getData();
         Integer num_simul_sounds = (Integer) options.getOption("NUM_SIMUL_SOUNDS").getData();
-        this.player = new Player(sound_pack, num_simul_sounds);
+        // this.player = new Player(sound_pack, num_simul_sounds);
+        this.player = null; // Sounds broken currently :(
         System.out.println("Time to init sounds: " + (System.currentTimeMillis() - startSoundTime) + "ms");
         
         //other init stuff ...
@@ -197,7 +198,9 @@ public class VisualSorting {
         
         //play sound
         if (sorter.indexToPlaySound() >= 0 && sorter.indexToPlaySound() < sorter.getArray().size()) {
-            player.playSound(1, sorter.getMax(), sorter.getArray().get(sorter.indexToPlaySound()));
+            if (player != null) {
+                player.playSound(1, sorter.getMax(), sorter.getArray().get(sorter.indexToPlaySound()));
+            }
         }
         return true;
     }

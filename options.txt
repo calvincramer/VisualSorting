@@ -16,7 +16,7 @@ FONT_FAMILY					can be any of: currently installed fonts recognizable to java?
 SORTER_CLASS				= CombSort		|string
 NUM_ELEMENTS				= 80			|integer, positive
 CLOCK_SPEED					= 50			|integer, non-negative
-START_DELAY					= 3000			|integer, non-negative
+START_DELAY					= 5000			|integer, non-negative
 START_ARRAY_NUMBERS_TYPE	= UNIQUE		|string
 START_ARRAY_STRUCTURE		= SHUFFLED 		|string
 

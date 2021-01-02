@@ -3,7 +3,6 @@ package visualsorting;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.util.Pair;
 
 /**
  * Abstract class that represents a sorting algorithm that can be called to incrementally step through the algorithm

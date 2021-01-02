@@ -42,7 +42,8 @@ public class Player {
         System.out.println(soundPackFolder);
         
         System.out.println("sound pack folder: " + soundPackFolder.getAbsolutePath());
-        this.NUM_SOUND_FILES = soundPackFolder.listFiles().length;
+        // this.NUM_SOUND_FILES = soundPackFolder.listFiles().length;   // broke at some point in Java most likely
+        this.NUM_SOUND_FILES = 32;
         init();
 
         
